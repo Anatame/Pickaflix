@@ -25,7 +25,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bottomNav.setNavBackgroundColor(Color.RED)
+        val bottomNav = binding.bottomNav
+
+        bottomNav.setNavBackgroundColor(Color.RED)
+        bottomNav.setNavHeight(48)
+
 
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
