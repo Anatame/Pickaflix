@@ -3,6 +3,7 @@ package com.anatame.pickaflix.presentation.CustomViews
 import android.content.Context
 import android.content.res.Resources.getSystem
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -11,8 +12,6 @@ import android.widget.LinearLayout
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.ThemeableBottomNavBinding
 import kotlin.properties.Delegates
-
-
 
 
 class ThemeableBottomNav constructor(
@@ -48,7 +47,9 @@ class ThemeableBottomNav constructor(
         binding.bottomNavBackground.layoutParams = params
     }
 
-
+    fun setSelectedIconColor(color: Int){
+        binding.item1.setColorFilter(color)
+    }
 
 }
 
