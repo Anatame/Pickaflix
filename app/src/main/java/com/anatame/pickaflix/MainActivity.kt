@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = binding.bottomNav
 
         bottomNav.setNavBackgroundColor(Color.BLACK)
-        bottomNav.setSelectedIconColor(Color.BLUE)
+        bottomNav.selectedColor = Color.RED
         bottomNav.setNavHeight(48)
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
