@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomNav.setNavBackgroundColor(Color.BLACK)
         bottomNav.selectedColor = Color.RED
-        bottomNav.setNavHeight(48)
+        bottomNav.setNavHeight(58)
         bottomNav.setCurrentSelectedItem(0)
 
         currentSelection = bottomNav.currentItem

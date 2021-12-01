@@ -21,7 +21,7 @@
 
     <com.anatame.pickaflix.presentation.CustomViews.ThemeableBottomNav
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:id="@+id/bottomNav"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

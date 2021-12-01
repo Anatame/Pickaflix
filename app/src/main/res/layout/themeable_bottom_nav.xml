@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@color/teal_200"
-    android:paddingStart="16dp"
     android:id="@+id/bottom_nav_container">
 
 
@@ -16,12 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_baseline_home_24"
         app:tint="@color/UnselectedIconColor" />
 
     <ImageButton
-        android:background="?android:attr/selectableItemBackground"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:id="@+id/imageButton2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,7 +29,7 @@
         app:tint="@color/UnselectedIconColor" />
 
     <ImageButton
-        android:background="?android:attr/selectableItemBackground"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:id="@+id/imageButton3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
