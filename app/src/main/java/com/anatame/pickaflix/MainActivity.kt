@@ -10,6 +10,7 @@ import android.view.WindowManager
 
 import android.os.Build
 import android.view.Window
+import android.widget.Toast
 import com.anatame.pickaflix.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setNavBackgroundColor(Color.BLACK)
         bottomNav.selectedColor = Color.RED
         bottomNav.setNavHeight(48)
+
+        bottomNav.setOnItemClickListener { index ->
+            Toast.makeText(this, "Clicked item $index", Toast.LENGTH_SHORT).show()
+        }
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
