@@ -8,7 +8,6 @@
     android:gravity="center"
     android:background="@color/teal_200"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:id="@+id/bottomNavBackground">
 
 
@@ -17,22 +16,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@null"
-        app:srcCompat="@drawable/ic_baseline_home_24" />
+        android:background="?android:attr/selectableItemBackground"
+        app:srcCompat="@drawable/ic_baseline_home_24"
+        app:tint="@color/UnselectedIconColor" />
 
     <ImageButton
-        android:background="@null"
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/imageButton2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_baseline_bookmark_border_24" />
+        app:srcCompat="@drawable/ic_baseline_bookmark_border_24"
+        app:tint="@color/UnselectedIconColor" />
 
     <ImageButton
-        android:background="@null"
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/imageButton3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_baseline_menu_24" />
+        app:srcCompat="@drawable/ic_baseline_menu_24"
+        app:tint="@color/UnselectedIconColor"/>
 </LinearLayout>
