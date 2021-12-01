@@ -24,6 +24,7 @@ class ThemeableBottomNav constructor(
 
     var selectedColor = Color.BLUE
     var unselectedColor = Color.GRAY
+    var currentItem = 0
 
     init { // inflate binding and add as view
         addView(binding.root)
@@ -84,6 +85,12 @@ class ThemeableBottomNav constructor(
 
     fun setNavBackgroundColor(color: Int){
         binding.bottomNavContainer.setBackgroundColor(color)
+    }
+
+    fun setCurrentSelectedItem(currentIndex: Int){
+        currentItem = currentIndex
+        val activeItem = binding.bottomNavContainer.getChildAt(currentIndex) as ImageButton
+        activeItem.setColorFilter(selectedColor)
     }
 
     fun setNavHeight(height: Int){
