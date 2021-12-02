@@ -10,7 +10,36 @@ import javax.inject.Inject
 const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
-    var movieItemListData = ArrayList<MovieItem>()
+    private var movieItemListData = ArrayList<MovieItem>()
+
+    fun getHeroSectionItems(){
+        val doc = Jsoup.connect(MOVIE_URL)
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000*5)
+            .get()
+
+        val sliderList = doc.getElementsByClass("swiper-slide")
+        sliderList.forEach { element ->
+            val sliderItem = element.allElements[0]
+
+            val sliderDivStyle = sliderItem.attr("style")
+            val backgroundImageUrl = sliderDivStyle.substring( (sliderDivStyle.indexOf('(') + 1), sliderDivStyle.indexOf(')'),)
+
+            val anchor = sliderItem.select("a")
+            val movieHref = anchor.attr("href")
+            val movieTitle = anchor.attr("title")
+
+            val movieCaption = sliderItem.getElementsByClass("scd-item")[0]
+
+            Log.d(MOVIE_TAG, """
+                backgroundImage: $backgroundImageUrl
+                title: $movieTitle
+                href: $movieHref
+                movieCaption: $movieCaption
+            """.trimIndent())
+        }
+    }
 
     fun getMovieList(page: Int = 0): ArrayList<MovieItem> {
         val doc = Jsoup.connect(MOVIE_URL)

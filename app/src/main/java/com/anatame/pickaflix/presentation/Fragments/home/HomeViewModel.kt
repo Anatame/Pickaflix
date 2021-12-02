@@ -19,7 +19,14 @@ class HomeViewModel @Inject constructor(
     val Movies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
 
     init{
-        getHomeScreenData()
+      //  getHomeScreenData()
+        getSliderItems()
+    }
+
+    fun getSliderItems(){
+        viewModelScope.launch (Dispatchers.IO)  {
+            parser.getHeroSectionItems()
+        }
     }
 
     fun getHomeScreenData(){
