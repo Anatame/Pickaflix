@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
@@ -40,6 +42,13 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         setupRecyclerView()
+
+
+        movieAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("movie", it)
+            }
+        }
 
         homeViewModel.Movies.observe(viewLifecycleOwner, Observer { response ->
             when(response) {
@@ -81,7 +90,7 @@ class HomeFragment : Fragment() {
         movieAdapter = MovieAdapter()
         binding.rvMovies.apply {
             adapter = movieAdapter
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = GridLayoutManager(activity, 2)
         }
     }
 
