@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.presentation.Adapters.MovieAdapter
@@ -48,6 +50,12 @@ class HomeFragment : Fragment() {
             val bundle = Bundle().apply {
                 putSerializable("movie", it)
             }
+
+            findNavController().navigate(
+                R.id.action_navigation_home_to_movieDetailFragment,
+                bundle
+            )
+
         }
 
         homeViewModel.Movies.observe(viewLifecycleOwner, Observer { response ->
