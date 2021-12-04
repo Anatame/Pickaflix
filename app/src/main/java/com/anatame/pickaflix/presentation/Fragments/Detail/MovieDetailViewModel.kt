@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.presentation.Fragments.movieDetail
+package com.anatame.pickaflix.presentation.Fragments.Detail
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.presentation.ui.colors
+package com.anatame.pickaflix.common.Extras.ui.colors
 
 
 data class Theme(

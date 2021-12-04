@@ -12,16 +12,15 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.common.Resource
-import com.anatame.pickaflix.databinding.SearchFragmentBinding
+import com.anatame.pickaflix.databinding.FragmentSearchBinding
 import com.anatame.pickaflix.presentation.Adapters.SearchRVAdapter
 import kotlinx.coroutines.*
 
 class SearchFragment : Fragment() {
 
     private lateinit var viewModel: SearchViewModel
-    private var binding: SearchFragmentBinding? = null
+    private var binding: FragmentSearchBinding? = null
     lateinit var searchAdapter: SearchRVAdapter
   //  private lateinit var binding: SearchFragmentBinding
 
@@ -30,7 +29,7 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
-        binding = SearchFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
         setupRecyclerView()
         return binding!!.root
     }
@@ -53,13 +52,13 @@ class SearchFragment : Fragment() {
                     }
                 }
 
-                return true
+                return false
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 // task HERE
 
-                return true
+                return false
             }
 
         })
@@ -117,7 +116,7 @@ class SearchFragment : Fragment() {
         searchAdapter = SearchRVAdapter()
         binding?.searchRV?.apply {
             adapter = searchAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = GridLayoutManager(context, 3)
         }
     }
 

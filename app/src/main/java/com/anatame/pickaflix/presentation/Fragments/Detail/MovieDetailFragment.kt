@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.presentation.Fragments.movieDetail
+package com.anatame.pickaflix.presentation.Fragments.Detail
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
-import com.anatame.pickaflix.databinding.FragmentHomeBinding
+import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 
 class MovieDetailFragment : Fragment() {
 
     private lateinit var viewModel: MovieDetailViewModel
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentMovieDetailBinding
     val args: MovieDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -23,7 +23,7 @@ class MovieDetailFragment : Fragment() {
         val movieData = args.movie
 
         Toast.makeText(context, movieData.title, Toast.LENGTH_SHORT).show()
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
 
         return binding.root
     }

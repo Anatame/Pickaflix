@@ -1,16 +1,14 @@
-package com.anatame.pickaflix.presentation.CustomViews
+package com.anatame.pickaflix.common.Extras.CustomViews
 
 import android.content.Context
 import android.content.res.Resources.getSystem
 import android.graphics.Color
-import android.media.Image
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.ThemeableBottomNavBinding
 
