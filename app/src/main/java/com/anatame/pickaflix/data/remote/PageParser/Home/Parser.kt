@@ -4,6 +4,7 @@ import android.util.Log
 import com.anatame.pickaflix.common.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.common.Constants.MOVIE_URL
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import org.jsoup.Connection
 import org.jsoup.Jsoup
 import javax.inject.Inject
 
@@ -11,6 +12,33 @@ const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
     private var movieItemListData = ArrayList<MovieItem>()
+
+    fun getSearchItem(searchTerm: String = "mom"){
+        val cookies: Map<String, String> = HashMap()
+        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/search")
+            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36")
+            .header("content-type", "application/json")
+            .header("accept", "*/*")
+            .requestBody("""{"keyword": "$searchTerm"}""")
+            .ignoreContentType(true)
+            .cookies(cookies)
+            .post()
+
+        val movies = doc.select("a")
+        movies.forEach { item ->
+            val movieSrc = item.select("a").attr("href")
+            val moviePoster = item.select("img").attr("src")
+            val movieName = item.getElementsByClass("film-name").text()
+
+            Log.d("searchReturn", """
+               MovieSource = $movieSrc
+               MoviePoster = $moviePoster
+               MovieName = $movieName
+            """.trimIndent())
+        }
+
+
+    }
 
     fun getHeroSectionItems(){
         val doc = Jsoup.connect(MOVIE_URL)
@@ -24,7 +52,10 @@ class Parser @Inject constructor() {
             val sliderItem = element.allElements[0]
 
             val sliderDivStyle = sliderItem.attr("style")
-            val backgroundImageUrl = sliderDivStyle.substring( (sliderDivStyle.indexOf('(') + 1), sliderDivStyle.indexOf(')'),)
+            val backgroundImageUrl = sliderDivStyle.substring(
+                (sliderDivStyle.indexOf('(') + 1),
+                sliderDivStyle.indexOf(')')
+            )
 
             val anchor = sliderItem.select("a")
             val movieHref = anchor.attr("href")
