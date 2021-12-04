@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.databinding.FragmentSearchBinding
 import com.anatame.pickaflix.presentation.Adapters.SearchRVAdapter
@@ -35,6 +37,8 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding?.svSearchView?.requestFocus()
 
 
         var job: Job? = null
@@ -116,7 +120,7 @@ class SearchFragment : Fragment() {
         searchAdapter = SearchRVAdapter()
         binding?.searchRV?.apply {
             adapter = searchAdapter
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = LinearLayoutManager(context)
         }
     }
 
