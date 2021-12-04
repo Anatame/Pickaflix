@@ -15,27 +15,28 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SearchFragment : Fragment() {
 
     private lateinit var viewModel: SearchViewModel
-    private lateinit var binding: SearchFragmentBinding
+    private var _binding: SearchFragmentBinding? = null
+  //  private lateinit var binding: SearchFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = SearchFragmentBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+        _binding = SearchFragmentBinding.inflate(inflater, container, false)
 
-        return binding.root
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
-
 
         var job: Job? = null
-        binding.svSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        _binding?.svSearchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 job?.cancel()
@@ -43,6 +44,7 @@ class SearchFragment : Fragment() {
                     delay(400)
                     newText.let {
                         if(it.isNotEmpty()){
+                            viewModel.getSearch(it)
                             Log.d("search", it)
                         }
                     }

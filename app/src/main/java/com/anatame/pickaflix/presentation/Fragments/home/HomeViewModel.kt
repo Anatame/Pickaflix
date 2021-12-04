@@ -25,11 +25,11 @@ class HomeViewModel @Inject constructor(
     }
 
     // this is in search view model now
-    fun getSearch(){
-        viewModelScope.launch(Dispatchers.IO){
-            parser.getSearchItem()
-        }
-    }
+//    fun getSearch(){
+//        viewModelScope.launch(Dispatchers.IO){
+//            parser.getSearchItem()
+//        }
+//    }
 
     fun getSliderItems(){
         viewModelScope.launch (Dispatchers.IO)  {

@@ -13,7 +13,7 @@ const val MOVIE_TAG = "movieItemList"
 class Parser @Inject constructor() {
     private var movieItemListData = ArrayList<MovieItem>()
 
-    fun getSearchItem(searchTerm: String = "mom"){
+    fun getSearchItem(searchTerm: String){
         val cookies: Map<String, String> = HashMap()
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/search")
             .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36")
