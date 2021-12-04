@@ -13,7 +13,7 @@ import com.anatame.pickaflix.databinding.FragmentHomeBinding
 class MovieDetailFragment : Fragment() {
 
     private lateinit var viewModel: MovieDetailViewModel
-    private var binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
     val args: MovieDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -23,14 +23,15 @@ class MovieDetailFragment : Fragment() {
         val movieData = args.movie
 
         Toast.makeText(context, movieData.title, Toast.LENGTH_SHORT).show()
-
-        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        return binding!!.root
+        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
     }
 
 }

@@ -78,6 +78,10 @@ class HomeFragment : Fragment() {
             }
         })
 
+        binding.ibSearchButton.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
+        }
+
 
 
         return root
