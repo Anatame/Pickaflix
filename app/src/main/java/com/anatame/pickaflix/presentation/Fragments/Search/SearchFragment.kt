@@ -8,19 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import com.anatame.pickaflix.R
-import com.anatame.pickaflix.databinding.FragmentHomeBinding
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.databinding.SearchFragmentBinding
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import com.anatame.pickaflix.presentation.Adapters.SearchRVAdapter
+import kotlinx.coroutines.*
 
 class SearchFragment : Fragment() {
 
     private lateinit var viewModel: SearchViewModel
-    private var _binding: SearchFragmentBinding? = null
+    private var binding: SearchFragmentBinding? = null
+    lateinit var searchAdapter: SearchRVAdapter
   //  private lateinit var binding: SearchFragmentBinding
 
     override fun onCreateView(
@@ -28,52 +30,95 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
-        _binding = SearchFragmentBinding.inflate(inflater, container, false)
-
-        return _binding!!.root
+        binding = SearchFragmentBinding.inflate(inflater, container, false)
+        setupRecyclerView()
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+
         var job: Job? = null
-        _binding?.svSearchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding?.svSearchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 job?.cancel()
-                job = MainScope().launch {
-                    delay(400)
+                job = viewModel.viewModelScope.launch {
+                    delay(500)
                     newText.let {
                         if(it.isNotEmpty()){
                             viewModel.getSearch(it)
-                            Log.d("search", it)
+                            Log.d("searchTerm", it)
                         }
                     }
                 }
 
-                return false
+                return true
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 // task HERE
-                return false
+
+                return true
             }
 
         })
 
-//            job?.cancel()
-//            job = MainScope().launch {
-//                delay(SEARCH_NEWS_TIME_DELAY)
-//                editable?.let {
-//                    if(editable.toString().isNotEmpty()) {
-//                        viewModel.searchNews(editable.toString())
+        searchAdapter.setOnItemClickListener {
+//            val bundle = Bundle().apply {
+//                putSerializable("movie", it)
+//            }
+//
+//            findNavController().navigate(
+//                R.id.action_navigation_home_to_movieDetailFragment,
+//                bundle
+//            )
+
+        }
+
+        viewModel.searchList.observe(viewLifecycleOwner, Observer { response ->
+            when(response) {
+                is Resource.Success -> {
+                    hideProgressBar()
+                    response.data?.let { movie ->
+                        searchAdapter.differ.submitList(movie)
+                    }
+                }
+//                is Resource.Error -> {
+//                    hideProgressBar()
+//                    response.message?.let { message ->
+//                        Log.e(TAG, "An error occured: $message")
 //                    }
 //                }
-//            }
-//        }
+                is Resource.Loading -> {
+                    showProgressBar()
+                }
+            }
+        })
+
 
 
 
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun hideProgressBar() {
+//        paginationProgressBar.visibility = View.INVISIBLE
+        Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showProgressBar() {
+//        paginationProgressBar.visibility = View.VISIBLE
+        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+    }
+
+
+    private fun setupRecyclerView() {
+        searchAdapter = SearchRVAdapter()
+        binding?.searchRV?.apply {
+            adapter = searchAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
     }
 
 

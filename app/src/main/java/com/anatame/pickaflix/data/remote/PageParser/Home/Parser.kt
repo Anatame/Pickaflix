@@ -4,25 +4,60 @@ import android.util.Log
 import com.anatame.pickaflix.common.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.common.Constants.MOVIE_URL
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import javax.inject.Inject
 
+
+
+
+
+
+
+
 const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
-    private var movieItemListData = ArrayList<MovieItem>()
 
-    fun getSearchItem(searchTerm: String){
-        val cookies: Map<String, String> = HashMap()
-        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/search")
-            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36")
-            .header("content-type", "application/json")
-            .header("accept", "*/*")
-            .requestBody("""{"keyword": "$searchTerm"}""")
-            .ignoreContentType(true)
-            .cookies(cookies)
-            .post()
+    fun getSearchItem(searchTerm: String): ArrayList<SearchMovieItem> {
+        val searchItemList = ArrayList<SearchMovieItem>()
+
+        val client = OkHttpClient()
+        val formBody= FormBody.Builder()
+            .addEncoded("keyword", "$searchTerm")
+            .build()
+
+        val request = Request.Builder()
+            .url("https://fmoviesto.cc/ajax/search")
+            .addHeader("authority", "fmoviesto.cc")
+            .addHeader("accept", "*/*")
+            .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+            .addHeader("origin", "https://fmoviesto.cc")
+            .addHeader("referer", "https://fmoviesto.cc/search/")
+            .addHeader("sec-ch-ua-mobile", "?0")
+            .addHeader("sec-ch-ua-platform", "Windows")
+            .addHeader("sec-fetch-mode", "cors")
+            .addHeader("sec-fetch-site", "same-origin")
+            .addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36")
+            .addHeader("x-requested-with", "XMLHttpRequest")
+
+            .post(formBody)
+            .build()
+
+        // Execute request
+        val response = client.newCall(request).execute()
+        val result = response.body?.string()
+        Log.d("okResponse", result.toString())
+        Log.d("okResponse", searchTerm)
+
+        client.cache?.delete()
+
+        val doc = Jsoup.parse(result!!)
+
 
         val movies = doc.select("a")
         movies.forEach { item ->
@@ -35,8 +70,16 @@ class Parser @Inject constructor() {
                MoviePoster = $moviePoster
                MovieName = $movieName
             """.trimIndent())
+
+            searchItemList.add(SearchMovieItem(
+                thumbnailSrc = moviePoster,
+                title = movieName,
+                src = movieSrc
+            ))
+
         }
 
+        return searchItemList
 
     }
 
@@ -73,6 +116,8 @@ class Parser @Inject constructor() {
     }
 
     fun getMovieList(page: Int = 0): ArrayList<MovieItem> {
+        var movieItemListData = ArrayList<MovieItem>()
+
         val doc = Jsoup.connect(MOVIE_URL)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
@@ -149,5 +194,41 @@ class Parser @Inject constructor() {
                     
                     """.trimIndent()
         )
+    }
+
+    fun getHttpSearchItem() {
+        var client = OkHttpClient()
+        val formBody= FormBody.Builder()
+            .add("keyword", "Venom")
+            .build()
+
+        var request = Request.Builder()
+            .url("https://fmoviesto.cc/ajax/search")
+            .post(formBody)
+            .build()
+
+        // Execute request
+        val response = client.newCall(request).execute()
+        val result = response.body?.string()
+        Log.d("okResponse", result.toString())
+
+
+        val doc = Jsoup.parse(result!!)
+
+        val movies = doc.select("a")
+        movies.forEach { item ->
+            val movieSrc = item.select("a").attr("href")
+            val moviePoster = item.select("img").attr("src")
+            val movieName = item.getElementsByClass("film-name").text()
+
+            Log.d(
+                "searchReturn", """
+               MovieSource = $movieSrc
+               MoviePoster = $moviePoster
+               MovieName = $movieName
+            """.trimIndent()
+            )
+
+        }
     }
 }

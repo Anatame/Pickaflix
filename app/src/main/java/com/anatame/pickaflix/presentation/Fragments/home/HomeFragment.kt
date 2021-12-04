@@ -89,12 +89,12 @@ class HomeFragment : Fragment() {
 
     private fun hideProgressBar() {
 //        paginationProgressBar.visibility = View.INVISIBLE
-        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
     }
 
     private fun showProgressBar() {
 //        paginationProgressBar.visibility = View.VISIBLE
-        Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
     }
 
 

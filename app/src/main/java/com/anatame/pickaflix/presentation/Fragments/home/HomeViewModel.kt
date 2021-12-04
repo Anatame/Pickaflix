@@ -22,7 +22,14 @@ class HomeViewModel @Inject constructor(
       //  getHomeScreenData()
       //  getSliderItems()
       //  getSearch()
+       // getOkHttpSearchResult()
     }
+
+//    fun getOkHttpSearchResult(){
+//        viewModelScope.launch(Dispatchers.IO){
+//            parser.getHttpSearchItem()
+//        }
+//    }
 
     // this is in search view model now
 //    fun getSearch(){

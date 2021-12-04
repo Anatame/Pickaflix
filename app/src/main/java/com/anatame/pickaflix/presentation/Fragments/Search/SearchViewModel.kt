@@ -1,7 +1,13 @@
 package com.anatame.pickaflix.presentation.Fragments.Search
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,9 +17,17 @@ class SearchViewModel (
     private val parser: Parser = Parser()
 ) : ViewModel() {
 
+    val searchList: MutableLiveData<Resource<List<SearchMovieItem>>> = MutableLiveData()
+
     fun getSearch(searchTerm: String){
+
         viewModelScope.launch(Dispatchers.IO){
-            parser.getSearchItem(searchTerm)
+            searchList.postValue(Resource.Loading())
+            val response = parser.getSearchItem(searchTerm)
+            searchList.postValue(Resource.Success(response))
+
         }
+
     }
+
 }
