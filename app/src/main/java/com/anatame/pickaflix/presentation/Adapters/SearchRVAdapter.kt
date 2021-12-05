@@ -2,8 +2,11 @@ package com.anatame.pickaflix.presentation.Adapters
 
 import android.content.Context
 import android.content.res.Resources.getSystem
+import android.text.Layout
+import android.transition.Visibility
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
@@ -50,9 +53,11 @@ class SearchRVAdapter(
         val searchMovieItem = differ.currentList[position]
         Log.d("searchResponse", searchMovieItem.toString())
 
+
         holder.itemView.apply {
             Glide.with(this)
                 .load(searchMovieItem.thumbnailSrc)
+                .centerCrop()
                 .into(holder.binding.ivMovieThumnail)
             holder.binding.apply {
                 val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
@@ -67,23 +72,23 @@ class SearchRVAdapter(
             }
 
         }
-   //     setRotateAnimation(position, holder)
+        setRotateAnimation(position, holder)
 
     }
 
- //   private var lastPosition = -1
+    private var lastPosition = -1
 
-//    private fun setRotateAnimation(
-//        position: Int,
-//        holder: SearchRVAdapter.SearchItemViewHolder
-//    ) {
-////        if (position > lastPosition) {
-//            val animation = AnimationUtils.loadAnimation(context, R.anim.rv_falldown);
-//            holder.itemView.startAnimation(animation);
-////            lastPosition = position
-////        }
-//    }
-//    //extension function to convert dp to px
+    private fun setRotateAnimation(
+        position: Int,
+        holder: SearchRVAdapter.SearchItemViewHolder
+    ) {
+        if (position > lastPosition) {
+            val animation = AnimationUtils.loadAnimation(context, R.anim.rv_scaleup);
+            holder.itemView.startAnimation(animation)
+            lastPosition = position
+        }
+    }
+    //extension function to convert dp to px
    val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
 
     fun setOnItemClickListener(listener: (SearchMovieItem) -> Unit) {

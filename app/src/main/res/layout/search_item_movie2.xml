@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:layout_height="wrap_content"
+    android:id="@+id/rootView"
    >
 
     <androidx.cardview.widget.CardView

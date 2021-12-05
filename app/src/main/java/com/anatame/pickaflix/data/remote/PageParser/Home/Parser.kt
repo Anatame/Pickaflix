@@ -71,12 +71,13 @@ class Parser @Inject constructor() {
                MovieName = $movieName
             """.trimIndent())
 
-            searchItemList.add(SearchMovieItem(
-                thumbnailSrc = moviePoster,
-                title = movieName,
-                src = movieSrc
-            ))
-
+            if(moviePoster.isNotEmpty()){
+                searchItemList.add(SearchMovieItem(
+                    thumbnailSrc = moviePoster,
+                    title = movieName,
+                    src = movieSrc
+                ))
+            }
         }
 
         return searchItemList
