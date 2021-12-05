@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@android:color/transparent"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
@@ -13,7 +14,20 @@
         app:cardBackgroundColor="#F48FB1"
         android:layout_height="264dp">
 
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/iv_movieThumnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </com.google.android.material.card.MaterialCardView>
 
+    <TextView
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:id="@+id/tv_movieName"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"/>
 
-</FrameLayout>
+</LinearLayout>

@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
 import com.anatame.pickaflix.databinding.SearchItemMovie2Binding
+import com.bumptech.glide.Glide
 
 class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolder>() {
 
@@ -40,21 +42,23 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolde
     private var onItemClickListener: ((SearchMovieItem) -> Unit)? = null
 
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
-        val SearchMovieItem = differ.currentList[position]
-        Log.d("searchResponse", SearchMovieItem.toString())
+        val searchMovieItem = differ.currentList[position]
+        Log.d("searchResponse", searchMovieItem.toString())
 
         holder.itemView.apply {
-//            Glide.with(this)
-//                .load(SearchMovieItem.thumbnailSrc)
-//                .into(holder.binding.ivMovieThumnail)
+            Glide.with(this)
+                .load(searchMovieItem.thumbnailSrc)
+                .into(holder.binding.ivMovieThumnail)
             holder.binding.apply {
-                val layoutParams: FrameLayout.LayoutParams = card.layoutParams as FrameLayout.LayoutParams
+                val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(16.px, 16.px, 0.px, 0.px)
                 card.layoutParams = layoutParams
+
+                tvMovieName.text = searchMovieItem.title
             }
 
             setOnClickListener {
-                onItemClickListener?.let { it(SearchMovieItem) }
+                onItemClickListener?.let { it(searchMovieItem) }
             }
 
         }
