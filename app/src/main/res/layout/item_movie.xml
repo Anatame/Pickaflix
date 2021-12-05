@@ -3,7 +3,7 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardBackgroundColor="@android:color/transparent"
+    android:background="?attr/selectableItemBackgroundBorderless"
 android:layout_width="match_parent"
 android:orientation="vertical"
 android:layout_height="wrap_content">
@@ -15,8 +15,6 @@ android:layout_height="wrap_content">
     android:layout_height="264dp">
 
     <ImageView
-        android:focusable="true"
-        android:clickable="true"
         android:scaleType="centerCrop"
         android:id="@+id/iv_movieThumnail"
         android:layout_width="match_parent"
