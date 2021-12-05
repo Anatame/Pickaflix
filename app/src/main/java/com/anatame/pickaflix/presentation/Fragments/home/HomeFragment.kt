@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
@@ -96,7 +97,7 @@ class HomeFragment : Fragment() {
         movieAdapter = MovieAdapter()
         binding.rvMovies.apply {
             adapter = movieAdapter
-            layoutManager = GridLayoutManager(activity, 2)
+            layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         }
     }
 

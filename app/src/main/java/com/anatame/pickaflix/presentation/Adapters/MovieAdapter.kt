@@ -2,9 +2,11 @@ package com.anatame.pickaflix.presentation.Adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.anatame.pickaflix.common.Extras.CustomViews.px
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemMovieBinding
 import com.bumptech.glide.Glide
@@ -45,6 +47,10 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
                 .load(MovieItem.thumbnailUrl)
                 .into(holder.binding.ivMovieThumnail)
             holder.binding.apply {
+                val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
+                layoutParams.setMargins(8.px, 16.px, 0.px, 0.px)
+                card.layoutParams = layoutParams
+
                 tvMovieName.text = MovieItem.title
                 tvReleaseDate.text = MovieItem.releaseDate
                 tvMovieLength.text = MovieItem.length

@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="142dp"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp">
+    app:cardBackgroundColor="@android:color/transparent"
+android:layout_width="match_parent"
+android:orientation="vertical"
+android:layout_height="wrap_content">
+
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    app:cardBackgroundColor="#F48FB1"
+    android:layout_height="264dp">
+
+    <ImageView
+        android:focusable="true"
+        android:clickable="true"
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_movieThumnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</com.google.android.material.card.MaterialCardView>
+
+
+<TextView
+    android:id="@+id/tv_movieName"
+    android:textColor="@color/white"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="16dp"
+    android:text="Arcane"
+    android:textAlignment="center"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/iv_movieThumnail"
-            android:layout_width="0dp"
-            android:layout_height="206dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tv_movieName"
+            android:id="@+id/tvReleaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="2021"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvMovieLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="TextView"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_movieThumnail" />
-
-        <TextView
-            android:id="@+id/tv_releaseDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movieName" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/tv_movieLength"
-            app:layout_constraintStart_toEndOf="@+id/tv_releaseDate"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movieName" />
-
-        <TextView
-            android:id="@+id/tv_movieLength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
+            android:text="153m"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movieName" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
+
