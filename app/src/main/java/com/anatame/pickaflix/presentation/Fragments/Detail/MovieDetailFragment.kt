@@ -1,11 +1,15 @@
 package com.anatame.pickaflix.presentation.Fragments.Detail
 
+import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
@@ -27,6 +31,22 @@ class MovieDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        Log.d("detailCreated", "detailCreated")
+
+        val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        // To get the correct window token, lets first get the currently focused view
+        var view = activity?.currentFocus;
+
+        // To get the window token when there is no currently focused view, we have a to create a view
+        if (view == null) {
+            view = View(activity);
+        }
+
+        // hide the keyboard
+        imm.hideSoftInputFromWindow(view.windowToken, 0);
+
 
         val transition: Transition = TransitionSet()
             .addTransition(ChangeTransform())
@@ -55,6 +75,7 @@ class MovieDetailFragment : Fragment() {
 
         return binding.root
     }
+
 
 
 }

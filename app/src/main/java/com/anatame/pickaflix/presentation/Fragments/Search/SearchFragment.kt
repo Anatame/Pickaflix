@@ -1,5 +1,6 @@
 package com.anatame.pickaflix.presentation.Fragments.Search
 
+import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -25,6 +26,10 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
 
 
 class SearchFragment : Fragment() {
@@ -47,12 +52,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding?.svSearchView?.requestFocus()
-
-        // show keyboard for searchview
-        val imgr = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        imgr.showSoftInput(binding?.svSearchView, InputMethodManager.SHOW_IMPLICIT)
-
+        binding?.svSearchView?.setOnQueryTextFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                showInputMethod(view.findFocus());
+            }
+        }
 
         var job: Job? = null
         binding?.svSearchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -80,7 +84,9 @@ class SearchFragment : Fragment() {
 
         })
 
+
         searchAdapter.setOnItemClickListener {searchMovieItem, imageView ->
+
             val destination = SearchFragmentDirections.actionNavigationSearchToNavigationDetail(
                 null,
                 imageView.transitionName,
@@ -92,6 +98,8 @@ class SearchFragment : Fragment() {
                 destination,
                 extras
             )
+
+            binding?.svSearchView?.setQuery("", false)
         }
 
         viewModel.searchList.observe(viewLifecycleOwner, Observer { response ->
@@ -120,6 +128,11 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    private fun showInputMethod(view: View) {
+        binding?.svSearchView?.isIconified = true;
+        binding?.svSearchView?.isIconified = false;
+    }
+
     private fun hideProgressBar() {
 //        paginationProgressBar.visibility = View.INVISIBLE
         Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
@@ -136,6 +149,12 @@ class SearchFragment : Fragment() {
         binding?.searchRV?.apply {
             adapter = searchAdapter
             layoutManager = GridLayoutManager(context, 2)
+
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
         }
     }
 

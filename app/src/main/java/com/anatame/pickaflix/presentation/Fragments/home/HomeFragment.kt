@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        postponeEnterTransition()
+
         homeViewModel =
             ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
@@ -108,6 +108,7 @@ class HomeFragment : Fragment() {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(context, 2)
 
+            postponeEnterTransition()
             viewTreeObserver.addOnPreDrawListener {
                 startPostponedEnterTransition()
                 true

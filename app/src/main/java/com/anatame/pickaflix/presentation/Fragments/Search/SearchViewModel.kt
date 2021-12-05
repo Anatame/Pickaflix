@@ -22,6 +22,8 @@ class SearchViewModel constructor(
 
     fun getSearch(searchTerm: String){
 
+        Log.d("searchViewModelMethod", "called")
+
         viewModelScope.launch(Dispatchers.IO){
             searchList.postValue(Resource.Loading())
             val response = parser.getSearchItem(searchTerm)
