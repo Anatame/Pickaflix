@@ -2,7 +2,9 @@ package com.anatame.pickaflix.presentation.Adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +39,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((MovieItem) -> Unit)? = null
+    private var onItemClickListener: ((MovieItem, ImageView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val MovieItem = differ.currentList[position]
@@ -50,6 +52,8 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
                 val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(8.px, 16.px, 0.px, 0.px)
                 card.layoutParams = layoutParams
+                ViewCompat.setTransitionName(ivMovieThumnail, "iv$position")
+            //    ivMovieThumnail.transitionName = "iv$position"
 
                 tvMovieName.text = MovieItem.title
                 tvReleaseDate.text = MovieItem.releaseDate
@@ -57,13 +61,13 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
             }
 
             setOnClickListener {
-                onItemClickListener?.let { it(MovieItem) }
+                onItemClickListener?.let { it(MovieItem, holder.binding.ivMovieThumnail) }
             }
 
         }
     }
 
-    fun setOnItemClickListener(listener: (MovieItem) -> Unit) {
+    fun setOnItemClickListener(listener: (MovieItem, ImageView) -> Unit) {
         onItemClickListener = listener
     }
 

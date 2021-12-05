@@ -15,8 +15,8 @@ android:layout_height="wrap_content">
     android:layout_height="264dp">
 
     <ImageView
-        android:scaleType="centerCrop"
         android:id="@+id/iv_movieThumnail"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
+import com.bumptech.glide.Glide
 
 class MovieDetailFragment : Fragment() {
 
@@ -16,22 +19,23 @@ class MovieDetailFragment : Fragment() {
     private lateinit var binding: FragmentMovieDetailBinding
     val args: MovieDetailFragmentArgs by navArgs()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val movieData = args.movie
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
-        Toast.makeText(context, movieData.title, Toast.LENGTH_SHORT).show()
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+
+        Glide.with(this).load(args.movie.thumbnailUrl)
+            .into(binding.ivMovieThumnail)
+        ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
+
+        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
-    }
 
 }

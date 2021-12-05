@@ -39,10 +39,13 @@
         android:id="@+id/navigation_detail"
         android:name="com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment"
         android:label="movie_detail_fragment"
-        tools:layout="@layout/fragment_movie_detail" >
+        tools:layout="@layout/fragment_movie_detail">
         <argument
             android:name="movie"
             app:argType="com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem" />
+        <argument
+            android:name="imageID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"

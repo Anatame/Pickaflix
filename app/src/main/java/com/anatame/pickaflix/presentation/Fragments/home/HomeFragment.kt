@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,14 +48,20 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
 
 
-        movieAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("movie", it)
-            }
+        movieAdapter.setOnItemClickListener { movieItem, imageView ->
+//            val bundle = Bundle().apply {
+//                putSerializable("movie", movieItem)
+//                putString("imageID", imageView.transitionName)
+//            }
+            val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
+                movieItem,
+                imageView.transitionName
+            )
+            val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
 
             findNavController().navigate(
-                R.id.action_navigation_home_to_movieDetailFragment,
-                bundle
+                destination,
+                extras
             )
 
         }
@@ -98,6 +105,11 @@ class HomeFragment : Fragment() {
         binding.rvMovies.apply {
             adapter = movieAdapter
             layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
         }
     }
 
