@@ -1,20 +1,19 @@
 package com.anatame.pickaflix.presentation.Adapters
 
+import android.content.res.Resources.getSystem
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
-import com.anatame.pickaflix.databinding.ItemMovieBinding
-import com.anatame.pickaflix.databinding.SearchItemMovieBinding
-import com.bumptech.glide.Glide
+import com.anatame.pickaflix.databinding.SearchItemMovie2Binding
 
 class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolder>() {
 
-    inner class SearchItemViewHolder(val binding: SearchItemMovieBinding): RecyclerView.ViewHolder(binding.root)
+    inner class SearchItemViewHolder(val binding: SearchItemMovie2Binding): RecyclerView.ViewHolder(binding.root)
 
     private val differCallback = object : DiffUtil.ItemCallback<SearchMovieItem>() {
         override fun areItemsTheSame(oldItem: SearchMovieItem, newItem: SearchMovieItem): Boolean {
@@ -29,7 +28,7 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolde
     val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchItemViewHolder {
-        val binding = SearchItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = SearchItemMovie2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return SearchItemViewHolder(binding)
     }
@@ -45,11 +44,13 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolde
         Log.d("searchResponse", SearchMovieItem.toString())
 
         holder.itemView.apply {
-            Glide.with(this)
-                .load(SearchMovieItem.thumbnailSrc)
-                .into(holder.binding.ivMovieThumnail)
+//            Glide.with(this)
+//                .load(SearchMovieItem.thumbnailSrc)
+//                .into(holder.binding.ivMovieThumnail)
             holder.binding.apply {
-                tvMovieName.text = SearchMovieItem.title
+                val layoutParams: FrameLayout.LayoutParams = card.layoutParams as FrameLayout.LayoutParams
+                layoutParams.setMargins(16.px, 16.px, 0.px, 0.px)
+                card.layoutParams = layoutParams
             }
 
             setOnClickListener {
@@ -58,6 +59,8 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolde
 
         }
     }
+
+    val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
 
     fun setOnItemClickListener(listener: (SearchMovieItem) -> Unit) {
         onItemClickListener = listener

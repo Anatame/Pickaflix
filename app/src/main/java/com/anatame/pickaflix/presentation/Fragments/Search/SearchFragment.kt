@@ -120,7 +120,7 @@ class SearchFragment : Fragment() {
         searchAdapter = SearchRVAdapter()
         binding?.searchRV?.apply {
             adapter = searchAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, 2)
         }
     }
 
