@@ -43,18 +43,17 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val MovieItem = differ.currentList[position]
+        ViewCompat.setTransitionName(holder.binding.ivMovieThumnail, "iv$position")
 
         holder.itemView.apply {
             Glide.with(this)
                 .load(MovieItem.thumbnailUrl)
+                .centerCrop()
                 .into(holder.binding.ivMovieThumnail)
             holder.binding.apply {
                 val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(8.px, 16.px, 0.px, 0.px)
                 card.layoutParams = layoutParams
-                ViewCompat.setTransitionName(ivMovieThumnail, "iv$position")
-            //    ivMovieThumnail.transitionName = "iv$position"
-
                 tvMovieName.text = MovieItem.title
                 tvReleaseDate.text = MovieItem.releaseDate
                 tvMovieLength.text = MovieItem.length

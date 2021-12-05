@@ -1,6 +1,8 @@
 package com.anatame.pickaflix.presentation.Fragments.home
 
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +22,8 @@ class HomeViewModel @Inject constructor(
 
     init{
         getHomeScreenData()
-      //  getSliderItems()
+       Log.d("viewModelInitialized", "viewModelInitialized")
+        //  getSliderItems()
       //  getSearch()
        // getOkHttpSearchResult()
     }

@@ -39,8 +39,9 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        postponeEnterTransition()
         homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -104,8 +105,8 @@ class HomeFragment : Fragment() {
         movieAdapter = MovieAdapter()
         binding.rvMovies.apply {
             adapter = movieAdapter
-            layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-            postponeEnterTransition()
+            layoutManager = GridLayoutManager(context, 2)
+
             viewTreeObserver.addOnPreDrawListener {
                 startPostponedEnterTransition()
                 true

@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
-import androidx.transition.TransitionInflater
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 import com.bumptech.glide.Glide
+import android.widget.TextView
+import androidx.transition.*
+
 
 class MovieDetailFragment : Fragment() {
 
@@ -24,11 +27,20 @@ class MovieDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+
+        val transition: Transition = TransitionSet()
+            .addTransition(ChangeTransform())
+            .addTransition(ChangeBounds()) // For both
+
+
+        sharedElementEnterTransition = transition
+
+
 
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
 
         Glide.with(this).load(args.movie.thumbnailUrl)
+            .centerCrop()
             .into(binding.ivMovieThumnail)
         ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
 
@@ -39,3 +51,15 @@ class MovieDetailFragment : Fragment() {
 
 
 }
+
+
+// shared element tranistions specific to views
+
+//val transition: Transition = TransitionSet()
+//    .addTransition(ChangeTransform()).addTarget(TextView::class.java) // Only for TextViews
+//    .addTransition(ChangeImageTransform())
+//    .addTarget(ImageView::class.java) // Only for ImageViews
+//    .addTransition(ChangeBounds()) // For both
+//
+//
+//sharedElementEnterTransition = transition

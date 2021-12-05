@@ -63,8 +63,8 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.SearchItemViewHolde
 
         }
     }
-
-    val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
+    //extension function to convert dp to px
+   val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
 
     fun setOnItemClickListener(listener: (SearchMovieItem) -> Unit) {
         onItemClickListener = listener
