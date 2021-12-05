@@ -10,11 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.R
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
 import com.anatame.pickaflix.databinding.SearchItemMovie2Binding
 import com.bumptech.glide.Glide
@@ -47,10 +50,11 @@ class SearchRVAdapter(
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((SearchMovieItem) -> Unit)? = null
+    private var onItemClickListener: ((SearchMovieItem, ImageView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
         val searchMovieItem = differ.currentList[position]
+        ViewCompat.setTransitionName(holder.binding.ivMovieThumnail, "iv$position")
         Log.d("searchResponse", searchMovieItem.toString())
 
 
@@ -68,7 +72,10 @@ class SearchRVAdapter(
             }
 
             setOnClickListener {
-                onItemClickListener?.let { it(searchMovieItem) }
+                onItemClickListener?.let { it(
+                    searchMovieItem,
+                    holder.binding.ivMovieThumnail
+                )}
             }
 
         }
@@ -91,7 +98,7 @@ class SearchRVAdapter(
     //extension function to convert dp to px
    val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
 
-    fun setOnItemClickListener(listener: (SearchMovieItem) -> Unit) {
+    fun setOnItemClickListener(listener: (SearchMovieItem, ImageView) -> Unit) {
         onItemClickListener = listener
     }
 

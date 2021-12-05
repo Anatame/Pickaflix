@@ -44,14 +44,23 @@
         tools:layout="@layout/fragment_movie_detail">
         <argument
             android:name="movie"
-            app:argType="com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem" />
+            app:argType="com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem"
+            app:nullable="true" />
         <argument
             android:name="imageID"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
+        <argument android:name="searchMovieItem"
+            app:argType="com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.anatame.pickaflix.presentation.Fragments.Search.SearchFragment"
         android:label="search_fragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_detail"
+            app:destination="@id/navigation_detail" />
+    </fragment>
 </navigation>

@@ -22,8 +22,9 @@ import com.anatame.pickaflix.databinding.FragmentSearchBinding
 import com.anatame.pickaflix.presentation.Adapters.SearchRVAdapter
 import kotlinx.coroutines.*
 import androidx.core.content.ContextCompat.getSystemService
-
-
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
 
 
 class SearchFragment : Fragment() {
@@ -79,16 +80,18 @@ class SearchFragment : Fragment() {
 
         })
 
-        searchAdapter.setOnItemClickListener {
-//            val bundle = Bundle().apply {
-//                putSerializable("movie", it)
-//            }
-//
-//            findNavController().navigate(
-//                R.id.action_navigation_home_to_movieDetailFragment,
-//                bundle
-//            )
+        searchAdapter.setOnItemClickListener {searchMovieItem, imageView ->
+            val destination = SearchFragmentDirections.actionNavigationSearchToNavigationDetail(
+                null,
+                imageView.transitionName,
+                searchMovieItem
+            )
+            val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
 
+            findNavController().navigate(
+                destination,
+                extras
+            )
         }
 
         viewModel.searchList.observe(viewLifecycleOwner, Observer { response ->

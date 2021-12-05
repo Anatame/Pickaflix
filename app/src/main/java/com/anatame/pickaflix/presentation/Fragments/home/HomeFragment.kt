@@ -56,7 +56,8 @@ class HomeFragment : Fragment() {
 //            }
             val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
                 movieItem,
-                imageView.transitionName
+                imageView.transitionName,
+                null
             )
             val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
 

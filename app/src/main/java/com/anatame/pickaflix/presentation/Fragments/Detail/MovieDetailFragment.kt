@@ -32,16 +32,23 @@ class MovieDetailFragment : Fragment() {
             .addTransition(ChangeTransform())
             .addTransition(ChangeBounds()) // For both
 
-
         sharedElementEnterTransition = transition
-
-
 
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
 
-        Glide.with(this).load(args.movie.thumbnailUrl)
-            .centerCrop()
-            .into(binding.ivMovieThumnail)
+        if(args.movie != null){
+            Glide.with(this).load(args.movie?.thumbnailUrl)
+                .centerCrop()
+                .into(binding.ivMovieThumnail)
+        }
+
+        if(args.searchMovieItem != null){
+            Glide.with(this).load(args.searchMovieItem?.thumbnailSrc)
+                .centerCrop()
+                .into(binding.ivMovieThumnail)
+        }
+
+
         ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
 
         viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
