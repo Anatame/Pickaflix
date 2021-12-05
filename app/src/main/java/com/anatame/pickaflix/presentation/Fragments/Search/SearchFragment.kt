@@ -50,7 +50,7 @@ class SearchFragment : Fragment() {
         // show keyboard for searchview
         val imgr = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        imgr.showSoftInput(binding?.svSearchView, 0);
+        imgr.showSoftInput(binding?.svSearchView, InputMethodManager.SHOW_IMPLICIT)
 
 
         var job: Job? = null
