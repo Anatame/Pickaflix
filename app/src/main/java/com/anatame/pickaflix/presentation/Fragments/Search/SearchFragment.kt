@@ -117,7 +117,7 @@ class SearchFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        searchAdapter = SearchRVAdapter()
+        searchAdapter = SearchRVAdapter(requireContext())
         binding?.searchRV?.apply {
             adapter = searchAdapter
             layoutManager = GridLayoutManager(context, 2)

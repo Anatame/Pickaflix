@@ -102,7 +102,7 @@ class HomeFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        movieAdapter = MovieAdapter()
+        movieAdapter = context?.let { MovieAdapter(it) }!!
         binding.rvMovies.apply {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(context, 2)

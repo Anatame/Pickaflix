@@ -1,19 +1,26 @@
 package com.anatame.pickaflix.presentation.Adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Extras.CustomViews.px
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemMovieBinding
 import com.bumptech.glide.Glide
+import dagger.hilt.android.qualifiers.ApplicationContext
 
-class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
+class MovieAdapter(
+    val context: Context
+) : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
 
     inner class MovieItemViewHolder(val binding: ItemMovieBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -51,7 +58,8 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
                 .centerCrop()
                 .into(holder.binding.ivMovieThumnail)
             holder.binding.apply {
-                val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
+                val layoutParams: LinearLayout.LayoutParams =
+                    card.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(8.px, 16.px, 0.px, 0.px)
                 card.layoutParams = layoutParams
                 tvMovieName.text = MovieItem.title
@@ -63,6 +71,23 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
                 onItemClickListener?.let { it(MovieItem, holder.binding.ivMovieThumnail) }
             }
 
+        }
+
+
+        setRotateAnimation(position, holder)
+
+    }
+
+    private var lastPosition = -1
+
+    private fun setRotateAnimation(
+        position: Int,
+        holder: MovieItemViewHolder
+    ) {
+        if (position > lastPosition) {
+            val animation = AnimationUtils.loadAnimation(context, R.anim.rv_scaleup);
+            holder.itemView.startAnimation(animation);
+            lastPosition = position
         }
     }
 
