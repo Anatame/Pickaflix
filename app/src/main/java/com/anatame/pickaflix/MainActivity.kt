@@ -1,5 +1,6 @@
 package com.anatame.pickaflix
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import android.view.WindowManager
 
 import android.view.Window
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.anatame.pickaflix.databinding.ActivityMainBinding
@@ -19,10 +21,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var navController: NavController
+    val context: Context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        windowFlags(window)
+        windowFlags(context, window)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -49,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-fun windowFlags(window: Window){
+fun windowFlags(context: Context, window: Window){
     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    window.statusBarColor = Color.BLUE
+    window.statusBarColor = ContextCompat.getColor(context, R.color.BackgroundDark);
 }

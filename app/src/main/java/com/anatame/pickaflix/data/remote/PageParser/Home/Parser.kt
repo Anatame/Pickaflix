@@ -115,9 +115,9 @@ class Parser @Inject constructor() {
         }
     }
 
+
     fun getMovieList(page: Int = 0): ArrayList<MovieItem> {
         var movieItemListData = ArrayList<MovieItem>()
-
         val doc = Jsoup.connect(MOVIE_URL)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
@@ -137,7 +137,7 @@ class Parser @Inject constructor() {
 
             val movieFdiItem = movieItem.getElementsByClass("fdi-item")
             val movieReleaseDate = movieFdiItem[0]?.text()
-            val movieLength = movieFdiItem[1]?.text()
+            val movieLength = movieItem.getElementsByClass("fdi-duration").text()
 
             val movieQuality =  movieItem.getElementsByClass("pick film-poster-quality").text()
             val movieType = movieItem.getElementsByClass("fdi-type").text()
@@ -157,13 +157,13 @@ class Parser @Inject constructor() {
                 thumbnailUrl = imageSrc,
                 Url = movieHref,
                 releaseDate = movieReleaseDate!!,
-                length = movieLength!!,
+                length = movieLength,
                 quality = movieQuality,
                 movieType = movieType
             )
 
-                movieItemListData.add(movieItemData)
-            }
+            movieItemListData.add(movieItemData)
+        }
 
         return movieItemListData
 
@@ -171,7 +171,7 @@ class Parser @Inject constructor() {
 //               val item = mElement.getElementsByClass("film-poster")[index]
 //                Log.d(MOVIE_TAG, item.select("img")[0].absUrl("src"))
 //            }
-        }
+    }
 
     private fun LogMovieItems(
         movieTitle: String?,
@@ -195,7 +195,6 @@ class Parser @Inject constructor() {
                     """.trimIndent()
         )
     }
-
     fun getHttpSearchItem() {
         var client = OkHttpClient()
         val formBody= FormBody.Builder()

@@ -66,12 +66,6 @@ class HomeFragment : Fragment() {
                         movieAdapter.differ.submitList(movie)
                     }
                 }
-//                is Resource.Error -> {
-//                    hideProgressBar()
-//                    response.message?.let { message ->
-//                        Log.e(TAG, "An error occured: $message")
-//                    }
-//                }
                 is Resource.Loading -> {
                     showProgressBar()
                 }

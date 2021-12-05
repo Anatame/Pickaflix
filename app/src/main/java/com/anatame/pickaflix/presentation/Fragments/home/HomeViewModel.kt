@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(
     val Movies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
 
     init{
-      //  getHomeScreenData()
+        getHomeScreenData()
       //  getSliderItems()
       //  getSearch()
        // getOkHttpSearchResult()
@@ -37,18 +37,22 @@ class HomeViewModel @Inject constructor(
 //            parser.getSearchItem()
 //        }
 //    }
-
-    fun getSliderItems(){
-        viewModelScope.launch (Dispatchers.IO)  {
-            parser.getHeroSectionItems()
-        }
-    }
+//
+//    fun getSliderItems(){
+//        viewModelScope.launch (Dispatchers.IO)  {
+//            parser.getHeroSectionItems()
+//        }
+//    }
 
     fun getHomeScreenData(){
-        viewModelScope.launch (Dispatchers.IO) {
-            Movies.postValue(Resource.Loading())
-            val response = parser.getMovieList()
-            Movies.postValue(Resource.Success(response))
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Movies.postValue(Resource.Loading())
+                val response = parser.getMovieList()
+                Movies.postValue(Resource.Success(response))
+            } catch (e: Exception){
+                e.printStackTrace()
+            }
         }
     }
 

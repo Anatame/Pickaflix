@@ -9,11 +9,12 @@ import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SearchViewModel (
+class SearchViewModel constructor(
     private val parser: Parser = Parser()
 ) : ViewModel() {
 

@@ -62,5 +62,3 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
     }
 
 }
-
-

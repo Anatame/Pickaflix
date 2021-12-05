@@ -9,16 +9,19 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-       android:id="@+id/card"
+        android:id="@+id/card"
         android:layout_width="match_parent"
         app:cardBackgroundColor="#F48FB1"
         android:layout_height="264dp">
 
         <ImageView
+            android:focusable="true"
+            android:clickable="true"
             android:scaleType="centerCrop"
             android:id="@+id/iv_movieThumnail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
 
     </com.google.android.material.card.MaterialCardView>
 
