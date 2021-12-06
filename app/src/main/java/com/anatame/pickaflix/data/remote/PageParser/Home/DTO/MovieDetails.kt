@@ -3,6 +3,7 @@ package com.anatame.pickaflix.data.remote.PageParser.Home.DTO
 import com.anatame.pickaflix.data.remote.PageParser.Home.getBackgroundImageUrl
 
 data class MovieDetails(
+    val movieTrailerUrl: String,
     val movieDataID: String,
     val movieTitle : String,
     val movieQuality: String,

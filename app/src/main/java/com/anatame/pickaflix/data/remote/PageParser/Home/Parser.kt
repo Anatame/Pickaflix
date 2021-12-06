@@ -3,10 +3,7 @@ package com.anatame.pickaflix.data.remote.PageParser.Home
 import android.util.Log
 import com.anatame.pickaflix.common.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.common.Constants.MOVIE_URL
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SeasonItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.*
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -40,11 +37,32 @@ class Parser @Inject constructor() {
             )
         }
 
-        Log.d("seasonData", seasonList.toString())
+        Log.d("seasonData",
+            """
+            ${seasonList.toString()}
+            ${getEpisodes(seasonList[0].seasonDataID)}
+            
+            """.trimIndent()
+        )
     }
 
-    fun getEpisodes(seasonID: String){
+    fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
+        val episodeList = ArrayList<EpisodeItem>()
 
+        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/season/episodes/$seasonID")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000 * 5)
+            .get()
+
+        val episodeItems = doc.getElementsByClass("eps-item")
+        episodeItems.forEach { item ->
+            episodeList.add(
+                EpisodeItem(item.attr("title"), item.attr("data-id"))
+            )
+        }
+
+        return episodeList
     }
 
     fun getMovieDetails(movieName: String): MovieDetails {
@@ -58,6 +76,7 @@ class Parser @Inject constructor() {
             .maxBodySize(0)
             .timeout(1000 * 5)
             .get()
+
 
         val movieItems = doc.getElementsByClass("page-detail")
         movieItems.forEach { element ->
@@ -79,6 +98,9 @@ class Parser @Inject constructor() {
             var production = ""
             var casts = ""
             val movieDataID = movieItem.getElementsByClass("detail_page-watch").attr("data-id")
+            val movieTrailer = doc.getElementById("iframe-trailer")
+                ?.attr("data-src")
+                .toString()
 
             val elements = movieItem.getElementsByClass("row-line")
             elements.forEach { item ->
@@ -133,6 +155,7 @@ class Parser @Inject constructor() {
 //                )
 
             movieDetail = MovieDetails(
+                        movieTrailer,
                         movieDataID,
                         movieTitle,
                         movieQuality,
