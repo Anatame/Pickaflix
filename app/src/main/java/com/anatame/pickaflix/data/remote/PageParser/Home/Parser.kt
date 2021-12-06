@@ -3,6 +3,7 @@ package com.anatame.pickaflix.data.remote.PageParser.Home
 import android.util.Log
 import com.anatame.pickaflix.common.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.common.Constants.MOVIE_URL
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
 import okhttp3.FormBody
@@ -22,7 +23,9 @@ const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
 
-    fun getMovieDetails(movieName: String) {
+    fun getMovieDetails(movieName: String): MovieDetails {
+        lateinit var movieDetail: MovieDetails
+
         val url = "https://fmoviesto.cc${movieName}"
         val doc = Jsoup.connect(url)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
@@ -42,7 +45,6 @@ class Parser @Inject constructor() {
             val movieRating = statItems[1]?.text()
             val movieLength = statsContainer[0].allElements.last()?.text()
             val movieDescription = movieItem.getElementsByClass("description").text()
-
             val movieBackgroundCoverUrl =
                 movieItem.getElementsByClass("w_b-cover").attr("style").getBackgroundImageUrl()
             var country = ""
@@ -50,8 +52,7 @@ class Parser @Inject constructor() {
             var released = ""
             var production = ""
             var casts = ""
-            var tags = ""
-
+            val movieDataID = movieItem.getElementsByClass("detail_page-watch").attr("data-id")
 
             val elements = movieItem.getElementsByClass("row-line")
             elements.forEach { item ->
@@ -88,23 +89,40 @@ class Parser @Inject constructor() {
                 }
             }
 
-                Log.d(
-                    "movieDetailsHtml", """
-                $movieTitle
-                $movieQuality
-                $movieRating
-                $movieLength
-                $movieDescription
-                $movieBackgroundCoverUrl
-                
-                $country
-                $genre
-                $released
-                $production
-                $casts
-            """.trimIndent()
+//                Log.d(
+//                    "movieDetailsHtml", """
+//                $movieTitle
+//                $movieQuality
+//                $movieRating
+//                $movieLength
+//                $movieDescription
+//                $movieBackgroundCoverUrl
+//
+//                $country
+//                $genre
+//                $released
+//                $production
+//                $casts
+//            """.trimIndent()
+//                )
+
+            movieDetail = MovieDetails(
+                        movieDataID,
+                        movieTitle,
+                        movieQuality,
+                        movieRating!!,
+                        movieLength!!,
+                        movieDescription,
+                        movieBackgroundCoverUrl,
+                        country,
+                        genre,
+                        released,
+                        production,
+                        casts
                 )
             }
+
+        return movieDetail
     }
 
     fun getSearchItem(searchTerm: String): ArrayList<SearchMovieItem> {

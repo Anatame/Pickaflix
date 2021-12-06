@@ -1,5 +1,6 @@
 package com.anatame.pickaflix.presentation.Fragments.Detail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
@@ -12,7 +13,8 @@ class MovieDetailViewModel (
 
     fun getMovieDetails(movieSrc: String){
         viewModelScope.launch (Dispatchers.IO) {
-            parser.getMovieDetails(movieSrc)
+            val response = parser.getMovieDetails(movieSrc)
+            Log.d("movieDetailViewModel", response.toString())
         }
     }
 }
