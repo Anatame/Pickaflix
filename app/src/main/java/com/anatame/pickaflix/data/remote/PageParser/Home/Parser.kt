@@ -22,12 +22,12 @@ const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
 
-    fun getMovieDetails(movieName: String){
+    fun getMovieDetails(movieName: String) {
         val url = "https://fmoviesto.cc${movieName}"
         val doc = Jsoup.connect(url)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
-            .timeout(1000*5)
+            .timeout(1000 * 5)
             .get()
 
         val movieItems = doc.getElementsByClass("page-detail")
@@ -43,18 +43,68 @@ class Parser @Inject constructor() {
             val movieLength = statsContainer[0].allElements.last()?.text()
             val movieDescription = movieItem.getElementsByClass("description").text()
 
-            val movieBackgroundCoverUrl = movieItem.getElementsByClass("w_b-cover").attr("style").getBackgroundImageUrl()
+            val movieBackgroundCoverUrl =
+                movieItem.getElementsByClass("w_b-cover").attr("style").getBackgroundImageUrl()
+            var country = ""
+            var genre = ""
+            var released = ""
+            var production = ""
+            var casts = ""
+            var tags = ""
 
-            Log.d("movieDetailsHtml", """
+
+            val elements = movieItem.getElementsByClass("row-line")
+            elements.forEach { item ->
+                if (item.select("span").text() == "Country:") country = item.select("a").text()
+                if (item.select("span").text() == "Genre:") {
+                    item.select("a").forEach { g ->
+                        if(genre.isNotEmpty()){
+                            genre += ", ${g.text()}"
+                        } else {
+                            genre = g.text()
+                        }
+                    }
+                }
+                if (item.select("span").text() == "Released:") released = item.text()
+                if (item.select("span").text() == "Production:") {
+                    item.select("a").forEach { p ->
+                        if(production.isNotEmpty()){
+                            production += ", ${p.text()}"
+                        } else {
+                            production = p.text()
+                        }
+
+                    }
+                }
+
+                if (item.select("span").text() == "Casts:") {
+                    item.select("a").forEach { c ->
+                        if(casts.isNotEmpty()){
+                            casts += ", ${c.text()}"
+                        } else {
+                            casts = c.text()
+                        }
+                    }
+                }
+            }
+
+                Log.d(
+                    "movieDetailsHtml", """
                 $movieTitle
                 $movieQuality
                 $movieRating
                 $movieLength
                 $movieDescription
                 $movieBackgroundCoverUrl
-            """.trimIndent())
-        }
-
+                
+                $country
+                $genre
+                $released
+                $production
+                $casts
+            """.trimIndent()
+                )
+            }
     }
 
     fun getSearchItem(searchTerm: String): ArrayList<SearchMovieItem> {
@@ -130,11 +180,7 @@ class Parser @Inject constructor() {
             val sliderItem = element.allElements[0]
 
             val sliderDivStyle = sliderItem.attr("style")
-            val backgroundImageUrl = sliderDivStyle.substring(
-                (sliderDivStyle.indexOf('(') + 1),
-                sliderDivStyle.indexOf(')')
-            )
-
+            val backgroundImageUrl = sliderDivStyle.getBackgroundImageUrl()
             val anchor = sliderItem.select("a")
             val movieHref = anchor.attr("href")
             val movieTitle = anchor.attr("title")
