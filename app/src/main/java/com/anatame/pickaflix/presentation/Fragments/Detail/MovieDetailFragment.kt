@@ -32,8 +32,43 @@ class MovieDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        Log.d("detailCreated", "detailCreated")
+        hideKeyboard()
 
+        val transition: Transition = TransitionSet()
+            .addTransition(ChangeTransform())
+            .addTransition(ChangeBounds()) // For both
+
+        sharedElementEnterTransition = transition
+
+        binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
+
+        if(args.movie != null){
+            Glide.with(this).load(args.movie?.thumbnailUrl)
+                .centerCrop()
+                .into(binding.ivMovieThumnail)
+            viewModel.getMovieDetails(args.movie?.Url.toString())
+        }
+
+        if(args.searchMovieItem != null){
+            Glide.with(this).load(args.searchMovieItem?.thumbnailSrc)
+                .centerCrop()
+                .into(binding.ivMovieThumnail)
+
+            // get movie details passing the src
+            viewModel.getMovieDetails(args.searchMovieItem?.src.toString())
+            Log.d("MOvieDetailUrl", args.searchMovieItem?.src.toString())
+        }
+
+
+        ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
+
+
+
+        return binding.root
+    }
+
+    private fun hideKeyboard() {
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
 
         // To get the correct window token, lets first get the currently focused view
@@ -46,36 +81,7 @@ class MovieDetailFragment : Fragment() {
 
         // hide the keyboard
         imm.hideSoftInputFromWindow(view.windowToken, 0);
-
-
-        val transition: Transition = TransitionSet()
-            .addTransition(ChangeTransform())
-            .addTransition(ChangeBounds()) // For both
-
-        sharedElementEnterTransition = transition
-
-        binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
-
-        if(args.movie != null){
-            Glide.with(this).load(args.movie?.thumbnailUrl)
-                .centerCrop()
-                .into(binding.ivMovieThumnail)
-        }
-
-        if(args.searchMovieItem != null){
-            Glide.with(this).load(args.searchMovieItem?.thumbnailSrc)
-                .centerCrop()
-                .into(binding.ivMovieThumnail)
-        }
-
-
-        ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
-
-        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
-
-        return binding.root
     }
-
 
 
 }

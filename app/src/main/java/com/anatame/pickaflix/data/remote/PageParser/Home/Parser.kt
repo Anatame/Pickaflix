@@ -8,7 +8,6 @@ import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.jsoup.Connection
 import org.jsoup.Jsoup
 import javax.inject.Inject
 
@@ -22,6 +21,41 @@ import javax.inject.Inject
 const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
+
+    fun getMovieDetails(movieName: String){
+        val url = "https://fmoviesto.cc${movieName}"
+        val doc = Jsoup.connect(url)
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000*5)
+            .get()
+
+        val movieItems = doc.getElementsByClass("page-detail")
+        movieItems.forEach { element ->
+            val movieItem = element.allElements[0]
+            val headerContainer = movieItem.getElementsByClass("heading-name")
+            val statsContainer = movieItem.getElementsByClass("stats")
+            val statItems = statsContainer[0].getElementsByClass("mr-3")
+
+            val movieTitle = headerContainer.select("a").text()
+            val movieQuality = movieItem.getElementsByClass("btn-quality").text()
+            val movieRating = statItems[1]?.text()
+            val movieLength = statsContainer[0].allElements.last()?.text()
+            val movieDescription = movieItem.getElementsByClass("description").text()
+
+            val movieBackgroundCoverUrl = movieItem.getElementsByClass("w_b-cover").attr("style").getBackgroundImageUrl()
+
+            Log.d("movieDetailsHtml", """
+                $movieTitle
+                $movieQuality
+                $movieRating
+                $movieLength
+                $movieDescription
+                $movieBackgroundCoverUrl
+            """.trimIndent())
+        }
+
+    }
 
     fun getSearchItem(searchTerm: String): ArrayList<SearchMovieItem> {
         val searchItemList = ArrayList<SearchMovieItem>()
@@ -115,7 +149,6 @@ class Parser @Inject constructor() {
             """.trimIndent())
         }
     }
-
 
     fun getMovieList(page: Int = 0): ArrayList<MovieItem> {
         var movieItemListData = ArrayList<MovieItem>()
@@ -231,4 +264,12 @@ class Parser @Inject constructor() {
 
         }
     }
+}
+
+
+fun String.getBackgroundImageUrl(): String{
+    return this.substring(
+        (this.indexOf('(') + 1),
+        this.indexOf(')')
+    )
 }
