@@ -21,6 +21,32 @@ const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
 
+    fun getServers(episodeID: String = "8328"){
+        var serverList = ArrayList<ServerItem>()
+
+        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/episode/servers/$episodeID")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000 * 5)
+            .get()
+
+        var serverDataID = ""
+        var serverName = ""
+        doc.body().select("a").forEach { item ->
+            serverName = item.text()
+            serverDataID = item.attr("data-id")
+
+            serverList.add(ServerItem(
+                serverName,
+                serverDataID
+            ))
+        }
+
+        Log.d("serverList", """
+            $serverList
+        """.trimIndent())
+    }
+
     fun getSeasons(showDataID: String = "39495"){
         val seasonList = ArrayList<SeasonItem>()
 
@@ -61,7 +87,7 @@ class Parser @Inject constructor() {
                 EpisodeItem(item.attr("title"), item.attr("data-id"))
             )
         }
-
+        getServers(episodeList[0].episodeDataID)
         return episodeList
     }
 
