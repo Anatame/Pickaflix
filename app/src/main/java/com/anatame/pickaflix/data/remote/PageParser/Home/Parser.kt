@@ -6,6 +6,7 @@ import com.anatame.pickaflix.common.Constants.MOVIE_URL
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SearchMovieItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.SeasonItem
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,8 +24,33 @@ const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
 
+    fun getSeasons(showDataID: String = "39495"){
+        val seasonList = ArrayList<SeasonItem>()
+
+        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/tv/seasons/$showDataID")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000 * 5)
+            .get()
+
+        val dropDownItem = doc.getElementsByClass("dropdown-item")
+        dropDownItem.forEach { item ->
+            seasonList.add(
+                SeasonItem(item.text(), item.attr("data-id"))
+            )
+        }
+
+        Log.d("seasonData", seasonList.toString())
+    }
+
+    fun getEpisodes(seasonID: String){
+
+    }
+
     fun getMovieDetails(movieName: String): MovieDetails {
         lateinit var movieDetail: MovieDetails
+
+        getSeasons()
 
         val url = "https://fmoviesto.cc${movieName}"
         val doc = Jsoup.connect(url)
