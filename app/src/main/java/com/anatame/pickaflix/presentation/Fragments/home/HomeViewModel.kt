@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,10 +20,12 @@ class HomeViewModel @Inject constructor(
     private val parser: Parser
 ) : ViewModel() {
     val Movies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
+    val sliderItems: MutableLiveData<Resource<List<HeroItem>>> = MutableLiveData()
 
     init{
         getHomeScreenData()
        Log.d("viewModelInitialized", "viewModelInitialized")
+        getSliderItems()
         //  getSliderItems()
       //  getSearch()
        // getOkHttpSearchResult()
@@ -41,11 +44,17 @@ class HomeViewModel @Inject constructor(
 //        }
 //    }
 //
-//    fun getSliderItems(){
-//        viewModelScope.launch (Dispatchers.IO)  {
-//            parser.getHeroSectionItems()
-//        }
-//    }
+    fun getSliderItems(){
+        viewModelScope.launch (Dispatchers.IO)  {
+            try {
+                sliderItems.postValue(Resource.Loading())
+                val response =  parser.getHeroSectionItems()
+                sliderItems.postValue(Resource.Success(response))
+            } catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
 
     fun getHomeScreenData(){
         viewModelScope.launch(Dispatchers.IO) {

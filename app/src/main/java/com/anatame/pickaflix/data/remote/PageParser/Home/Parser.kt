@@ -22,7 +22,7 @@ const val MOVIE_TAG = "movieItemList"
 class Parser @Inject constructor() {
 
     fun getServers(episodeID: String = "8328"){
-        var serverList = ArrayList<ServerItem>()
+        val serverList = ArrayList<ServerItem>()
 
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/episode/servers/$episodeID")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
@@ -45,6 +45,25 @@ class Parser @Inject constructor() {
         Log.d("serverList", """
             $serverList
         """.trimIndent())
+    }
+
+    fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
+        val episodeList = ArrayList<EpisodeItem>()
+
+        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/season/episodes/$seasonID")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000 * 5)
+            .get()
+
+        val episodeItems = doc.getElementsByClass("eps-item")
+        episodeItems.forEach { item ->
+            episodeList.add(
+                EpisodeItem(item.attr("title"), item.attr("data-id"))
+            )
+        }
+        getServers(episodeList[0].episodeDataID)
+        return episodeList
     }
 
     fun getSeasons(showDataID: String = "39495"){
@@ -70,25 +89,6 @@ class Parser @Inject constructor() {
             
             """.trimIndent()
         )
-    }
-
-    fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
-        val episodeList = ArrayList<EpisodeItem>()
-
-        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/season/episodes/$seasonID")
-            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-            .maxBodySize(0)
-            .timeout(1000 * 5)
-            .get()
-
-        val episodeItems = doc.getElementsByClass("eps-item")
-        episodeItems.forEach { item ->
-            episodeList.add(
-                EpisodeItem(item.attr("title"), item.attr("data-id"))
-            )
-        }
-        getServers(episodeList[0].episodeDataID)
-        return episodeList
     }
 
     fun getMovieDetails(movieName: String): MovieDetails {
@@ -261,7 +261,9 @@ class Parser @Inject constructor() {
 
     }
 
-    fun getHeroSectionItems(){
+    fun getHeroSectionItems() : ArrayList<HeroItem>{
+        val heroItemList = ArrayList<HeroItem>()
+
         val doc = Jsoup.connect(MOVIE_URL)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
@@ -286,7 +288,15 @@ class Parser @Inject constructor() {
                 href: $movieHref
                 movieCaption: $movieCaption
             """.trimIndent())
+
+            heroItemList.add(HeroItem(
+                backgroundImageUrl,
+                movieTitle,
+                movieHref,
+            ))
         }
+
+        return heroItemList
     }
 
     fun getMovieList(page: Int = 0): ArrayList<MovieItem> {

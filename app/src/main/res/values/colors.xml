@@ -9,8 +9,9 @@
     <color name="white">#FFFFFFFF</color>
 
 <!--    <color name="BackgroundDark">#1F121F</color>-->
-    <color name="BackgroundDark">#12121F</color>
-    <color name="PrimaryText">#F7F7F7</color>
+<!--    <color name="BackgroundDark">#12121F</color> -->
+
+    <color name="BackgroundDark">#14131E</color>
 
     <color name="UnselectedIconColor">#626262</color>
 

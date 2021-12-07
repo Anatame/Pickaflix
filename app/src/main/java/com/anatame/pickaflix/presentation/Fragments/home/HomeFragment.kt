@@ -1,12 +1,9 @@
 package com.anatame.pickaflix.presentation.Fragments.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,13 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
+import com.anatame.pickaflix.presentation.Adapters.HeroPagerAdapter
 import com.anatame.pickaflix.presentation.Adapters.MovieAdapter
-import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +24,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
     lateinit var movieAdapter: MovieAdapter
+    lateinit var heroPagerAdapter: HeroPagerAdapter
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -47,6 +43,7 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         setupRecyclerView()
+        setupHeroViewHolder()
 
 
         movieAdapter.setOnItemClickListener { movieItem, imageView ->
@@ -82,6 +79,23 @@ class HomeFragment : Fragment() {
             }
         })
 
+        homeViewModel.sliderItems.observe(viewLifecycleOwner, Observer { response ->
+            when(response) {
+                is Resource.Success -> {
+                    hideProgressBar()
+                    response.data?.let { movie ->
+                        heroPagerAdapter.differ.submitList(movie)
+                    }
+                }
+                is Resource.Loading -> {
+                    showProgressBar()
+                }
+            }
+        })
+
+
+
+
         binding.ibSearchButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
         }
@@ -113,6 +127,13 @@ class HomeFragment : Fragment() {
                 startPostponedEnterTransition()
                 true
             }
+        }
+    }
+
+    private fun setupHeroViewHolder(){
+        heroPagerAdapter = context?.let { HeroPagerAdapter(it) }!!
+        binding.vpHeroPager.apply {
+            adapter = heroPagerAdapter
         }
     }
 
