@@ -11,10 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
+import com.anatame.pickaflix.domain.models.CategoryItem
+import com.anatame.pickaflix.domain.models.HomeItem
 import com.anatame.pickaflix.presentation.Adapters.HeroPagerAdapter
+import com.anatame.pickaflix.presentation.Adapters.HomeRVAdapter
 import com.anatame.pickaflix.presentation.Adapters.MovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,11 +29,10 @@ class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
-    lateinit var movieAdapter: MovieAdapter
-    lateinit var heroPagerAdapter: HeroPagerAdapter
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    lateinit var homeRvAdapter: HomeRVAdapter
+    lateinit var homeRvItemList: ArrayList<HomeItem>
+
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -42,56 +47,58 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        homeRvItemList = ArrayList()
         setupRecyclerView()
-        setupHeroViewHolder()
+
+        val categoryName: String = "Trending"
+        var categoryItemList = homeViewModel.Movies
+
+        var pagerList = homeViewModel.sliderItems
 
 
-        movieAdapter.setOnItemClickListener { movieItem, imageView ->
-//            val bundle = Bundle().apply {
-//                putSerializable("movie", movieItem)
-//                putString("imageID", imageView.transitionName)
-//            }
-            val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
-                movieItem,
-                imageView.transitionName,
+        val categoryItem: CategoryItem = CategoryItem(
+            categoryName,
+            categoryItemList
+        )
+
+        homeRvItemList.add(
+            HomeItem(
+                pagerList,
                 null
             )
-            val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
+        )
 
-            findNavController().navigate(
-                destination,
-                extras
+        homeRvItemList.add(
+            HomeItem(
+                null,
+                categoryItem
             )
+        )
+//
+//        homeRvAdapter = context?.let { HomeRVAdapter(it, homeRvItemList) }!!
+//        setupRecyclerView()
 
-        }
+//
+//        movieAdapter.setOnItemClickListener { movieItem, imageView ->
+////            val bundle = Bundle().apply {
+////                putSerializable("movie", movieItem)
+////                putString("imageID", imageView.transitionName)
+////            }
+//            val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
+//                movieItem,
+//                imageView.transitionName,
+//                null
+//            )
+//            val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
+//
+//            findNavController().navigate(
+//                destination,
+//                extras
+//            )
+//
+//        }
+//
 
-        homeViewModel.Movies.observe(viewLifecycleOwner, Observer { response ->
-            when(response) {
-                is Resource.Success -> {
-                    hideProgressBar()
-                    response.data?.let { movie ->
-                        movieAdapter.differ.submitList(movie)
-                    }
-                }
-                is Resource.Loading -> {
-                    showProgressBar()
-                }
-            }
-        })
-
-        homeViewModel.sliderItems.observe(viewLifecycleOwner, Observer { response ->
-            when(response) {
-                is Resource.Success -> {
-                    hideProgressBar()
-                    response.data?.let { movie ->
-                        heroPagerAdapter.differ.submitList(movie)
-                    }
-                }
-                is Resource.Loading -> {
-                    showProgressBar()
-                }
-            }
-        })
 
 
 
@@ -117,10 +124,16 @@ class HomeFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        movieAdapter = context?.let { MovieAdapter(it) }!!
-        binding.rvMovies.apply {
-            adapter = movieAdapter
-            layoutManager = GridLayoutManager(context, 2)
+
+        homeRvAdapter = HomeRVAdapter(
+            requireContext(),
+            viewLifecycleOwner,
+            homeRvItemList
+        )
+
+        binding.rvHome.apply {
+            adapter =  homeRvAdapter
+            layoutManager = LinearLayoutManager(context)
 
             postponeEnterTransition()
             viewTreeObserver.addOnPreDrawListener {
@@ -130,12 +143,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupHeroViewHolder(){
-        heroPagerAdapter = context?.let { HeroPagerAdapter(it) }!!
-        binding.vpHeroPager.apply {
-            adapter = heroPagerAdapter
-        }
-    }
+
 
 
     override fun onDestroyView() {

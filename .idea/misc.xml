@@ -13,6 +13,9 @@
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/fragment_notifications.xml" value="0.1082427536231884" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/fragment_saved.xml" value="0.10190217391304347" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/fragment_search.xml" value="0.1480978260869565" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/home_rv_item.xml" value="0.12635869565217392" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_hero_viewpager_holder.xml" value="0.11956521739130435" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_home_category.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_movie.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/movie_detail_fragment.xml" value="0.11548913043478261" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/pager_hero_tem.xml" value="0.12635869565217392" />
