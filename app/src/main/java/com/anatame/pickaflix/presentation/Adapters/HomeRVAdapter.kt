@@ -9,11 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.common.Resource
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.domain.models.HomeItem
 import com.anatame.pickaflix.databinding.ItemHeroViewpagerHolderBinding
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
-import dagger.hilt.android.scopes.ViewModelScoped
 
 class HomeRVAdapter(
     val context: Context,
@@ -84,11 +82,10 @@ class HomeRVAdapter(
 
             }
 
-            else -> {
+            1 -> {
                 holder as CategoryViewHolder
                 holder.rvItemBinding.apply {
-                    tvCategoryName.text = homeItemList[position]
-                        .categoryItem!!.categoryName
+                    tvCategoryName.text = "Trending Movies"
 
                     val adapter = MovieAdapter(context)
                     rvCategoryItems.adapter = adapter
@@ -99,7 +96,7 @@ class HomeRVAdapter(
                     )
 
                     homeItemList[position].categoryItem!!.
-                    categoryItemList.observe(lifeCycleOwner, Observer { response ->
+                    movieItemList.observe(lifeCycleOwner, Observer { response ->
                             when(response) {
                                 is Resource.Success -> {
                                     response.data?.let { movie ->
@@ -110,6 +107,60 @@ class HomeRVAdapter(
                                 }
                             }
                         })
+                }
+            }
+            2 -> {
+                holder as CategoryViewHolder
+                holder.rvItemBinding.apply {
+                    tvCategoryName.text = "Trending Shows"
+
+                    val adapter = MovieAdapter(context)
+                    rvCategoryItems.adapter = adapter
+                    rvCategoryItems.layoutManager = LinearLayoutManager(
+                        context,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
+
+                    homeItemList[position].categoryItem!!.
+                    trendingShows.observe(lifeCycleOwner, Observer { response ->
+                        when(response) {
+                            is Resource.Success -> {
+                                response.data?.let { movie ->
+                                    adapter.differ.submitList(movie)
+                                }
+                            }
+                            is Resource.Loading -> {
+                            }
+                        }
+                    })
+                }
+            }
+            3 -> {
+                holder as CategoryViewHolder
+                holder.rvItemBinding.apply {
+                    tvCategoryName.text = "Latest Movies"
+
+                    val adapter = MovieAdapter(context)
+                    rvCategoryItems.adapter = adapter
+                    rvCategoryItems.layoutManager = LinearLayoutManager(
+                        context,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
+
+                    homeItemList[position].categoryItem!!.
+                    latestMovies.observe(lifeCycleOwner, Observer { response ->
+                        when(response) {
+                            is Resource.Success -> {
+                                response.data?.let { movie ->
+                                    adapter.differ.submitList(movie)
+                                }
+                            }
+                            is Resource.Loading -> {
+                            }
+                        }
+                    })
                 }
             }
         }

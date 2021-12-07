@@ -13,6 +13,7 @@
         android:layout_marginTop="16dp"
         android:textSize="18dp"
         android:text="TextView"
+        android:textFontWeight="600"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +23,7 @@
         android:id="@+id/rv_categoryItems"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

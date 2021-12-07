@@ -2,7 +2,6 @@ package com.anatame.pickaflix.presentation.Fragments.home
 
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,8 +18,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val parser: Parser
 ) : ViewModel() {
-    val Movies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
     val sliderItems: MutableLiveData<Resource<List<HeroItem>>> = MutableLiveData()
+    val movies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
+    val trendingShows: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
+    val latestMovies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
 
     init{
         getHomeScreenData()
@@ -59,9 +60,34 @@ class HomeViewModel @Inject constructor(
     fun getHomeScreenData(){
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Movies.postValue(Resource.Loading())
+                movies.postValue(Resource.Loading())
+
                 val response = parser.getMovieList()
-                Movies.postValue(Resource.Success(response))
+
+                val trendingMovies: ArrayList<MovieItem> = ArrayList()
+                response.forEachIndexed{index, item ->
+                    if(index in 0..23){
+                        trendingMovies.add(item)
+                    }
+                }
+
+                val trendingShowItems: ArrayList<MovieItem> = ArrayList()
+                response.forEachIndexed{index, item ->
+                    if(index in 24..47){
+                        trendingShowItems.add(item)
+                    }
+                }
+
+                val latestMovieItems: ArrayList<MovieItem> = ArrayList()
+                response.forEachIndexed{index, item ->
+                    if(index in 48..73){
+                        latestMovieItems.add(item)
+                    }
+                }
+
+                movies.postValue(Resource.Success(trendingMovies))
+                trendingShows.postValue(Resource.Success(trendingShowItems))
+                latestMovies.postValue(Resource.Success(latestMovieItems))
             } catch (e: Exception){
                 e.printStackTrace()
             }

@@ -6,22 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
-import com.anatame.pickaflix.common.Resource
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.domain.models.CategoryItem
 import com.anatame.pickaflix.domain.models.HomeItem
-import com.anatame.pickaflix.presentation.Adapters.HeroPagerAdapter
 import com.anatame.pickaflix.presentation.Adapters.HomeRVAdapter
-import com.anatame.pickaflix.presentation.Adapters.MovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,14 +43,17 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
 
         val categoryName: String = "Trending"
-        var categoryItemList = homeViewModel.Movies
 
+        var movieItemList = homeViewModel.movies
         var pagerList = homeViewModel.sliderItems
+        var trendingShows = homeViewModel.trendingShows
+        var latestMovies = homeViewModel.latestMovies
 
 
         val categoryItem: CategoryItem = CategoryItem(
-            categoryName,
-            categoryItemList
+            movieItemList,
+            trendingShows,
+            latestMovies
         )
 
         homeRvItemList.add(
@@ -68,12 +63,16 @@ class HomeFragment : Fragment() {
             )
         )
 
-        homeRvItemList.add(
-            HomeItem(
-                null,
-                categoryItem
+        for(i in 1..3){
+            homeRvItemList.add(
+                HomeItem(
+                    null,
+                    categoryItem
+                )
             )
-        )
+        }
+
+
 //
 //        homeRvAdapter = context?.let { HomeRVAdapter(it, homeRvItemList) }!!
 //        setupRecyclerView()
