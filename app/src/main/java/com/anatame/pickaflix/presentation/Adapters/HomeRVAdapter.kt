@@ -94,6 +94,8 @@ class HomeRVAdapter(
                         LinearLayoutManager.HORIZONTAL,
                         false
                     )
+                    rvCategoryItems.setHasFixedSize(true);
+                    rvCategoryItems.setNestedScrollingEnabled(false);
 
                     homeItemList[position].categoryItem!!.
                     movieItemList.observe(lifeCycleOwner, Observer { response ->
@@ -121,6 +123,8 @@ class HomeRVAdapter(
                         LinearLayoutManager.HORIZONTAL,
                         false
                     )
+                    rvCategoryItems.setHasFixedSize(true);
+                    rvCategoryItems.setNestedScrollingEnabled(false);
 
                     homeItemList[position].categoryItem!!.
                     trendingShows.observe(lifeCycleOwner, Observer { response ->
@@ -148,6 +152,9 @@ class HomeRVAdapter(
                         LinearLayoutManager.HORIZONTAL,
                         false
                     )
+
+                    rvCategoryItems.setHasFixedSize(true);
+                    rvCategoryItems.setNestedScrollingEnabled(false);
 
                     homeItemList[position].categoryItem!!.
                     latestMovies.observe(lifeCycleOwner, Observer { response ->
