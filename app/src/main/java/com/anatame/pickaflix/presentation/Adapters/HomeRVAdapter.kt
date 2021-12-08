@@ -32,7 +32,9 @@ class HomeRVAdapter(
             0 -> 0
             1 -> 1
             2 -> 2
-            else -> 3
+            3 -> 3
+            4 -> 4
+            else -> 5
         }
     }
 
@@ -114,7 +116,7 @@ class HomeRVAdapter(
             2 -> {
                 holder as CategoryViewHolder
                 holder.rvItemBinding.apply {
-                    tvCategoryName.text = "Trending Shows"
+                    tvCategoryName.text = "Popular Shows"
 
                     val adapter = MovieAdapter(context)
                     rvCategoryItems.adapter = adapter
@@ -158,6 +160,66 @@ class HomeRVAdapter(
 
                     homeItemList[position].categoryItem!!.
                     latestMovies.observe(lifeCycleOwner, Observer { response ->
+                        when(response) {
+                            is Resource.Success -> {
+                                response.data?.let { movie ->
+                                    adapter.differ.submitList(movie)
+                                }
+                            }
+                            is Resource.Loading -> {
+                            }
+                        }
+                    })
+                }
+            }
+            4 -> {
+                holder as CategoryViewHolder
+                holder.rvItemBinding.apply {
+                    tvCategoryName.text = "New TV Shows"
+
+                    val adapter = MovieAdapter(context)
+                    rvCategoryItems.adapter = adapter
+                    rvCategoryItems.layoutManager = LinearLayoutManager(
+                        context,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
+
+                    rvCategoryItems.setHasFixedSize(true);
+                    rvCategoryItems.setNestedScrollingEnabled(false);
+
+                    homeItemList[position].categoryItem!!.
+                    latestShows.observe(lifeCycleOwner, Observer { response ->
+                        when(response) {
+                            is Resource.Success -> {
+                                response.data?.let { movie ->
+                                    adapter.differ.submitList(movie)
+                                }
+                            }
+                            is Resource.Loading -> {
+                            }
+                        }
+                    })
+                }
+            }
+            5 -> {
+                holder as CategoryViewHolder
+                holder.rvItemBinding.apply {
+                    tvCategoryName.text = "Coming Soon"
+
+                    val adapter = MovieAdapter(context)
+                    rvCategoryItems.adapter = adapter
+                    rvCategoryItems.layoutManager = LinearLayoutManager(
+                        context,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
+
+                    rvCategoryItems.setHasFixedSize(true);
+                    rvCategoryItems.setNestedScrollingEnabled(false);
+
+                    homeItemList[position].categoryItem!!.
+                    comingSoon.observe(lifeCycleOwner, Observer { response ->
                         when(response) {
                             is Resource.Success -> {
                                 response.data?.let { movie ->

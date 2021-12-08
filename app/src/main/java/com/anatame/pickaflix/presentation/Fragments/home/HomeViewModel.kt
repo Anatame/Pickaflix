@@ -22,6 +22,9 @@ class HomeViewModel @Inject constructor(
     val movies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
     val trendingShows: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
     val latestMovies: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
+    val latestShows: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
+    val comingSoon: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
+
 
     init{
         getHomeScreenData()
@@ -80,14 +83,33 @@ class HomeViewModel @Inject constructor(
 
                 val latestMovieItems: ArrayList<MovieItem> = ArrayList()
                 response.forEachIndexed{index, item ->
-                    if(index in 48..73){
+                    if(index in 48..71){
                         latestMovieItems.add(item)
                     }
                 }
 
+                val latestShowItems: ArrayList<MovieItem> = ArrayList()
+                response.forEachIndexed{index, item ->
+                    if(index in 72..95){
+                        latestShowItems.add(item)
+                    }
+                }
+
+                val comingSoonItems: ArrayList<MovieItem> = ArrayList()
+                response.forEachIndexed{index, item ->
+                    if(index in 96..120){
+                        comingSoonItems.add(item)
+                    }
+                }
+
+
+
                 movies.postValue(Resource.Success(trendingMovies))
                 trendingShows.postValue(Resource.Success(trendingShowItems))
                 latestMovies.postValue(Resource.Success(latestMovieItems))
+                latestShows.postValue(Resource.Success(latestShowItems))
+                comingSoon.postValue(Resource.Success(comingSoonItems))
+
             } catch (e: Exception){
                 e.printStackTrace()
             }

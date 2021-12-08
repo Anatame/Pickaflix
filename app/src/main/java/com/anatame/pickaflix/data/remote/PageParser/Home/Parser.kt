@@ -320,11 +320,30 @@ class Parser @Inject constructor() {
 
             val movieFdiItem = movieItem.getElementsByClass("fdi-item")
             val movieReleaseDate = movieFdiItem[0]?.text()
-            val movieLength = movieItem.getElementsByClass("fdi-duration").text()
-
+            var movieLength = movieItem.getElementsByClass("fdi-duration").text()
             val movieQuality =  movieItem.getElementsByClass("pick film-poster-quality").text()
             val movieType = movieItem.getElementsByClass("fdi-type").text()
 
+            if(movieType == "TV"){
+                for(it in movieItem
+                    .getElementsByClass("film-detail")
+                    .select("span")){
+
+                    if(it.text().contains("EPS")) {
+                        movieLength = it.text()
+                        break
+                    }
+                }
+            }
+
+            if(movieLength.isEmpty()) movieLength = movieType
+
+            Log.d("movieEps", """
+                   $movieType
+                   $movieTitle
+                   ${movieLength}
+                   ${movieLength.length}
+                   """.trimIndent())
 //            LogMovieItems(
 //                movieTitle,
 //                movieHref,

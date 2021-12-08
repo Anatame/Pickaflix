@@ -48,12 +48,16 @@ class HomeFragment : Fragment() {
         var pagerList = homeViewModel.sliderItems
         var trendingShows = homeViewModel.trendingShows
         var latestMovies = homeViewModel.latestMovies
+        var latestShows = homeViewModel.latestShows
+        var comingSoon = homeViewModel.comingSoon
 
 
         val categoryItem: CategoryItem = CategoryItem(
             movieItemList,
             trendingShows,
-            latestMovies
+            latestMovies,
+            latestShows,
+            comingSoon
         )
 
         homeRvItemList.add(
@@ -63,7 +67,7 @@ class HomeFragment : Fragment() {
             )
         )
 
-        for(i in 1..3){
+        for(i in 1..5){
             homeRvItemList.add(
                 HomeItem(
                     null,
