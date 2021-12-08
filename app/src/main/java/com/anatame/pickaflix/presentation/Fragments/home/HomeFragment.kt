@@ -16,6 +16,7 @@ import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.domain.models.CategoryItem
 import com.anatame.pickaflix.domain.models.HomeItem
+import com.anatame.pickaflix.domain.models.NestedScrollState
 import com.anatame.pickaflix.presentation.Adapters.HomeRVAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -132,11 +133,19 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
 
+
+
         homeRvAdapter = HomeRVAdapter(
             requireActivity(),
             viewLifecycleOwner,
             homeRvItemList,
-            homeViewModel.scrollState4
+            NestedScrollState(
+                homeViewModel.scrollState1,
+                homeViewModel.scrollState2,
+                homeViewModel.scrollState3,
+                homeViewModel.scrollState4,
+                homeViewModel.scrollState5,
+            )
         )
 
         binding.rvHome.apply {

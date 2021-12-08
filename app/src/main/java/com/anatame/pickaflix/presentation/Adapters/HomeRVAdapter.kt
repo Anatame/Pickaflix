@@ -25,13 +25,14 @@ import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.domain.models.HomeItem
 import com.anatame.pickaflix.databinding.ItemHeroViewpagerHolderBinding
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
+import com.anatame.pickaflix.domain.models.NestedScrollState
 import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
 
 class HomeRVAdapter(
     val activity: Context,
     val lifeCycleOwner: LifecycleOwner,
     val homeItemList: List<HomeItem>,
-    val scrollState: MutableLiveData<Int>
+    val nestedScrollState: NestedScrollState
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -103,7 +104,8 @@ class HomeRVAdapter(
                     holder,
                     position,
                     "Trending Movies",
-                    homeItemList[position].categoryItem!!.movieItemList
+                    homeItemList[position].categoryItem!!.movieItemList,
+                    nestedScrollState.scrollState1
                 )
             }
             2 -> {
@@ -111,7 +113,8 @@ class HomeRVAdapter(
                     holder,
                     position,
                     "Popular Shows",
-                    homeItemList[position].categoryItem!!.trendingShows
+                    homeItemList[position].categoryItem!!.trendingShows,
+                    nestedScrollState.scrollState2
                 )
             }
             3 -> {
@@ -119,7 +122,8 @@ class HomeRVAdapter(
                     holder,
                     position,
                     "Latest Movies",
-                    homeItemList[position].categoryItem!!.latestMovies
+                    homeItemList[position].categoryItem!!.latestMovies,
+                    nestedScrollState.scrollState3
                 )
             }
             4 -> {
@@ -127,7 +131,8 @@ class HomeRVAdapter(
                     holder,
                     position,
                     "New TV Shows",
-                    homeItemList[position].categoryItem!!.latestShows
+                    homeItemList[position].categoryItem!!.latestShows,
+                    nestedScrollState.scrollState4
                 )
             }
             5 -> {
@@ -135,7 +140,8 @@ class HomeRVAdapter(
                     holder,
                     position,
                     "Coming Soon!",
-                    homeItemList[position].categoryItem!!.comingSoon
+                    homeItemList[position].categoryItem!!.comingSoon,
+                    nestedScrollState.scrollState5
                 )
             }
         }
@@ -146,6 +152,7 @@ class HomeRVAdapter(
         position: Int,
         itemName: String,
         itemList: MutableLiveData<Resource<List<MovieItem>>>,
+        scrollState: MutableLiveData<Int>
     ) {
         holder as CategoryViewHolder
         holder.rvItemBinding.apply {
@@ -166,15 +173,6 @@ class HomeRVAdapter(
             })
 
 
-//            rvCategoryItems.apply {
-//                postponeEnterTransition(activity as Activity)
-//                viewTreeObserver.addOnPreDrawListener {
-//                    startPostponedEnterTransition(activity as Activity)
-//                    true
-//                }
-//            }
-
-//            homeItemList[position].categoryItem!!.movieItemList
             itemList.observe(
                 lifeCycleOwner,
                 Observer { response ->
