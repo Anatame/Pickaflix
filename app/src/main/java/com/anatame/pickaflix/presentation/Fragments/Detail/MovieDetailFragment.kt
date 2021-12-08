@@ -63,6 +63,7 @@ class MovieDetailFragment : Fragment() {
 
         ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
 
+        Toast.makeText(context, "${args.imageID} ${binding.ivMovieThumnail.transitionName}", Toast.LENGTH_SHORT).show()
 
 
         return binding.root

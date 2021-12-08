@@ -1,20 +1,31 @@
 package com.anatame.pickaflix.presentation.Adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.postponeEnterTransition
+import androidx.core.app.ActivityCompat.startPostponedEnterTransition
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.domain.models.HomeItem
 import com.anatame.pickaflix.databinding.ItemHeroViewpagerHolderBinding
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
+import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
 
 class HomeRVAdapter(
-    val context: Context,
+    val activity: Context,
     val lifeCycleOwner: LifecycleOwner,
     val homeItemList: List<HomeItem>
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -60,180 +71,136 @@ class HomeRVAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Toast.makeText(context, "home size $itemCount", Toast.LENGTH_SHORT).show()
+     //   Toast.makeText(activity, "home size $itemCount", Toast.LENGTH_SHORT).show()
         when(holder.itemViewType){
             0 -> {
                 holder as ViewPagerViewHolder
-                val adapter = HeroPagerAdapter(context)
+                val adapter = HeroPagerAdapter(activity)
                 holder.pagerBinding.vpHeroPager.adapter = adapter
                 homeItemList[position].pagerList!!.observe(lifeCycleOwner, Observer { response ->
                     when(response) {
                         is Resource.Success -> {
                             response.data?.let { movie ->
-                                Toast.makeText(context, "Finished", Toast.LENGTH_SHORT)
+                                Toast.makeText(activity, "Finished", Toast.LENGTH_SHORT)
                                     .show()
                                 adapter.differ.submitList(movie)
                             }
                         }
                         is Resource.Loading -> {
-                            Toast.makeText(context, "Loading", Toast.LENGTH_SHORT)
+                            Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }
                 })
 
             }
-
             1 -> {
-                holder as CategoryViewHolder
-                holder.rvItemBinding.apply {
-                    tvCategoryName.text = "Trending Movies"
-
-                    val adapter = MovieAdapter(context)
-                    rvCategoryItems.adapter = adapter
-                    rvCategoryItems.layoutManager = LinearLayoutManager(
-                        context,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
-                    rvCategoryItems.setHasFixedSize(true);
-                    rvCategoryItems.setNestedScrollingEnabled(false);
-
-                    homeItemList[position].categoryItem!!.
-                    movieItemList.observe(lifeCycleOwner, Observer { response ->
-                            when(response) {
-                                is Resource.Success -> {
-                                    response.data?.let { movie ->
-                                        adapter.differ.submitList(movie)
-                                    }
-                                }
-                                is Resource.Loading -> {
-                                }
-                            }
-                        })
-                }
+                categoryItemHolderSetup(
+                    holder,
+                    position,
+                    "Trending Movies",
+                    homeItemList[position].categoryItem!!.movieItemList
+                )
             }
             2 -> {
-                holder as CategoryViewHolder
-                holder.rvItemBinding.apply {
-                    tvCategoryName.text = "Popular Shows"
-
-                    val adapter = MovieAdapter(context)
-                    rvCategoryItems.adapter = adapter
-                    rvCategoryItems.layoutManager = LinearLayoutManager(
-                        context,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
-                    rvCategoryItems.setHasFixedSize(true);
-                    rvCategoryItems.setNestedScrollingEnabled(false);
-
-                    homeItemList[position].categoryItem!!.
-                    trendingShows.observe(lifeCycleOwner, Observer { response ->
-                        when(response) {
-                            is Resource.Success -> {
-                                response.data?.let { movie ->
-                                    adapter.differ.submitList(movie)
-                                }
-                            }
-                            is Resource.Loading -> {
-                            }
-                        }
-                    })
-                }
+                categoryItemHolderSetup(
+                    holder,
+                    position,
+                    "Popular Shows",
+                    homeItemList[position].categoryItem!!.trendingShows
+                )
             }
             3 -> {
-                holder as CategoryViewHolder
-                holder.rvItemBinding.apply {
-                    tvCategoryName.text = "Latest Movies"
-
-                    val adapter = MovieAdapter(context)
-                    rvCategoryItems.adapter = adapter
-                    rvCategoryItems.layoutManager = LinearLayoutManager(
-                        context,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
-
-                    rvCategoryItems.setHasFixedSize(true);
-                    rvCategoryItems.setNestedScrollingEnabled(false);
-
-                    homeItemList[position].categoryItem!!.
-                    latestMovies.observe(lifeCycleOwner, Observer { response ->
-                        when(response) {
-                            is Resource.Success -> {
-                                response.data?.let { movie ->
-                                    adapter.differ.submitList(movie)
-                                }
-                            }
-                            is Resource.Loading -> {
-                            }
-                        }
-                    })
-                }
+                categoryItemHolderSetup(
+                    holder,
+                    position,
+                    "Latest Movies",
+                    homeItemList[position].categoryItem!!.latestMovies
+                )
             }
             4 -> {
-                holder as CategoryViewHolder
-                holder.rvItemBinding.apply {
-                    tvCategoryName.text = "New TV Shows"
-
-                    val adapter = MovieAdapter(context)
-                    rvCategoryItems.adapter = adapter
-                    rvCategoryItems.layoutManager = LinearLayoutManager(
-                        context,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
-
-                    rvCategoryItems.setHasFixedSize(true);
-                    rvCategoryItems.setNestedScrollingEnabled(false);
-
-                    homeItemList[position].categoryItem!!.
-                    latestShows.observe(lifeCycleOwner, Observer { response ->
-                        when(response) {
-                            is Resource.Success -> {
-                                response.data?.let { movie ->
-                                    adapter.differ.submitList(movie)
-                                }
-                            }
-                            is Resource.Loading -> {
-                            }
-                        }
-                    })
-                }
+                categoryItemHolderSetup(
+                    holder,
+                    position,
+                    "New TV Shows",
+                    homeItemList[position].categoryItem!!.latestShows
+                )
             }
             5 -> {
-                holder as CategoryViewHolder
-                holder.rvItemBinding.apply {
-                    tvCategoryName.text = "Coming Soon"
-
-                    val adapter = MovieAdapter(context)
-                    rvCategoryItems.adapter = adapter
-                    rvCategoryItems.layoutManager = LinearLayoutManager(
-                        context,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
-
-                    rvCategoryItems.setHasFixedSize(true);
-                    rvCategoryItems.setNestedScrollingEnabled(false);
-
-                    homeItemList[position].categoryItem!!.
-                    comingSoon.observe(lifeCycleOwner, Observer { response ->
-                        when(response) {
-                            is Resource.Success -> {
-                                response.data?.let { movie ->
-                                    adapter.differ.submitList(movie)
-                                }
-                            }
-                            is Resource.Loading -> {
-                            }
-                        }
-                    })
-                }
+                categoryItemHolderSetup(
+                    holder,
+                    position,
+                    "Coming Soon!",
+                    homeItemList[position].categoryItem!!.comingSoon
+                )
             }
         }
     }
+
+    private fun categoryItemHolderSetup(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        itemName: String,
+        itemList: MutableLiveData<Resource<List<MovieItem>>>,
+    ) {
+        holder as CategoryViewHolder
+        holder.rvItemBinding.apply {
+            tvCategoryName.text = itemName
+
+            val adapter = MovieAdapter(activity)
+            rvCategoryItems.adapter = adapter
+            rvCategoryItems.layoutManager = LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            rvCategoryItems.setHasFixedSize(true);
+            rvCategoryItems.setNestedScrollingEnabled(false);
+
+            rvCategoryItems.apply {
+                postponeEnterTransition(activity as Activity)
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition(activity as Activity)
+                    true
+                }
+            }
+
+//            homeItemList[position].categoryItem!!.movieItemList
+            itemList.observe(
+                lifeCycleOwner,
+                Observer { response ->
+                    when (response) {
+                        is Resource.Success -> {
+                            response.data?.let { movie ->
+                                adapter.differ.submitList(movie)
+                            }
+                        }
+                        is Resource.Loading -> {
+                        }
+                    }
+                })
+
+            adapter.setOnItemClickListener {view, movieItem, imageView ->
+                startNavigation(holder.itemView, movieItem, imageView)
+            }
+        }
+    }
+
+    fun startNavigation(view: View, movieItem: MovieItem, imageView: ImageView){
+
+        val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
+            movieItem,
+            imageView.transitionName,
+            null
+        )
+        val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
+
+        view.findNavController().navigate(
+            destination,
+            extras
+        )
+    }
+
 
     override fun getItemCount(): Int {
         return homeItemList.size

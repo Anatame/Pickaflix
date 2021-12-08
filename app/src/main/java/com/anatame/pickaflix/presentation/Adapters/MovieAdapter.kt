@@ -2,6 +2,7 @@ package com.anatame.pickaflix.presentation.Adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -48,11 +49,14 @@ class MovieAdapter(
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((MovieItem, ImageView) -> Unit)? = null
+    private var onItemClickListener: ((View, MovieItem, ImageView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val MovieItem = differ.currentList[position]
-        ViewCompat.setTransitionName(holder.binding.ivMovieThumnail, "iv$position")
+        ViewCompat.setTransitionName(
+            holder.binding.ivMovieThumnail,
+            "iv$position ${MovieItem.Url}"
+        )
 
         holder.itemView.apply {
             Glide.with(this)
@@ -71,8 +75,8 @@ class MovieAdapter(
                 tvMovieLength.text = MovieItem.length
             }
 
-            setOnClickListener {
-                onItemClickListener?.let { it(MovieItem, holder.binding.ivMovieThumnail) }
+            setOnClickListener {view ->
+                onItemClickListener?.let { it(view, MovieItem, holder.binding.ivMovieThumnail) }
             }
 
         }
@@ -95,7 +99,7 @@ class MovieAdapter(
         }
     }
 
-    fun setOnItemClickListener(listener: (MovieItem, ImageView) -> Unit) {
+    fun setOnItemClickListener(listener: (View, MovieItem, ImageView) -> Unit) {
         onItemClickListener = listener
     }
 

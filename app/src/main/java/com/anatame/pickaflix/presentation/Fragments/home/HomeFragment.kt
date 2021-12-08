@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
 
 
 //
-//        homeRvAdapter = context?.let { HomeRVAdapter(it, homeRvItemList) }!!
+//        homeRvAdapter = activity?.let { HomeRVAdapter(it, homeRvItemList) }!!
 //        setupRecyclerView()
 
 //
@@ -129,14 +129,14 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView() {
 
         homeRvAdapter = HomeRVAdapter(
-            requireContext(),
+            requireActivity(),
             viewLifecycleOwner,
             homeRvItemList
         )
 
         binding.rvHome.apply {
             adapter =  homeRvAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(activity)
 
             postponeEnterTransition()
             viewTreeObserver.addOnPreDrawListener {
