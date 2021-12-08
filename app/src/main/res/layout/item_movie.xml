@@ -29,7 +29,6 @@
         android:id="@+id/tv_movieName"
         android:textColor="@color/white"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
         android:text="Arcane"
         android:textAlignment="center"
         android:paddingStart="8dp"
