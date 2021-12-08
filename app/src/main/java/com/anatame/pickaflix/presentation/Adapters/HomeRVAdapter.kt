@@ -3,6 +3,7 @@ package com.anatame.pickaflix.presentation.Adapters
 import android.app.Activity
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -190,7 +191,7 @@ class HomeRVAdapter(
 
             adapter.setOnItemClickListener {position, movieItem, imageView ->
                 startNavigation(holder.itemView, movieItem, imageView)
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     //doSomethingHere()
                 }, 300)
                 scrollState.postValue(position)
