@@ -279,6 +279,19 @@ class Parser @Inject constructor() {
             val anchor = sliderItem.select("a")
             val movieHref = anchor.attr("href")
             val movieTitle = anchor.attr("title")
+            val detailItem = sliderItem.select(".scd-item")
+            var movieDuration = ""
+            var movieRating = ""
+            detailItem.forEach { item ->
+                if(item.text().contains("Duration: ")) {
+                    movieDuration = item.select("strong").text()
+                }
+
+                if(item.text().contains("IMDB: ")) {
+                    movieRating = item.select("strong").text()
+                }
+            }
+            Log.d("detailItem", "$movieDuration $movieRating")
 
             val movieCaption = sliderItem.getElementsByClass("scd-item")[0]
 
@@ -293,6 +306,8 @@ class Parser @Inject constructor() {
                 backgroundImageUrl,
                 movieTitle,
                 movieHref,
+                movieDuration,
+                movieRating
             ))
         }
 

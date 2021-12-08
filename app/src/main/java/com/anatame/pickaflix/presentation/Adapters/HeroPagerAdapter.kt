@@ -51,6 +51,12 @@ class HeroPagerAdapter(
                 .load(heroItem.backgroundImageUrl)
                 .centerCrop()
                 .into(holder.binding.ivHero)
+
+            holder.binding.apply {
+                tvMovieName.text = heroItem.title
+                tvMovieLength.text = heroItem.duration
+                tvMovieRating.text = "IMBD: ${heroItem.rating}"
+            }
         }
     }
 
