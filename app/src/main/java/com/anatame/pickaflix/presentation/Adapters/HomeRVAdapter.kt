@@ -2,6 +2,8 @@ package com.anatame.pickaflix.presentation.Adapters
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +29,8 @@ import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
 class HomeRVAdapter(
     val activity: Context,
     val lifeCycleOwner: LifecycleOwner,
-    val homeItemList: List<HomeItem>
+    val homeItemList: List<HomeItem>,
+    val scrollState: MutableLiveData<Int>
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -156,14 +159,19 @@ class HomeRVAdapter(
             )
             rvCategoryItems.setHasFixedSize(true);
             rvCategoryItems.setNestedScrollingEnabled(false);
+            scrollState.observe(lifeCycleOwner, Observer{
+                (rvCategoryItems.layoutManager as LinearLayoutManager)
+                    .scrollToPositionWithOffset(it, 200)
+            })
 
-            rvCategoryItems.apply {
-                postponeEnterTransition(activity as Activity)
-                viewTreeObserver.addOnPreDrawListener {
-                    startPostponedEnterTransition(activity as Activity)
-                    true
-                }
-            }
+
+//            rvCategoryItems.apply {
+//                postponeEnterTransition(activity as Activity)
+//                viewTreeObserver.addOnPreDrawListener {
+//                    startPostponedEnterTransition(activity as Activity)
+//                    true
+//                }
+//            }
 
 //            homeItemList[position].categoryItem!!.movieItemList
             itemList.observe(
@@ -180,8 +188,12 @@ class HomeRVAdapter(
                     }
                 })
 
-            adapter.setOnItemClickListener {view, movieItem, imageView ->
+            adapter.setOnItemClickListener {position, movieItem, imageView ->
                 startNavigation(holder.itemView, movieItem, imageView)
+                Handler().postDelayed({
+                    //doSomethingHere()
+                }, 300)
+                scrollState.postValue(position)
             }
         }
     }

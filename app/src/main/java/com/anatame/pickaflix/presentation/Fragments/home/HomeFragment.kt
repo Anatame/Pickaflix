@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.domain.models.CategoryItem
@@ -41,6 +44,7 @@ class HomeFragment : Fragment() {
 
         homeRvItemList = ArrayList()
         setupRecyclerView()
+
 
         val categoryName: String = "Trending"
 
@@ -131,7 +135,8 @@ class HomeFragment : Fragment() {
         homeRvAdapter = HomeRVAdapter(
             requireActivity(),
             viewLifecycleOwner,
-            homeRvItemList
+            homeRvItemList,
+            homeViewModel.scrollState4
         )
 
         binding.rvHome.apply {
@@ -143,6 +148,7 @@ class HomeFragment : Fragment() {
                 startPostponedEnterTransition()
                 true
             }
+
         }
     }
 

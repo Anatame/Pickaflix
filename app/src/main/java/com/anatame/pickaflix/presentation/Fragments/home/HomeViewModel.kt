@@ -11,6 +11,7 @@ import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class HomeViewModel @Inject constructor(
     val latestShows: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
     val comingSoon: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
 
+    val scrollState4 = MutableLiveData(0)
 
     init{
         getHomeScreenData()

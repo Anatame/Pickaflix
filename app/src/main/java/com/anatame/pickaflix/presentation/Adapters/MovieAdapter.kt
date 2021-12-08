@@ -49,7 +49,7 @@ class MovieAdapter(
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((View, MovieItem, ImageView) -> Unit)? = null
+    private var onItemClickListener: ((Int, MovieItem, ImageView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val MovieItem = differ.currentList[position]
@@ -76,7 +76,7 @@ class MovieAdapter(
             }
 
             setOnClickListener {view ->
-                onItemClickListener?.let { it(view, MovieItem, holder.binding.ivMovieThumnail) }
+                onItemClickListener?.let { it(position, MovieItem, holder.binding.ivMovieThumnail) }
             }
 
         }
@@ -99,7 +99,7 @@ class MovieAdapter(
         }
     }
 
-    fun setOnItemClickListener(listener: (View, MovieItem, ImageView) -> Unit) {
+    fun setOnItemClickListener(listener: (Int, MovieItem, ImageView) -> Unit) {
         onItemClickListener = listener
     }
 
