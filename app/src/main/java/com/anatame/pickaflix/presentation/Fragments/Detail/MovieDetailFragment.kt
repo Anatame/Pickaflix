@@ -1,5 +1,6 @@
 package com.anatame.pickaflix.presentation.Fragments.Detail
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
@@ -10,18 +11,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 import com.bumptech.glide.Glide
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.*
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
+import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
+import com.google.android.material.chip.Chip
 
 
 class MovieDetailFragment : Fragment() {
@@ -94,6 +96,7 @@ class MovieDetailFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ResourceType")
     private fun setContent(movieDetails: MovieDetails){
         binding.apply {
             Glide.with(requireContext()).load(movieDetails.movieBackgroundCoverUrl)
@@ -104,6 +107,24 @@ class MovieDetailFragment : Fragment() {
             tvMovieRating.text = "IMDB: ${movieDetails.movieRating}"
             tvCaption.text = movieDetails.movieDescription
 //            tvMovieCaption.text = movieDetails.movieDescription
+            rvServers.apply {
+                adapter = ServerAdapter(listOf("VidCloud", "Hydrax"))
+                layoutManager = LinearLayoutManager(
+                    requireContext(),
+                    LinearLayoutManager.HORIZONTAL,
+                    false
+                )
+            }
+
+            var genreList: List<String> = movieDetails.genre.split(",").map { it.trim() }
+
+            Log.d("genreList", movieDetails.genre)
+
+            genreList.forEach { item ->
+                val chip = Chip(requireContext())
+                chip.text = item
+                cgGenre.addView(chip)
+            }
 
             ivBackBtn.setOnClickListener {
                 findNavController().popBackStack()
