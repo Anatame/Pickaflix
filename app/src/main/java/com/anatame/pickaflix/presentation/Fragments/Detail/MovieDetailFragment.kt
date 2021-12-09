@@ -3,6 +3,8 @@ package com.anatame.pickaflix.presentation.Fragments.Detail
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
@@ -19,7 +22,11 @@ import com.bumptech.glide.Glide
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.*
+import androidx.transition.ChangeBounds
+import androidx.transition.ChangeTransform
+import androidx.transition.Transition
+import androidx.transition.TransitionSet
+import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
@@ -90,8 +97,6 @@ class MovieDetailFragment : Fragment() {
 
         ViewCompat.setTransitionName(binding.ivHero, args.imageID)
 
-        Toast.makeText(context, "${args.imageID} ${binding.ivHero.transitionName}", Toast.LENGTH_SHORT).show()
-
 
         return binding.root
     }
@@ -114,8 +119,8 @@ class MovieDetailFragment : Fragment() {
                     LinearLayoutManager.HORIZONTAL,
                     false
                 )
-            }
 
+            }
             var genreList: List<String> = movieDetails.genre.split(",").map { it.trim() }
 
             Log.d("genreList", movieDetails.genre)
@@ -123,6 +128,8 @@ class MovieDetailFragment : Fragment() {
             genreList.forEach { item ->
                 val chip = Chip(requireContext())
                 chip.text = item
+//                chip.setTextAppearanceResource(R.style.ChipTextStyle_Selected)
+//                chip.chipBackgroundColor =  ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.PrimaryAccent))
                 cgGenre.addView(chip)
             }
 

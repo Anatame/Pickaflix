@@ -12,6 +12,7 @@
 <!--    <color name="BackgroundDark">#12121F</color> -->
 
     <color name="BackgroundDark">#14131E</color>
+    <color name="PrimaryAccent">#80C2FF</color>
 
     <color name="UnselectedIconColor">#626262</color>
 

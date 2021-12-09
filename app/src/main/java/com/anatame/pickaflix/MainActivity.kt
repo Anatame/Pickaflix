@@ -15,6 +15,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.anatame.pickaflix.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import android.content.res.ColorStateList
+
+
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -42,6 +46,19 @@ class MainActivity : AppCompatActivity() {
             )
         )
         navView.setupWithNavController(navController)
+
+        val iconColorStates = ColorStateList(
+            arrayOf(
+                intArrayOf(-android.R.attr.state_checked),
+                intArrayOf(android.R.attr.state_checked)
+            ), intArrayOf(
+                ContextCompat.getColor(this, R.color.UnselectedIconColor),
+                ContextCompat.getColor(this, R.color.PrimaryAccent)
+            )
+        )
+
+        navView.setItemIconTintList(iconColorStates)
+        navView.setItemTextColor(iconColorStates)
     }
 
     override fun onSupportNavigateUp(): Boolean {
