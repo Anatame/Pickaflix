@@ -17,7 +17,7 @@
         android:layout_height="264dp">
 
         <ImageView
-            android:id="@+id/iv_movieThumnail"
+            android:id="@+id/iv_movieThumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />

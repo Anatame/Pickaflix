@@ -1,6 +1,7 @@
 package com.anatame.pickaflix.data.remote.PageParser.Home
 
 import android.util.Log
+import com.anatame.pickaflix.common.Constants.HOST
 import com.anatame.pickaflix.common.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.common.Constants.MOVIE_URL
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.*
@@ -91,12 +92,21 @@ class Parser @Inject constructor() {
         )
     }
 
-    fun getMovieDetails(movieName: String): MovieDetails {
+
+//    fun getMovieDetailsFrom(movieSrc: String = "/tv/watch-the-flash-online-39535"){
+//        val doc = Jsoup.connect("https://$HOST$movieSrc").get()
+//        Log.d("detailFromPS", doc.toString())
+//
+//        val movieDetails = doc.getElementById("")
+//    }
+
+
+    fun getMovieDetails(movieSrc: String): MovieDetails {
         lateinit var movieDetail: MovieDetails
 
         getSeasons()
 
-        val url = "https://fmoviesto.cc${movieName}"
+        val url = "https://fmoviesto.cc${movieSrc}"
         val doc = Jsoup.connect(url)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)

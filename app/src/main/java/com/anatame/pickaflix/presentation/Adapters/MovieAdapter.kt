@@ -54,7 +54,7 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val MovieItem = differ.currentList[position]
         ViewCompat.setTransitionName(
-            holder.binding.ivMovieThumnail,
+            holder.binding.ivMovieThumbnail,
             "iv$position ${MovieItem.Url}"
         )
 
@@ -62,7 +62,7 @@ class MovieAdapter(
             Glide.with(this)
                 .load(MovieItem.thumbnailUrl)
                 .centerCrop()
-                .into(holder.binding.ivMovieThumnail)
+                .into(holder.binding.ivMovieThumbnail)
             holder.binding.apply {
                 // used for custom spacing in grid layout
 //                val layoutParams: LinearLayout.LayoutParams =
@@ -76,7 +76,7 @@ class MovieAdapter(
             }
 
             setOnClickListener {view ->
-                onItemClickListener?.let { it(position, MovieItem, holder.binding.ivMovieThumnail) }
+                onItemClickListener?.let { it(position, MovieItem, holder.binding.ivMovieThumbnail) }
             }
 
         }

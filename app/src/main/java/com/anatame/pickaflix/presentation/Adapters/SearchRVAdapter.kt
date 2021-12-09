@@ -54,7 +54,7 @@ class SearchRVAdapter(
 
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
         val searchMovieItem = differ.currentList[position]
-        ViewCompat.setTransitionName(holder.binding.ivMovieThumnail, "iv$position")
+        ViewCompat.setTransitionName(holder.binding.ivMovieThumbnail, "iv$position")
         Log.d("searchResponse", searchMovieItem.toString())
 
 
@@ -62,7 +62,7 @@ class SearchRVAdapter(
             Glide.with(this)
                 .load(searchMovieItem.thumbnailSrc)
                 .centerCrop()
-                .into(holder.binding.ivMovieThumnail)
+                .into(holder.binding.ivMovieThumbnail)
             holder.binding.apply {
                 val layoutParams: LinearLayout.LayoutParams = card.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(16.px, 16.px, 0.px, 0.px)
@@ -74,7 +74,7 @@ class SearchRVAdapter(
             setOnClickListener {
                 onItemClickListener?.let { it(
                     searchMovieItem,
-                    holder.binding.ivMovieThumnail
+                    holder.binding.ivMovieThumbnail
                 )}
             }
 

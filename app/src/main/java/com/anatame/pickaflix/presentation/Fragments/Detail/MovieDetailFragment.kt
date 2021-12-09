@@ -17,7 +17,11 @@ import androidx.navigation.fragment.navArgs
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 import com.bumptech.glide.Glide
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.transition.*
+import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 
 
 class MovieDetailFragment : Fragment() {
@@ -46,14 +50,14 @@ class MovieDetailFragment : Fragment() {
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
                 .centerCrop()
-                .into(binding.ivMovieThumnail)
+                .into(binding.ivHero)
             viewModel.getMovieDetails(args.movie?.Url.toString())
         }
 
         if(args.searchMovieItem != null){
             Glide.with(this).load(args.searchMovieItem?.thumbnailSrc)
                 .centerCrop()
-                .into(binding.ivMovieThumnail)
+                .into(binding.ivHero)
 
             // get movie details passing the src
             viewModel.getMovieDetails(args.searchMovieItem?.src.toString())
@@ -63,18 +67,48 @@ class MovieDetailFragment : Fragment() {
         args.heroItem?.let {
             Glide.with(this).load(it.backgroundImageUrl)
                 .centerCrop()
-                .into(binding.ivMovieThumnail)
+                .into(binding.ivHero)
 
             viewModel.getMovieDetails(it.source)
         }
 
+        viewModel.movieDetails.observe(viewLifecycleOwner, Observer { response->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let{
+                        setContent(it)
+                    }
+                }
+                is Resource.Loading -> {
+                Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+                    .show()
+                }
+            }
+        })
 
-        ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
+        ViewCompat.setTransitionName(binding.ivHero, args.imageID)
 
-        Toast.makeText(context, "${args.imageID} ${binding.ivMovieThumnail.transitionName}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "${args.imageID} ${binding.ivHero.transitionName}", Toast.LENGTH_SHORT).show()
 
 
         return binding.root
+    }
+
+    private fun setContent(movieDetails: MovieDetails){
+        binding.apply {
+            Glide.with(requireContext()).load(movieDetails.movieBackgroundCoverUrl)
+                .centerCrop()
+                .into(binding.ivHero)
+            tvMovieName.text = movieDetails.movieTitle
+            tvMovieLength.text = movieDetails.movieLength
+            tvMovieRating.text = "IMDB: ${movieDetails.movieRating}"
+            tvCaption.text = movieDetails.movieDescription
+//            tvMovieCaption.text = movieDetails.movieDescription
+
+            ivBackBtn.setOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
     }
 
     private fun hideKeyboard() {
