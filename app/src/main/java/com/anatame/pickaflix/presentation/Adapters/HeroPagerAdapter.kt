@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.databinding.PagerHeroTemBinding
 import android.content.Context
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import com.anatame.pickaflix.R
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.bumptech.glide.Glide
 
@@ -40,7 +43,7 @@ class HeroPagerAdapter(
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((MovieItem, ImageView) -> Unit)? = null
+    private var onItemClickListener: ((Int, HeroItem, ImageView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: HeroPagerViewHolder, position: Int) {
         val heroItem = differ.currentList[position]
@@ -56,11 +59,22 @@ class HeroPagerAdapter(
                 tvMovieName.text = heroItem.title
                 tvMovieLength.text = heroItem.duration
                 tvMovieRating.text = "IMBD: ${heroItem.rating}"
+                ViewCompat.setTransitionName(
+                    ivHero,
+                    "iv$position ${heroItem.source}"
+                )
+            }
+
+            setOnClickListener {view ->
+                onItemClickListener?.let { it(position, heroItem, holder.binding.ivHero) }
             }
         }
+
     }
 
-
+    fun setOnItemClickListener(listener: (Int, HeroItem, ImageView) -> Unit) {
+        onItemClickListener = listener
+    }
 
 
 //    fun setOnItemClickListener(listener: (MovieItem, ImageView) -> Unit) {

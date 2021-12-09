@@ -21,6 +21,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.domain.models.HomeItem
 import com.anatame.pickaflix.databinding.ItemHeroViewpagerHolderBinding
@@ -32,7 +33,8 @@ class HomeRVAdapter(
     val activity: Context,
     val lifeCycleOwner: LifecycleOwner,
     val homeItemList: List<HomeItem>,
-    val nestedScrollState: NestedScrollState
+    val nestedScrollState: NestedScrollState,
+    val viewPagerScrollState: MutableLiveData<Int>
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -97,6 +99,17 @@ class HomeRVAdapter(
                         }
                     }
                 })
+
+                viewPagerScrollState.observe(lifeCycleOwner, Observer{
+                    holder.pagerBinding.vpHeroPager.setCurrentItem(it, false)
+                })
+
+                adapter.setOnItemClickListener {position, heroItem, imageView ->
+                    startHeroNavigation(holder.itemView, heroItem, imageView)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        viewPagerScrollState.postValue(position)
+                    }, 300)
+                }
 
             }
             1 -> {
@@ -202,7 +215,24 @@ class HomeRVAdapter(
         val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
             movieItem,
             imageView.transitionName,
+            null,
             null
+        )
+        val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
+
+        view.findNavController().navigate(
+            destination,
+            extras
+        )
+    }
+
+    fun startHeroNavigation(view: View, heroItem: HeroItem, imageView: ImageView){
+
+        val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
+            null,
+            imageView.transitionName,
+            null,
+            heroItem
         )
         val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
 

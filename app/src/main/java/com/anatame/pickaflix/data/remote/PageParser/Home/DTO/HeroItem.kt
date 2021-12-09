@@ -1,5 +1,6 @@
 package com.anatame.pickaflix.data.remote.PageParser.Home.DTO
 
+import java.io.Serializable
 import java.time.Duration
 
 data class HeroItem(
@@ -8,4 +9,4 @@ data class HeroItem(
     val source: String,
     val duration: String,
     val rating: String
-)
+): Serializable

@@ -89,7 +89,8 @@ class SearchFragment : Fragment() {
             val destination = SearchFragmentDirections.actionNavigationSearchToNavigationDetail(
                 null,
                 imageView.transitionName,
-                searchMovieItem
+                searchMovieItem,
+                null
             )
             val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
 

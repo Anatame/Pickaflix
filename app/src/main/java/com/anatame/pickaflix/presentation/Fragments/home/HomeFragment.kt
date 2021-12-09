@@ -145,7 +145,8 @@ class HomeFragment : Fragment() {
                 homeViewModel.scrollState3,
                 homeViewModel.scrollState4,
                 homeViewModel.scrollState5,
-            )
+            ),
+            homeViewModel.viewPagerScrollState
         )
 
         binding.rvHome.apply {

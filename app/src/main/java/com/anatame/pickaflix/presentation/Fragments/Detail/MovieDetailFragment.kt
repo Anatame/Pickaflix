@@ -60,6 +60,14 @@ class MovieDetailFragment : Fragment() {
             Log.d("MOvieDetailUrl", args.searchMovieItem?.src.toString())
         }
 
+        args.heroItem?.let {
+            Glide.with(this).load(it.backgroundImageUrl)
+                .centerCrop()
+                .into(binding.ivMovieThumnail)
+
+            viewModel.getMovieDetails(it.source)
+        }
+
 
         ViewCompat.setTransitionName(binding.ivMovieThumnail, args.imageID)
 

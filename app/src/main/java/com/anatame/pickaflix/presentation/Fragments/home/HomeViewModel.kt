@@ -26,6 +26,8 @@ class HomeViewModel @Inject constructor(
     val latestShows: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
     val comingSoon: MutableLiveData<Resource<List<MovieItem>>> = MutableLiveData()
 
+    val viewPagerScrollState = MutableLiveData(0)
+
     val scrollState1 = MutableLiveData(0)
     val scrollState2 = MutableLiveData(0)
     val scrollState3 = MutableLiveData(0)
