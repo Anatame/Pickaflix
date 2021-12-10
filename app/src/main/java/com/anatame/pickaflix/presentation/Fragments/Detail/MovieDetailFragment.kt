@@ -218,6 +218,7 @@ class MovieDetailFragment : Fragment() {
                         """javascript:(function f() {
         document.querySelector('.ytp-cued-thumbnail-overlay-image').click();
         document.querySelector('.ytp-chrome-controls').style.display = 'none';
+        document.querySelector('.ytp-chrome-bottom').style.display = 'none';
         document.querySelector('.ytp-pause-overlay').style.display = 'none';
         document.querySelector('.ytp-show-cards-title').style.display = 'none';
         this.interval = setInterval(() => {
