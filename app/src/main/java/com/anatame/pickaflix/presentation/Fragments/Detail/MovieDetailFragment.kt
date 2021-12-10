@@ -3,7 +3,9 @@ package com.anatame.pickaflix.presentation.Fragments.Detail
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -13,7 +15,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.webkit.*
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
@@ -28,9 +32,12 @@ import androidx.transition.Transition
 import androidx.transition.TransitionSet
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.Resource
+import com.anatame.pickaflix.common.utils.BlockHosts
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
 import com.google.android.material.chip.Chip
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 
 class MovieDetailFragment : Fragment() {
@@ -113,7 +120,7 @@ class MovieDetailFragment : Fragment() {
             tvCaption.text = movieDetails.movieDescription
 //            tvMovieCaption.text = movieDetails.movieDescription
             rvServers.apply {
-                adapter = ServerAdapter(listOf("VidCloud", "Hydrax"))
+                adapter = ServerAdapter(listOf("UpCloud", "VidCloud", "Hydrax"))
                 layoutManager = LinearLayoutManager(
                     requireContext(),
                     LinearLayoutManager.HORIZONTAL,
@@ -132,6 +139,58 @@ class MovieDetailFragment : Fragment() {
 //                chip.chipBackgroundColor =  ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.PrimaryAccent))
                 cgGenre.addView(chip)
             }
+
+            tvCast.text = "Cast: ${movieDetails.casts}"
+            tvProduction.text = "Production: ${movieDetails.production}"
+
+            wvPlayer.webViewClient = WebViewClient()
+            wvPlayer.settings.javaScriptEnabled = true
+            wvPlayer.settings.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+
+            wvPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+            val map = HashMap<String, String>()
+            map.put("referer", "https://fmoviesto.cc")
+
+            wvPlayer.loadUrl(
+                "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z=",
+                map
+            )
+//            wvPlayer.loadUrl(
+//                "https://embed2.megaxfer.ru/embed2/c9ffb234a4a622dbfdb7d7e319778330",
+//                map
+//            )
+
+
+            wvPlayer.getSettings().setDomStorageEnabled(true);
+            wvPlayer.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT)
+            wvPlayer.getSettings().setAppCacheEnabled(true);
+            wvPlayer.getSettings().setAppCachePath(requireContext().getFilesDir().getAbsolutePath() + "/cache");
+            wvPlayer.getSettings().setDatabaseEnabled(true);
+            wvPlayer.getSettings().setDatabasePath(requireContext().getFilesDir().getAbsolutePath() + "/databases");
+
+            fun getTextWebResource(data: InputStream): WebResourceResponse {
+                return WebResourceResponse("text/plain", "UTF-8", data);
+            }
+
+            wvPlayer.webViewClient = object : WebViewClient() {
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+
+                    if (BlockHosts().hosts.contains(request!!.url.host)) {
+                        val textStream: InputStream = ByteArrayInputStream("".toByteArray())
+                        return getTextWebResource(textStream)
+                    }
+
+
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+            }
+
+
 
             ivBackBtn.setOnClickListener {
                 findNavController().popBackStack()

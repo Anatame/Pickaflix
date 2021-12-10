@@ -173,24 +173,10 @@ class Parser @Inject constructor() {
                 }
             }
 
-//                Log.d(
-//                    "movieDetailsHtml", """
-//                $movieTitle
-//                $movieQuality
-//                $movieRating
-//                $movieLength
-//                $movieDescription
-//                $movieBackgroundCoverUrl
-//
-//                $country
-//                $genre
-//                $released
-//                $production
-//                $casts
-//            """.trimIndent()
-//                )
+            val finalUrl = movieSrc.substring(1)
 
             movieDetail = MovieDetails(
+                "https://fmoviesto.cc/watch-${movieSrc}",
                         movieTrailer,
                         movieDataID,
                         movieTitle,
@@ -206,6 +192,8 @@ class Parser @Inject constructor() {
                         casts
                 )
             }
+
+        Log.d("MovieDetailsHTML", movieDetail.toString())
 
         return movieDetail
     }
