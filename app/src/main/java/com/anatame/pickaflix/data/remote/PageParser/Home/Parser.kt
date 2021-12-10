@@ -5,15 +5,17 @@ import com.anatame.pickaflix.common.Constants.HOST
 import com.anatame.pickaflix.common.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.common.Constants.MOVIE_URL
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.*
+import com.anatame.pickaflix.data.remote.retrofit.RetrofitInstance
+import com.anatame.pickaflix.data.remote.retrofit.VidData
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.Reader
+import java.net.URL
 import javax.inject.Inject
-
-
-
-
 
 
 
@@ -21,8 +23,12 @@ import javax.inject.Inject
 const val MOVIE_TAG = "movieItemList"
 
 class Parser @Inject constructor() {
+    suspend fun getVidSource(serverDataID: String): VidData{
+        val vidData = RetrofitInstance.api.getVidData("https://fmoviesto.cc/ajax/get_link/$serverDataID")
+        return vidData.body()!!
+    }
 
-    fun getServers(episodeID: String = "8328"){
+    fun getServers(episodeID: String = "8328"): ArrayList<ServerItem> {
         val serverList = ArrayList<ServerItem>()
 
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/episode/servers/$episodeID")
@@ -46,6 +52,8 @@ class Parser @Inject constructor() {
         Log.d("serverList", """
             $serverList
         """.trimIndent())
+
+        return serverList
     }
 
     fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
@@ -67,9 +75,10 @@ class Parser @Inject constructor() {
         return episodeList
     }
 
-    fun getSeasons(showDataID: String = "39495"){
+    fun getSeasons(showDataID: String): ArrayList<SeasonItem>{
         val seasonList = ArrayList<SeasonItem>()
 
+        Log.d("movieSeasons","called from parser")
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/tv/seasons/$showDataID")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
@@ -83,15 +92,8 @@ class Parser @Inject constructor() {
             )
         }
 
-        Log.d("seasonData",
-            """
-            ${seasonList.toString()}
-            ${getEpisodes(seasonList[0].seasonDataID)}
-            
-            """.trimIndent()
-        )
+        return seasonList
     }
-
 
 //    fun getMovieDetailsFrom(movieSrc: String = "/tv/watch-the-flash-online-39535"){
 //        val doc = Jsoup.connect("https://$HOST$movieSrc").get()
@@ -100,11 +102,8 @@ class Parser @Inject constructor() {
 //        val movieDetails = doc.getElementById("")
 //    }
 
-
     fun getMovieDetails(movieSrc: String): MovieDetails {
         lateinit var movieDetail: MovieDetails
-
-        getSeasons()
 
         val url = "https://fmoviesto.cc${movieSrc}"
         val doc = Jsoup.connect(url)

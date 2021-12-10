@@ -63,11 +63,30 @@ class MovieDetailFragment : Fragment() {
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
+        binding.ivBackBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        loadPlayer()
+
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
                 .centerCrop()
                 .into(binding.ivHero)
             viewModel.getMovieDetails(args.movie?.Url.toString())
+
+            if(args.movie?.movieType == "TV") {
+                viewModel.getSeasons(args.movie?.Url.toString())
+                viewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
+                    when(response){
+                        is Resource.Success -> {
+                            response.data?.let{
+                                loadPlayer(it)
+                            }
+                        }
+                    }
+                })
+            }
         }
 
         if(args.searchMovieItem != null){
@@ -77,7 +96,8 @@ class MovieDetailFragment : Fragment() {
 
             // get movie details passing the src
             viewModel.getMovieDetails(args.searchMovieItem?.src.toString())
-            Log.d("MOvieDetailUrl", args.searchMovieItem?.src.toString())
+
+//            Log.d("MOvieDetailUrl", args.searchMovieItem?.src.toString())
         }
 
         args.heroItem?.let {
@@ -143,6 +163,12 @@ class MovieDetailFragment : Fragment() {
             tvCast.text = "Cast: ${movieDetails.casts}"
             tvProduction.text = "Production: ${movieDetails.production}"
 
+        }
+    }
+
+    private fun loadPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
+        binding.apply {
+
             wvPlayer.webViewClient = WebViewClient()
             wvPlayer.settings.javaScriptEnabled = true
             wvPlayer.settings.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
@@ -152,21 +178,16 @@ class MovieDetailFragment : Fragment() {
             map.put("referer", "https://fmoviesto.cc")
 
             wvPlayer.loadUrl(
-                "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z=",
+                vidEmbedURl,
                 map
             )
-//            wvPlayer.loadUrl(
-//                "https://embed2.megaxfer.ru/embed2/c9ffb234a4a622dbfdb7d7e319778330",
-//                map
-//            )
 
-
-            wvPlayer.getSettings().setDomStorageEnabled(true);
-            wvPlayer.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT)
-            wvPlayer.getSettings().setAppCacheEnabled(true);
-            wvPlayer.getSettings().setAppCachePath(requireContext().getFilesDir().getAbsolutePath() + "/cache");
-            wvPlayer.getSettings().setDatabaseEnabled(true);
-            wvPlayer.getSettings().setDatabasePath(requireContext().getFilesDir().getAbsolutePath() + "/databases");
+            wvPlayer.settings.setDomStorageEnabled(true);
+            wvPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
+            wvPlayer.settings.setAppCacheEnabled(true);
+            wvPlayer.settings.setAppCachePath(requireContext().filesDir.absolutePath + "/cache");
+            wvPlayer.settings.databaseEnabled = true;
+            wvPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
 
             fun getTextWebResource(data: InputStream): WebResourceResponse {
                 return WebResourceResponse("text/plain", "UTF-8", data);
@@ -191,10 +212,6 @@ class MovieDetailFragment : Fragment() {
             }
 
 
-
-            ivBackBtn.setOnClickListener {
-                findNavController().popBackStack()
-            }
         }
     }
 
