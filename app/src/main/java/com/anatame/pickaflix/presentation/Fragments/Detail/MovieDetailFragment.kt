@@ -112,7 +112,9 @@ class MovieDetailFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let{
                         setContent(it)
-                        loadPlayer(it.movieTrailerUrl + "&loop=1")
+                        // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
+                        val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
+                        loadPlayer(it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
                 is Resource.Loading -> {
