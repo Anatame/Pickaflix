@@ -67,7 +67,6 @@ class MovieDetailFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        loadPlayer()
 
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
@@ -81,7 +80,7 @@ class MovieDetailFragment : Fragment() {
                     when(response){
                         is Resource.Success -> {
                             response.data?.let{
-                                loadPlayer(it)
+//                                loadPlayer(it)
                             }
                         }
                     }
@@ -113,6 +112,7 @@ class MovieDetailFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let{
                         setContent(it)
+                        loadPlayer(it.movieTrailerUrl + "&loop=1")
                     }
                 }
                 is Resource.Loading -> {
@@ -188,6 +188,7 @@ class MovieDetailFragment : Fragment() {
             wvPlayer.settings.setAppCachePath(requireContext().filesDir.absolutePath + "/cache");
             wvPlayer.settings.databaseEnabled = true;
             wvPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
+            wvPlayer.settings.mediaPlaybackRequiresUserGesture = false;
 
             fun getTextWebResource(data: InputStream): WebResourceResponse {
                 return WebResourceResponse("text/plain", "UTF-8", data);
@@ -207,6 +208,23 @@ class MovieDetailFragment : Fragment() {
 
 
                     return super.shouldInterceptRequest(view, request)
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    wvPlayer.loadUrl(
+                        """javascript:(function f() {
+        document.querySelector('.ytp-cued-thumbnail-overlay-image').click();
+        document.querySelector('.ytp-chrome-controls').style.display = 'none';
+        document.querySelector('.ytp-pause-overlay').style.display = 'none';
+        document.querySelector('.ytp-show-cards-title').style.display = 'none';
+        this.interval = setInterval(() => {
+            document.querySelectorAll(".ytp-ce-element").forEach((el) => el.remove());
+        }, 100);
+      })()""".trimIndent().trimMargin()
+    );
+
+
                 }
 
             }
