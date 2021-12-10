@@ -66,7 +66,7 @@ class MovieDetailFragment : Fragment() {
         binding.ivBackBtn.setOnClickListener {
             findNavController().popBackStack()
         }
-
+        binding.epsPlayer.visibility = View.INVISIBLE
 
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
@@ -80,7 +80,7 @@ class MovieDetailFragment : Fragment() {
                     when(response){
                         is Resource.Success -> {
                             response.data?.let{
-//                                loadPlayer(it)
+                              loadEpsPlayer(it)
                             }
                         }
                     }
@@ -113,8 +113,8 @@ class MovieDetailFragment : Fragment() {
                     response.data?.let{
                         setContent(it)
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
-                        val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-                        loadPlayer(it.movieTrailerUrl + "?playlist=$vidId&loop=1")
+//                        val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
+//                        loadPlayer(it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
                 is Resource.Loading -> {
@@ -168,12 +168,78 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun loadEpsPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
+        binding.apply {
+            epsPlayer.webViewClient = WebViewClient()
+            epsPlayer.settings.javaScriptEnabled = true
+            epsPlayer.settings.userAgentString =
+                "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+
+            epsPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+            val map = HashMap<String, String>()
+            map.put("referer", "https://fmoviesto.cc")
+
+            epsPlayer.loadUrl(
+                vidEmbedURl,
+                map
+            )
+
+            epsPlayer.settings.setDomStorageEnabled(true);
+            epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
+            epsPlayer.settings.setAppCacheEnabled(true);
+            epsPlayer.settings.setAppCachePath(requireContext().filesDir.absolutePath + "/cache");
+            epsPlayer.settings.databaseEnabled = true;
+            epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
+            epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
+
+            fun getTextWebResource(data: InputStream): WebResourceResponse {
+                return WebResourceResponse("text/plain", "UTF-8", data);
+            }
+
+            epsPlayer.webViewClient = object : WebViewClient() {
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+
+                    if (BlockHosts().hosts.contains(request!!.url.host)) {
+                        val textStream: InputStream = ByteArrayInputStream("".toByteArray())
+                        return getTextWebResource(textStream)
+                    }
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+                override fun onLoadResource(view: WebView?, url: String?) {
+                    super.onLoadResource(view, url)
+                    if(url!!.contains("playlist.m3u8")){
+                        Log.d("movieSeasons", url)
+                    }
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    epsPlayer.loadUrl(
+                        """javascript:(function f() {
+                      })()""".trimIndent().trimMargin()
+                    );
+
+                    epsPlayer.visibility = View.VISIBLE
+                }
+
+            }
+
+
+        }
+    }
+
     private fun loadPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
         binding.apply {
-
+            wvPlayer.visibility = View.INVISIBLE
             wvPlayer.webViewClient = WebViewClient()
             wvPlayer.settings.javaScriptEnabled = true
-            wvPlayer.settings.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+            wvPlayer.settings.userAgentString =
+                "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
 
             wvPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
             val map = HashMap<String, String>()
@@ -216,18 +282,18 @@ class MovieDetailFragment : Fragment() {
                     super.onPageFinished(view, url)
                     wvPlayer.loadUrl(
                         """javascript:(function f() {
-        document.querySelector('.ytp-cued-thumbnail-overlay-image').click();
-        document.querySelector('.ytp-chrome-controls').style.display = 'none';
-        document.querySelector('.ytp-chrome-bottom').style.display = 'none';
-        document.querySelector('.ytp-pause-overlay').style.display = 'none';
-        document.querySelector('.ytp-show-cards-title').style.display = 'none';
-        this.interval = setInterval(() => {
-            document.querySelectorAll(".ytp-ce-element").forEach((el) => el.remove());
-        }, 100);
-      })()""".trimIndent().trimMargin()
-    );
+                        document.querySelector('.ytp-cued-thumbnail-overlay-image').click();
+                        document.querySelector('.ytp-chrome-controls').style.display = 'none';
+                        document.querySelector('.ytp-chrome-bottom').style.display = 'none';
+                        document.querySelector('.ytp-pause-overlay').style.display = 'none';
+                        document.querySelector('.ytp-show-cards-title').style.display = 'none';
+                        this.interval = setInterval(() => {
+                            document.querySelectorAll(".ytp-ce-element").forEach((el) => el.remove());
+                        }, 100);
+                      })()""".trimIndent().trimMargin()
+                    );
 
-
+                    wvPlayer.visibility = View.VISIBLE
                 }
 
             }

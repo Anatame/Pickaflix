@@ -23,7 +23,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="238dp">
 
                 <ImageView
                     android:id="@+id/iv_hero"
@@ -37,6 +37,11 @@
                 <!--                android:layout_height="wrap_content"-->
                 <!--                android:text="Money Heist"-->
                 <!--                />-->
+
+                <WebView
+                    android:id="@+id/epsPlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="238dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
