@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,9 +40,10 @@ import com.google.android.material.chip.Chip
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import com.facebook.shimmer.ShimmerFrameLayout
-
-
-
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
+import com.anatame.pickaflix.MainActivity
+import com.anatame.pickaflix.presentation.PlayerActivity
 
 
 class MovieDetailFragment : Fragment() {
@@ -224,14 +227,8 @@ class MovieDetailFragment : Fragment() {
             epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
             epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
 
-            val destination = MovieDetailFragmentDirections.actionNavigationDetailToPlayerFragment()
-
             epsPlayer.addJavascriptInterface(
-                WebAppInterface(
-                    requireContext(),
-                    findNavController(),
-                    destination
-                ), "Android")
+                WebAppInterface(requireContext(), vidEmbedURl), "Android")
 
             fun getTextWebResource(data: InputStream): WebResourceResponse {
                 return WebResourceResponse("text/plain", "UTF-8", data);
@@ -263,10 +260,14 @@ class MovieDetailFragment : Fragment() {
 
                     epsPlayer.loadUrl(
                         """javascript:(function f() {
-                            this.interval = setInterval(() => {
-                            document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
-                                 Android.showToast();
-                            });
+                            let myInterval = setInterval(() => {
+                            let fBtn = document.querySelector('.jw-icon-fullscreen');
+                            if(fBtn != null || fBtn != 'undefined'){
+                                  document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
+                                     Android.showToast();
+                                 });
+                                   clearInterval(myInterval);
+                            }
                         }, 200);
                       })()""".trimIndent().trimMargin()
                     );
@@ -287,15 +288,16 @@ class MovieDetailFragment : Fragment() {
     /** Instantiate the interface and set the context  */
     class WebAppInterface(
         private val mContext: Context,
-        private val navController: NavController,
-        private val destination: NavDirections
+        private val url: String
     ) {
 
         /** Show a toast from the web page  */
         @JavascriptInterface
         fun showToast() {
             Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
-            navController.navigate(destination)
+            val intent = Intent(mContext, PlayerActivity::class.java)
+            intent.putExtra("vidUrl", url)
+            mContext.startActivity(intent)
         }
     }
 
