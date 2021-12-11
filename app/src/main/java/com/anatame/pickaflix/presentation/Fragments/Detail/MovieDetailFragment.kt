@@ -114,7 +114,10 @@ class MovieDetailFragment : Fragment() {
             // get movie details passing the src
             viewModel.getMovieDetails(args.searchMovieItem?.src.toString())
 
-//            Log.d("MOvieDetailUrl", args.searchMovieItem?.src.toString())
+            if(args.searchMovieItem?.src!!.contains("tv")) {
+                viewModel.getSeasons(args.searchMovieItem?.src.toString())
+            }
+
         }
 
         args.heroItem?.let {
@@ -123,6 +126,10 @@ class MovieDetailFragment : Fragment() {
                 .into(binding.ivHero)
 
             viewModel.getMovieDetails(it.source)
+
+            if(args.heroItem?.source!!.contains("tv")) {
+                viewModel.getSeasons(args.heroItem?.source.toString())
+            }
         }
 
         viewModel.movieDetails.observe(viewLifecycleOwner, Observer { response->

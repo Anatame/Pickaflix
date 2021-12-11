@@ -49,7 +49,7 @@
                     <!--                android:text="Money Heist"-->
                     <!--                />-->
 
-                    <WebView
+                    <com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
                         android:visibility="gone"
                         android:id="@+id/epsPlayer"
                         android:layout_width="match_parent"
