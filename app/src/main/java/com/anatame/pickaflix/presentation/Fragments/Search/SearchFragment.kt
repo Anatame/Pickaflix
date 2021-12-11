@@ -63,7 +63,7 @@ class SearchFragment : Fragment() {
             override fun onQueryTextChange(newText: String): Boolean {
                 job?.cancel()
                 job = viewModel.viewModelScope.launch {
-                    delay(500)
+                    delay(300)
                     newText.let {
                         if(it.isNotEmpty()){
                             viewModel.getSearch(it)
