@@ -3,28 +3,25 @@ package com.anatame.pickaflix.presentation.Fragments.Detail
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.content.pm.ActivityInfo
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.webkit.*
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.navigation.fragment.navArgs
+import androidx.fragment.app.Fragment
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 import com.bumptech.glide.Glide
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.ChangeBounds
 import androidx.transition.ChangeTransform
@@ -35,8 +32,8 @@ import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.common.utils.BlockHosts
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
+import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
 import com.bumptech.glide.request.RequestOptions
-import com.facebook.shimmer.Shimmer
 import com.google.android.material.chip.Chip
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -227,7 +224,14 @@ class MovieDetailFragment : Fragment() {
             epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
             epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
 
-            epsPlayer.addJavascriptInterface(WebAppInterface(requireContext()), "Android")
+            val destination = MovieDetailFragmentDirections.actionNavigationDetailToPlayerFragment()
+
+            epsPlayer.addJavascriptInterface(
+                WebAppInterface(
+                    requireContext(),
+                    findNavController(),
+                    destination
+                ), "Android")
 
             fun getTextWebResource(data: InputStream): WebResourceResponse {
                 return WebResourceResponse("text/plain", "UTF-8", data);
@@ -281,14 +285,21 @@ class MovieDetailFragment : Fragment() {
         }
     }
     /** Instantiate the interface and set the context  */
-    class WebAppInterface(private val mContext: Context) {
+    class WebAppInterface(
+        private val mContext: Context,
+        private val navController: NavController,
+        private val destination: NavDirections
+    ) {
 
         /** Show a toast from the web page  */
         @JavascriptInterface
         fun showToast() {
             Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
+            navController.navigate(destination)
         }
     }
+
+
 
 
     private fun loadPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){

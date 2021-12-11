@@ -50,6 +50,7 @@
                     <!--                />-->
 
                     <com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
+                        android:transitionName="playerWV"
                         android:visibility="gone"
                         android:id="@+id/epsPlayer"
                         android:layout_width="match_parent"

@@ -57,6 +57,9 @@
             android:name="heroItem"
             app:argType="com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_navigation_detail_to_playerFragment"
+            app:destination="@id/playerFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"
@@ -67,4 +70,9 @@
             android:id="@+id/action_navigation_search_to_navigation_detail"
             app:destination="@id/navigation_detail" />
     </fragment>
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.anatame.pickaflix.presentation.Fragments.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player" />
 </navigation>
