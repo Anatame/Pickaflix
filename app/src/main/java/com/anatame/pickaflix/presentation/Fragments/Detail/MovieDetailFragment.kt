@@ -227,6 +227,8 @@ class MovieDetailFragment : Fragment() {
             epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
             epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
 
+            epsPlayer.addJavascriptInterface(WebAppInterface(requireContext()), "Android")
+
             fun getTextWebResource(data: InputStream): WebResourceResponse {
                 return WebResourceResponse("text/plain", "UTF-8", data);
             }
@@ -254,10 +256,18 @@ class MovieDetailFragment : Fragment() {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
+
                     epsPlayer.loadUrl(
                         """javascript:(function f() {
+                            this.interval = setInterval(() => {
+                            document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
+                                 Android.showToast();
+                            });
+                        }, 200);
                       })()""".trimIndent().trimMargin()
                     );
+
+
 
                     container.hideShimmer()
                     llTitleContainer.visibility = View.GONE
@@ -270,6 +280,16 @@ class MovieDetailFragment : Fragment() {
 
         }
     }
+    /** Instantiate the interface and set the context  */
+    class WebAppInterface(private val mContext: Context) {
+
+        /** Show a toast from the web page  */
+        @JavascriptInterface
+        fun showToast() {
+            Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun loadPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
         binding.apply {
