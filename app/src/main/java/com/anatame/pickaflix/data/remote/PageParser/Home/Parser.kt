@@ -28,6 +28,33 @@ class Parser @Inject constructor() {
         return vidData.body()!!
     }
 
+    fun getMovieServers(movieID: String = "66669"): ArrayList<ServerItem> {
+        val serverList = ArrayList<ServerItem>()
+
+        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/movie/episodes/$movieID")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .maxBodySize(0)
+            .timeout(1000 * 5)
+            .get()
+
+        var serverDataID = ""
+        var serverName = ""
+        doc.body().select("a").forEach { item ->
+            serverName = item.text()
+            serverDataID = item.attr("data-linkid")
+
+            serverList.add(ServerItem(
+                serverName,
+                serverDataID
+            ))
+        }
+
+        Log.d("serverList", """
+            $serverList
+        """.trimIndent())
+
+        return serverList
+    }
     fun getServers(episodeID: String = "8328"): ArrayList<ServerItem> {
         val serverList = ArrayList<ServerItem>()
 

@@ -19,6 +19,24 @@ class MovieDetailViewModel (
     val movieDetails: MutableLiveData<Resource<MovieDetails>> = MutableLiveData()
     val vidEmbedLink: MutableLiveData<Resource<String>> = MutableLiveData()
 
+    fun getMovieData(url: String){
+        val movieDataID: String = url.substring(url.lastIndexOf("-") + 1, (url.length))
+        Log.d("movieSeasons","$url $movieDataID")
+        viewModelScope.launch (Dispatchers.IO) {
+            try {
+                val servers = parser.getMovieServers(movieDataID)
+                Log.d("movieSeasons", servers.toString())
+
+                val vidSrc = parser.getVidSource(servers.first().serverDataId)
+                Log.d("movieSeasons", vidSrc.toString())
+                vidEmbedLink.postValue(Resource.Success(vidSrc.link))
+
+            } catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun getSeasons(url: String){
         val showDataID: String = url.substring(url.lastIndexOf("-") + 1, (url.length))
         Log.d("movieSeasons","$url $showDataID")

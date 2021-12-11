@@ -104,6 +104,10 @@ class MovieDetailFragment : Fragment() {
             if(args.movie?.movieType == "TV") {
                 viewModel.getSeasons(args.movie?.Url.toString())
             }
+
+            if(args.movie?.movieType == "Movie"){
+                viewModel.getMovieData(args.movie?.Url.toString())
+            }
         }
 
         if(args.searchMovieItem != null){
