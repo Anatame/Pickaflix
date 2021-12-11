@@ -36,16 +36,22 @@ import com.anatame.pickaflix.common.utils.BlockHosts
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
 import com.bumptech.glide.request.RequestOptions
+import com.facebook.shimmer.Shimmer
 import com.google.android.material.chip.Chip
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import com.facebook.shimmer.ShimmerFrameLayout
+
+
+
 
 
 class MovieDetailFragment : Fragment() {
 
     private lateinit var viewModel: MovieDetailViewModel
     private lateinit var binding: FragmentMovieDetailBinding
-    val args: MovieDetailFragmentArgs by navArgs()
+    private lateinit var container: ShimmerFrameLayout
+    private val args: MovieDetailFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -79,6 +85,10 @@ class MovieDetailFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        container = binding.shimmerViewContainer
+        container.startShimmer()
+
+
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
                 .apply(
@@ -86,7 +96,10 @@ class MovieDetailFragment : Fragment() {
                     .placeholder(R.drawable.backgroundplaceholder)
                 )
                 .into(binding.ivHero)
+
+
             viewModel.getMovieDetails(args.movie?.Url.toString())
+            val begin = System.currentTimeMillis()
 
             if(args.movie?.movieType == "TV") {
                 viewModel.getSeasons(args.movie?.Url.toString())
@@ -94,6 +107,10 @@ class MovieDetailFragment : Fragment() {
                     when(response){
                         is Resource.Success -> {
                             response.data?.let{
+                                Toast.makeText(context,
+                                    (System.currentTimeMillis() - begin).toString(),
+                                    Toast.LENGTH_SHORT)
+                                    .show()
                                 loadEpsPlayer(it)
                             }
                         }
@@ -125,6 +142,7 @@ class MovieDetailFragment : Fragment() {
             when(response){
                 is Resource.Success -> {
                     response.data?.let{
+
                         setContent(it)
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
                         val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
@@ -233,6 +251,8 @@ class MovieDetailFragment : Fragment() {
                         """javascript:(function f() {
                       })()""".trimIndent().trimMargin()
                     );
+
+                    container.hideShimmer()
 
                     epsPlayer.visibility = View.VISIBLE
                 }

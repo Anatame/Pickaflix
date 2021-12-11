@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
+
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -15,7 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <FrameLayout
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:shimmer_duration="1000"
+            app:shimmer_clip_to_children="true"
+            >
+            <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -88,5 +96,6 @@
 
             </LinearLayout>
         </FrameLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
