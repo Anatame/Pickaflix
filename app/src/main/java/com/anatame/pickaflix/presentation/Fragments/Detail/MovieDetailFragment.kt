@@ -88,6 +88,7 @@ class MovieDetailFragment : Fragment() {
         container = binding.shimmerViewContainer
         container.startShimmer()
 
+        val begin = System.currentTimeMillis()
 
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
@@ -99,23 +100,9 @@ class MovieDetailFragment : Fragment() {
 
 
             viewModel.getMovieDetails(args.movie?.Url.toString())
-            val begin = System.currentTimeMillis()
 
             if(args.movie?.movieType == "TV") {
                 viewModel.getSeasons(args.movie?.Url.toString())
-                viewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
-                    when(response){
-                        is Resource.Success -> {
-                            response.data?.let{
-                                Toast.makeText(context,
-                                    (System.currentTimeMillis() - begin).toString(),
-                                    Toast.LENGTH_SHORT)
-                                    .show()
-                                loadEpsPlayer(it)
-                            }
-                        }
-                    }
-                })
             }
         }
 
@@ -152,6 +139,19 @@ class MovieDetailFragment : Fragment() {
                 is Resource.Loading -> {
                     Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
                         .show()
+                }
+            }
+        })
+        viewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let{
+                        Toast.makeText(context,
+                            (System.currentTimeMillis() - begin).toString(),
+                            Toast.LENGTH_SHORT)
+                            .show()
+                        loadEpsPlayer(it)
+                    }
                 }
             }
         })
@@ -253,6 +253,7 @@ class MovieDetailFragment : Fragment() {
                     );
 
                     container.hideShimmer()
+                    llTitleContainer.visibility = View.GONE
 
                     epsPlayer.visibility = View.VISIBLE
                 }
