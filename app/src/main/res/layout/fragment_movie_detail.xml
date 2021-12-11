@@ -26,10 +26,12 @@
                 android:layout_height="238dp">
 
                 <ImageView
+                    android:scaleType="centerCrop"
                     android:id="@+id/iv_hero"
                     android:layout_width="match_parent"
                     android:layout_height="238dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:src="@drawable/backgroundplaceholder"
+                    />
 
                 <!--            <TextView-->
                 <!--                android:id="@+id/tvName"-->
@@ -39,6 +41,7 @@
                 <!--                />-->
 
                 <WebView
+                    android:visibility="gone"
                     android:id="@+id/epsPlayer"
                     android:layout_width="match_parent"
                     android:layout_height="238dp" />
@@ -181,6 +184,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_production">
 
             <WebView
+                android:visibility="gone"
                 android:id="@+id/wv_player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

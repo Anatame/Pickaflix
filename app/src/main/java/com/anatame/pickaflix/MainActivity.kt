@@ -16,8 +16,7 @@ import com.anatame.pickaflix.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import android.content.res.ColorStateList
-
-
+import com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment
 
 
 @AndroidEntryPoint
@@ -45,6 +44,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_search,  R.id.navigation_saved, R.id.navigation_settings
             )
         )
+
+
         navView.setupWithNavController(navController)
 
         val iconColorStates = ColorStateList(

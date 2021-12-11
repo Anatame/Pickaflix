@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +20,12 @@ import com.anatame.pickaflix.domain.models.CategoryItem
 import com.anatame.pickaflix.domain.models.HomeItem
 import com.anatame.pickaflix.domain.models.NestedScrollState
 import com.anatame.pickaflix.presentation.Adapters.HomeRVAdapter
+import com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -37,11 +44,12 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
         homeViewModel =
             ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
         homeRvItemList = ArrayList()
         setupRecyclerView()
@@ -115,10 +123,9 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
         }
 
-
-
         return root
     }
+
 
     private fun hideProgressBar() {
 //        paginationProgressBar.visibility = View.INVISIBLE

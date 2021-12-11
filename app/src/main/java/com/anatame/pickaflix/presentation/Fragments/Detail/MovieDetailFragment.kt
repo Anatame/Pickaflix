@@ -35,6 +35,7 @@ import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.common.utils.BlockHosts
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.chip.Chip
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -61,16 +62,29 @@ class MovieDetailFragment : Fragment() {
         sharedElementEnterTransition = transition
 
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+
+        args.imageID?.let {
+            ViewCompat.setTransitionName(binding.ivHero, args.imageID)
+        }
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
         binding.ivBackBtn.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding.epsPlayer.visibility = View.INVISIBLE
 
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
-                .centerCrop()
+                .apply(
+                    RequestOptions()
+                    .placeholder(R.drawable.backgroundplaceholder)
+                )
                 .into(binding.ivHero)
             viewModel.getMovieDetails(args.movie?.Url.toString())
 
@@ -80,7 +94,7 @@ class MovieDetailFragment : Fragment() {
                     when(response){
                         is Resource.Success -> {
                             response.data?.let{
-                              loadEpsPlayer(it)
+                                loadEpsPlayer(it)
                             }
                         }
                     }
@@ -113,21 +127,17 @@ class MovieDetailFragment : Fragment() {
                     response.data?.let{
                         setContent(it)
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
-//                        val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-//                        loadPlayer(it.movieTrailerUrl + "?playlist=$vidId&loop=1")
+                        val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
+                        loadPlayer(it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
                 is Resource.Loading -> {
-                Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
-                    .show()
+                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         })
 
-        ViewCompat.setTransitionName(binding.ivHero, args.imageID)
-
-
-        return binding.root
     }
 
     @SuppressLint("ResourceType")
@@ -212,7 +222,7 @@ class MovieDetailFragment : Fragment() {
 
                 override fun onLoadResource(view: WebView?, url: String?) {
                     super.onLoadResource(view, url)
-                    if(url!!.contains("playlist.m3u8")){
+                    if(url!!.endsWith("playlist.m3u8")){
                         Log.d("movieSeasons", url)
                     }
                 }
