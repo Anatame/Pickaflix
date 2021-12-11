@@ -211,14 +211,6 @@ class MovieDetailFragment : Fragment() {
                 "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
 
             epsPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
-            val map = HashMap<String, String>()
-            map.put("referer", "https://fmoviesto.cc")
-
-            epsPlayer.loadUrl(
-                vidEmbedURl,
-                map
-            )
-
             epsPlayer.settings.setDomStorageEnabled(true);
             epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
             epsPlayer.settings.setAppCacheEnabled(true);
@@ -226,6 +218,14 @@ class MovieDetailFragment : Fragment() {
             epsPlayer.settings.databaseEnabled = true;
             epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
             epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
+
+            val map = HashMap<String, String>()
+            map.put("referer", "https://fmoviesto.cc")
+
+            epsPlayer.loadUrl(
+                vidEmbedURl,
+                map
+            )
 
             epsPlayer.addJavascriptInterface(
                 WebAppInterface(requireContext(), vidEmbedURl), "Android")

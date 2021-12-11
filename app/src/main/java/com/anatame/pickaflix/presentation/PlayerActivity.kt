@@ -1,12 +1,16 @@
 package com.anatame.pickaflix.presentation
 
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.webkit.*
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.common.utils.BlockHosts
 import com.anatame.pickaflix.databinding.ActivityPlayerBinding
@@ -21,10 +25,11 @@ class PlayerActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
-
+        goFullScreen()
         binding = ActivityPlayerBinding.inflate(layoutInflater)
-        
+        setContentView(binding.root)
+
+
         val extras = intent.extras
         if (extras != null) {
             val url = extras.getString("vidUrl")
@@ -35,6 +40,16 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        goFullScreen()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        goFullScreen()
+    }
+
     private fun loadEpsPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
         binding.apply {
             epsPlayer.webViewClient = WebViewClient()
@@ -43,6 +58,14 @@ class PlayerActivity : AppCompatActivity() {
                 "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
 
             epsPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+            epsPlayer.settings.setDomStorageEnabled(true);
+            epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
+            epsPlayer.settings.setAppCacheEnabled(true);
+            epsPlayer.settings.setAppCachePath(context.filesDir.absolutePath + "/cache");
+            epsPlayer.settings.databaseEnabled = true;
+            epsPlayer.settings.setDatabasePath(context.filesDir.absolutePath + "/databases");
+            epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
+
             val map = HashMap<String, String>()
             map.put("referer", "https://fmoviesto.cc")
 
@@ -51,13 +74,6 @@ class PlayerActivity : AppCompatActivity() {
                 map
             )
 
-            epsPlayer.settings.setDomStorageEnabled(true);
-            epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
-            epsPlayer.settings.setAppCacheEnabled(true);
-            epsPlayer.settings.setAppCachePath(context.filesDir.absolutePath + "/cache");
-            epsPlayer.settings.databaseEnabled = true;
-            epsPlayer.settings.setDatabasePath(context.filesDir.absolutePath + "/databases");
-            epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
 
             epsPlayer.addJavascriptInterface(
                 MovieDetailFragment.WebAppInterface(context, vidEmbedURl), "Android")
@@ -107,5 +123,23 @@ class PlayerActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    private fun goFullScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+            val controller = window.insetsController
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                controller.systemBarsBehavior =
+                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+
     }
 }
