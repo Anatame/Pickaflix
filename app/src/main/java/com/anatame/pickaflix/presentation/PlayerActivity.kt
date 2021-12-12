@@ -1,6 +1,8 @@
 package com.anatame.pickaflix.presentation
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -77,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
 
 
             epsPlayer.addJavascriptInterface(
-                MovieDetailFragment.WebAppInterface(context, vidEmbedURl), "Android")
+                WebAppInterface(context), "Android")
 
             fun getTextWebResource(data: InputStream): WebResourceResponse {
                 return WebResourceResponse("text/plain", "UTF-8", data);
@@ -114,7 +116,7 @@ class PlayerActivity : AppCompatActivity() {
                                  document.querySelector('.jw-svg-icon-fullscreen-off').style.display = 'block';
                                  document.querySelector('.jw-svg-icon-fullscreen-on').style.display = 'none';
                                   document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
-                                     Android.showToast();
+                                     Android.finish();
                                  });
                                    clearInterval(myInterval);
                             }
@@ -126,7 +128,7 @@ class PlayerActivity : AppCompatActivity() {
                               document.getElementById('overlay-center').remove();
                                clearInterval(overlayInterval);
                             }
-                        }, 50);
+                        }, 200);
           
                       })()""".trimIndent().trimMargin()
                     );
@@ -143,6 +145,22 @@ class PlayerActivity : AppCompatActivity() {
 
         }
     }
+
+    /** Instantiate the interface and set the context  */
+    class WebAppInterface(
+        private val mContext: Context,
+    ) {
+
+        /** Show a toast from the web page  */
+        @JavascriptInterface
+        fun finish() {
+            Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
+            (mContext as Activity).finish()
+        }
+    }
+
+
+
 
     private fun goFullScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

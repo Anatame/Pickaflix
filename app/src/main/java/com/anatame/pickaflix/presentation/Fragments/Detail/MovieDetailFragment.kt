@@ -291,7 +291,7 @@ class MovieDetailFragment : Fragment() {
                               document.getElementById('overlay-center').remove();
                                clearInterval(overlayInterval);
                             }
-                        }, 50);
+                        }, 200);
                       })()""".trimIndent().trimMargin()
                     );
                 }
