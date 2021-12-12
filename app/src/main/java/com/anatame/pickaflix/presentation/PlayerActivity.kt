@@ -1,6 +1,7 @@
 package com.anatame.pickaflix.presentation
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -103,18 +104,36 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
                     epsPlayer.loadUrl(
                         """javascript:(function f() {
-                            this.interval = setInterval(() => {
-                            document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
-                                document.querySelector('.jw-icon-fullscreen').style.background = 'Red';
-                            });
+                            let myInterval = setInterval(() => {
+                            let fBtn = document.querySelector('.jw-icon-fullscreen');
+                            if(fBtn != null || fBtn != 'undefined'){
+                                 document.querySelector('.jw-svg-icon-fullscreen-off').style.display = 'block';
+                                 document.querySelector('.jw-svg-icon-fullscreen-on').style.display = 'none';
+                                  document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
+                                     Android.showToast();
+                                 });
+                                   clearInterval(myInterval);
+                            }
                         }, 200);
+                        
+                           let overlayInterval = setInterval(() => {
+                            let overlay = document.getElementById('overlay-center');
+                            if(overlay != null || overlay != 'undefined'){
+                              document.getElementById('overlay-center').remove();
+                               clearInterval(overlayInterval);
+                            }
+                        }, 50);
+          
                       })()""".trimIndent().trimMargin()
                     );
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
 
                     epsPlayer.visibility = View.VISIBLE
                 }

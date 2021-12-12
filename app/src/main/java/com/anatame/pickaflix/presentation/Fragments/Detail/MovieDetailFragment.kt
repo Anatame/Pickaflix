@@ -41,6 +41,7 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 import com.facebook.shimmer.ShimmerFrameLayout
 import android.content.Intent
+import android.graphics.Bitmap
 import androidx.core.content.ContextCompat.startActivity
 import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.presentation.PlayerActivity
@@ -267,8 +268,8 @@ class MovieDetailFragment : Fragment() {
                     }
                 }
 
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
 
                     epsPlayer.loadUrl(
                         """javascript:(function f() {
@@ -276,13 +277,32 @@ class MovieDetailFragment : Fragment() {
                             let fBtn = document.querySelector('.jw-icon-fullscreen');
                             if(fBtn != null || fBtn != 'undefined'){
                                   document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
+                                     document.querySelector('.jw-svg-icon-fullscreen-off').style.display = 'none';
+                                     document.querySelector('.jw-svg-icon-fullscreen-on').style.display = 'block';
                                      Android.showToast();
                                  });
                                    clearInterval(myInterval);
                             }
                         }, 200);
+                        
+                          let overlayInterval = setInterval(() => {
+                            let overlay = document.getElementById('overlay-center');
+                            if(overlay != null || overlay != 'undefined'){
+                              document.getElementById('overlay-center').remove();
+                               clearInterval(overlayInterval);
+                            }
+                        }, 50);
                       })()""".trimIndent().trimMargin()
                     );
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+
+
+
+                    // jw-svg-icon-fullscreen-off
+                    // jw-svg-icon-fullscreen-on
 
 
 
