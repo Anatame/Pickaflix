@@ -66,7 +66,7 @@ class MovieAdapter(
         holder.itemView.apply {
             Glide.with(this)
                 .load(MovieItem.thumbnailUrl)
-                .centerCrop()
+                .dontTransform()
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -108,9 +108,9 @@ class MovieAdapter(
 
         }
 
-
-        setRotateAnimation(position, holder)
-
+        if(position > 2){
+            setRotateAnimation(position, holder)
+        }
     }
 
     private var lastPosition = -1

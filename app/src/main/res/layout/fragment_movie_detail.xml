@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -42,12 +42,6 @@
                         android:src="@drawable/backgroundplaceholder"
                         />
 
-                    <!--            <TextView-->
-                    <!--                android:id="@+id/tvName"-->
-                    <!--                android:layout_width="wrap_content"-->
-                    <!--                android:layout_height="wrap_content"-->
-                    <!--                android:text="Money Heist"-->
-                    <!--                />-->
 
                     <com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
                         android:transitionName="playerWV"
@@ -83,11 +77,10 @@
                                 app:tint="@color/white" />
 
                             <TextView
-                                android:id="@+id/tv_movieName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
-                                android:text="Money Heist"
+                                android:text="Watch Trailer"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -144,14 +137,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rv_servers" />
 
+            <TextView
+                android:id="@+id/tv_movieName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Money Heist"
+                android:textColor="@color/white"
+                android:textSize="21sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+            <Button
+                android:backgroundTint="#03A9F4"
+                android:id="@+id/playBtn"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Play"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_movieName"/>
+
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:id="@+id/rv_servers"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+                app:layout_constraintTop_toBottomOf="@+id/playBtn"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/cg_genre"
@@ -186,23 +203,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_cast" />
 
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="238dp"
+            <Spinner
+                android:id="@+id/spinner_spinner"
+                android:layout_width="100dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_production">
-
-                <WebView
-                    android:visibility="gone"
-                    android:id="@+id/wv_player"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </FrameLayout>
+                app:layout_constraintTop_toBottomOf="@+id/tv_movieName" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+</LinearLayout>

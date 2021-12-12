@@ -19,6 +19,10 @@ class MovieDetailViewModel (
     val movieDetails: MutableLiveData<Resource<MovieDetails>> = MutableLiveData()
     val vidEmbedLink: MutableLiveData<Resource<String>> = MutableLiveData()
 
+    init{
+        Log.d("movieDetailViewModel", "started")
+    }
+
     fun getMovieData(url: String){
         val movieDataID: String = url.substring(url.lastIndexOf("-") + 1, (url.length))
         Log.d("movieSeasons","$url $movieDataID")

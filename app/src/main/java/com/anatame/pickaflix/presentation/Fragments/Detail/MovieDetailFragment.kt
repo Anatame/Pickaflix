@@ -44,6 +44,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import androidx.core.content.ContextCompat.startActivity
 import com.anatame.pickaflix.MainActivity
+import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
 import com.anatame.pickaflix.presentation.PlayerActivity
 
 
@@ -86,6 +87,13 @@ class MovieDetailFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        binding.playBtn.visibility = View.GONE
+
+        binding.playBtn.setOnClickListener{
+            binding.epsPlayer.visibility = View.VISIBLE
+            binding.llTitleContainer.visibility = View.GONE
+        }
+
         container = binding.shimmerViewContainer
         container.startShimmer()
 
@@ -93,6 +101,7 @@ class MovieDetailFragment : Fragment() {
 
         if(args.movie != null){
             Glide.with(this).load(args.movie?.thumbnailUrl)
+                .dontTransform()
                 .apply(
                     RequestOptions()
                     .placeholder(R.drawable.backgroundplaceholder)
@@ -151,9 +160,10 @@ class MovieDetailFragment : Fragment() {
                     response.data?.let{
 
                         setContent(it)
+                        container.hideShimmer()
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
                         val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-                        loadPlayer(it.movieTrailerUrl + "?playlist=$vidId&loop=1")
+                      //  loadTrailerPlayer(binding.epsPlayer,it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
                 is Resource.Loading -> {
@@ -170,7 +180,7 @@ class MovieDetailFragment : Fragment() {
                             (System.currentTimeMillis() - begin).toString(),
                             Toast.LENGTH_SHORT)
                             .show()
-                        loadEpsPlayer(it)
+                        loadEpsPlayer(binding.epsPlayer, it)
                     }
                 }
             }
@@ -216,8 +226,10 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun loadEpsPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
-        binding.apply {
+    private fun loadEpsPlayer(epsPlayer: View, vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
+
+            epsPlayer as TouchyWebView
+
             epsPlayer.webViewClient = WebViewClient()
             epsPlayer.settings.javaScriptEnabled = true
             epsPlayer.settings.userAgentString =
@@ -299,21 +311,11 @@ class MovieDetailFragment : Fragment() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
 
-
-
                     // jw-svg-icon-fullscreen-off
                     // jw-svg-icon-fullscreen-on
 
-
-
-                    container.hideShimmer()
-                    llTitleContainer.visibility = View.GONE
-
-                    epsPlayer.visibility = View.VISIBLE
+                    binding.playBtn.visibility = View.VISIBLE
                 }
-
-            }
-
 
         }
     }
@@ -334,11 +336,10 @@ class MovieDetailFragment : Fragment() {
     }
 
 
+    private fun loadTrailerPlayer(wvPlayer: View, vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
+        wvPlayer as TouchyWebView
 
-
-    private fun loadPlayer(vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
-        binding.apply {
-            wvPlayer.visibility = View.INVISIBLE
+        wvPlayer.visibility = View.INVISIBLE
             wvPlayer.webViewClient = WebViewClient()
             wvPlayer.settings.javaScriptEnabled = true
             wvPlayer.settings.userAgentString =
@@ -401,8 +402,6 @@ class MovieDetailFragment : Fragment() {
 
             }
 
-
-        }
     }
 
     private fun hideKeyboard() {

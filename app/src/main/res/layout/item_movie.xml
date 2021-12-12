@@ -6,8 +6,8 @@
     android:background="?attr/selectableItemBackgroundBorderless"
     android:orientation="vertical"
     android:layout_marginStart="8dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="138dp"
+    android:layout_height="264dp">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
@@ -27,8 +27,8 @@
         <ImageView
             android:id="@+id/iv_movieThumbnail"
             android:scaleType="centerCrop"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="138dp"
+            android:layout_height="264dp"
             />
 
     </com.google.android.material.card.MaterialCardView>
@@ -40,6 +40,7 @@
         android:textColor="@color/white"
         android:layout_marginTop="8dp"
         android:text="Arcane"
+        android:maxLines="1"
         android:textAlignment="center"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"

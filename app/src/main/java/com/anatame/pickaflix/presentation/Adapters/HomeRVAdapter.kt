@@ -43,7 +43,9 @@ class HomeRVAdapter(
 
     inner class CategoryViewHolder(
         val rvItemBinding: ItemHomeCategoryBinding
-    ): RecyclerView.ViewHolder(rvItemBinding.root)
+    ): RecyclerView.ViewHolder(rvItemBinding.root){
+        val adapter = MovieAdapter(activity)
+    }
 
     override fun getItemViewType(position: Int): Int {
         return when(position){
@@ -168,18 +170,19 @@ class HomeRVAdapter(
         scrollState: MutableLiveData<Int>
     ) {
         holder as CategoryViewHolder
+
         holder.rvItemBinding.apply {
             tvCategoryName.text = itemName
 
-            val adapter = MovieAdapter(activity)
-            rvCategoryItems.adapter = adapter
+            rvCategoryItems.adapter = holder.adapter
             rvCategoryItems.layoutManager = LinearLayoutManager(
                 activity,
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
             rvCategoryItems.setHasFixedSize(true);
-            rvCategoryItems.setNestedScrollingEnabled(false);
+            rvCategoryItems.isNestedScrollingEnabled = false;
+
             scrollState.observe(lifeCycleOwner, Observer{
                 (rvCategoryItems.layoutManager as LinearLayoutManager)
                     .scrollToPositionWithOffset(it, 200)
@@ -192,7 +195,7 @@ class HomeRVAdapter(
                     when (response) {
                         is Resource.Success -> {
                             response.data?.let { movie ->
-                                adapter.differ.submitList(movie)
+                                holder.adapter.differ.submitList(movie)
                             }
                         }
                         is Resource.Loading -> {
@@ -200,12 +203,13 @@ class HomeRVAdapter(
                     }
                 })
 
-            adapter.setOnItemClickListener {position, movieItem, imageView ->
+
+            holder.adapter.setOnItemClickListener {position, movieItem, imageView ->
                 startNavigation(holder.itemView, movieItem, imageView)
                 Handler(Looper.getMainLooper()).postDelayed({
                     //doSomethingHere()
+                    scrollState.postValue(position)
                 }, 300)
-                scrollState.postValue(position)
             }
         }
     }
