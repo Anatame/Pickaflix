@@ -7,10 +7,10 @@
     android:padding="8dp">
 
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="6dp"
+        app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,9 +73,11 @@
                         android:text="Money Heist"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:layout_marginBottom="6dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:id="@+id/tv_movieLength"
                         android:textColor="@color/white"
@@ -92,10 +94,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="IMDB: 6.8"/>
+
                 </LinearLayout>
 
             </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="end">
+                    <com.google.android.material.chip.Chip
+                        android:layout_gravity="bottom"
+                        style="@style/Widget.Material3.Chip.Assist.Elevated"
+                        android:id="@+id/chipMovieType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Movie"
+                        android:layout_marginEnd="16dp"
+                        />
+                </LinearLayout>
         </FrameLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,6 +57,7 @@ class MovieDetailFragment : Fragment() {
     private lateinit var webPlayer: WebView
 
     private lateinit var webTrailerPlayer: WebView
+    private lateinit var serverSpinnerAdapter: ArrayAdapter<String>
 
 
     override fun onCreateView(
@@ -96,6 +97,16 @@ class MovieDetailFragment : Fragment() {
             webPlayer.visibility = View.VISIBLE
             binding.llTitleContainer.visibility = View.GONE
         }
+
+        val spinnerArray = ArrayList<String>()
+        spinnerArray.add("Vidcloud")
+        serverSpinnerAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            spinnerArray
+        )
+
+        binding.serverSpinner.adapter = serverSpinnerAdapter
 
         container = binding.shimmerViewContainer
         container.startShimmer()
@@ -177,6 +188,30 @@ class MovieDetailFragment : Fragment() {
                 }
             }
         })
+        viewModel.serverList.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    response.data?.let {
+                        Log.d("dude", it.map { m -> m.serverName }.toString())
+                        serverSpinnerAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            it.map { serverItem ->
+                                serverItem.serverName
+                            }
+                        )
+
+                        binding.serverSpinner.adapter = serverSpinnerAdapter
+                    }
+                }
+
+                is Resource.Loading -> {
+                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
+
         viewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
             when(response){
                 is Resource.Success -> {

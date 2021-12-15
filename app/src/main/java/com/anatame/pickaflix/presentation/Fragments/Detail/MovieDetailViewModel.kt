@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.ServerItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +19,8 @@ class MovieDetailViewModel (
 
     val movieDetails: MutableLiveData<Resource<MovieDetails>> = MutableLiveData()
     val vidEmbedLink: MutableLiveData<Resource<String>> = MutableLiveData()
+
+    val serverList: MutableLiveData<Resource<List<ServerItem>>> = MutableLiveData()
 
     init{
         Log.d("movieDetailViewModel", "started")
@@ -56,6 +59,7 @@ class MovieDetailViewModel (
                 Log.d("movieSeasons", eps.toString())
 
                 val servers = parser.getServers(eps.first().episodeDataID)
+                serverList.postValue(Resource.Success(servers))
                 Log.d("movieSeasons", servers.toString())
 
                 val vidSrc = parser.getVidSource(servers.first().serverDataId)

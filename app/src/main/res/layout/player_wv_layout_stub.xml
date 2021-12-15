@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:transitionName="playerWV"
+    android:layout_gravity="center_horizontal"
     android:visibility="gone"
     android:id="@+id/epsPlayer"
     android:layout_width="match_parent"

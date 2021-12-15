@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Pickaflix" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Pickaflix" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="android:forceDarkAllowed">false</item>
         <item name="colorPrimary">@color/purple_200</item>
