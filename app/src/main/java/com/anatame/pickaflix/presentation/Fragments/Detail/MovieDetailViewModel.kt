@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anatame.pickaflix.common.Resource
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.ServerItem
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.*
 import com.anatame.pickaflix.data.remote.PageParser.Home.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +19,8 @@ class MovieDetailViewModel (
     val vidEmbedLink: MutableLiveData<Resource<String>> = MutableLiveData()
 
     val serverList: MutableLiveData<Resource<List<ServerItem>>> = MutableLiveData()
+    val seasonList: MutableLiveData<Resource<List<SeasonItem>>> = MutableLiveData()
+    val episodeList: MutableLiveData<Resource<List<EpisodeItem>>> = MutableLiveData()
 
     init{
         Log.d("movieDetailViewModel", "started")
@@ -46,6 +46,19 @@ class MovieDetailViewModel (
         }
     }
 
+    fun getEpisodes(seasonDataID: String){
+        val eps = parser.getEpisodes(seasonDataID)
+        episodeList.postValue(Resource.Success(eps))
+    }
+
+    fun getVideoSrc(serverDataId: String){
+        viewModelScope.launch (Dispatchers.IO){
+            val vidSrc = parser.getVidSource(serverDataId)
+            Log.d("movieSeasons", vidSrc.toString())
+            vidEmbedLink.postValue(Resource.Success(vidSrc.link))
+        }
+    }
+
     fun getSeasons(url: String){
         val showDataID: String = url.substring(url.lastIndexOf("-") + 1, (url.length))
         Log.d("movieSeasons","$url $showDataID")
@@ -56,8 +69,10 @@ class MovieDetailViewModel (
                 val response = parser.getSeasons(showDataID)
 //                movieDetails.postValue(Resource.Success(response))
                 Log.d("movieSeasons", response.toString())
+                seasonList.postValue(Resource.Success(response))
 
                 val eps = parser.getEpisodes(response.first().seasonDataID)
+                episodeList.postValue(Resource.Success(eps))
                 Log.d("movieSeasons", eps.toString())
 
                 val servers = parser.getServers(eps.first().episodeDataID)
@@ -77,18 +92,18 @@ class MovieDetailViewModel (
         }
     }
 
-    fun getVidSrc(movieSrc: String){
-        viewModelScope.launch (Dispatchers.IO) {
-            try {
-                movieDetails.postValue(Resource.Loading())
-                val response = parser.getMovieDetails(movieSrc)
-                movieDetails.postValue(Resource.Success(response))
-            } catch (e: Exception){
-                e.printStackTrace()
-            }
-
-        }
-    }
+//    fun getVidSrc(movieSrc: String){
+//        viewModelScope.launch (Dispatchers.IO) {
+//            try {
+//                movieDetails.postValue(Resource.Loading())
+//                val response = parser.getMovieDetails(movieSrc)
+//                movieDetails.postValue(Resource.Success(response))
+//            } catch (e: Exception){
+//                e.printStackTrace()
+//            }
+//
+//        }
+//    }
 
     fun getMovieDetails(movieSrc: String){
         viewModelScope.launch (Dispatchers.IO) {

@@ -44,6 +44,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import androidx.core.content.ContextCompat.startActivity
 import com.anatame.pickaflix.MainActivity
+import com.anatame.pickaflix.presentation.Adapters.EpisodeRVAdapter
 import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
 import com.anatame.pickaflix.presentation.PlayerActivity
 
@@ -58,6 +59,7 @@ class MovieDetailFragment : Fragment() {
 
     private lateinit var webTrailerPlayer: WebView
     private lateinit var serverSpinnerAdapter: ArrayAdapter<String>
+    private lateinit var seasonSpinnerAdapter: ArrayAdapter<String>
 
 
     override fun onCreateView(
@@ -98,15 +100,24 @@ class MovieDetailFragment : Fragment() {
             binding.llTitleContainer.visibility = View.GONE
         }
 
-        val spinnerArray = ArrayList<String>()
-        spinnerArray.add("Vidcloud")
+        val serverSpinnerArray = ArrayList<String>()
+        serverSpinnerArray.add("Vidcloud")
         serverSpinnerAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            spinnerArray
+            serverSpinnerArray
+        )
+
+     val seasonSpinnerArray = ArrayList<String>()
+        seasonSpinnerArray.add("Season 1")
+        seasonSpinnerAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            seasonSpinnerArray
         )
 
         binding.serverSpinner.adapter = serverSpinnerAdapter
+        binding.seasonSpinner.adapter = seasonSpinnerAdapter
 
         container = binding.shimmerViewContainer
         container.startShimmer()
@@ -127,10 +138,14 @@ class MovieDetailFragment : Fragment() {
 
             if(args.movie?.movieType == "TV") {
                 viewModel.getSeasons(args.movie?.Url.toString())
+                binding.playBtn.visibility = View.GONE
+                binding.seasonSpinner.visibility = View.VISIBLE
             }
 
             if(args.movie?.movieType == "Movie"){
                 viewModel.getMovieData(args.movie?.Url.toString())
+                binding.playBtn.visibility = View.VISIBLE
+                binding.seasonSpinner.visibility = View.GONE
             }
         }
 
@@ -144,10 +159,14 @@ class MovieDetailFragment : Fragment() {
 
             if(args.searchMovieItem?.src!!.contains("tv")) {
                 viewModel.getSeasons(args.searchMovieItem?.src.toString())
+                binding.playBtn.visibility = View.GONE
+                binding.seasonSpinner.visibility = View.VISIBLE
             }
 
             if(args.searchMovieItem?.src!!.contains("movie")) {
                 viewModel.getMovieData(args.searchMovieItem?.src.toString())
+                binding.playBtn.visibility = View.VISIBLE
+                binding.seasonSpinner.visibility = View.GONE
             }
 
         }
@@ -161,9 +180,13 @@ class MovieDetailFragment : Fragment() {
 
             if(args.heroItem?.source!!.contains("tv")) {
                 viewModel.getSeasons(args.heroItem?.source.toString())
+                binding.playBtn.visibility = View.GONE
+                binding.seasonSpinner.visibility = View.VISIBLE
             }
             if(args.heroItem?.source!!.contains("movie")) {
                 viewModel.getMovieData(args.heroItem?.source.toString())
+                binding.playBtn.visibility = View.VISIBLE
+                binding.seasonSpinner.visibility = View.GONE
             }
 
         }
@@ -202,6 +225,47 @@ class MovieDetailFragment : Fragment() {
                         )
 
                         binding.serverSpinner.adapter = serverSpinnerAdapter
+                    }
+                }
+
+                is Resource.Loading -> {
+                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
+        viewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    response.data?.let {
+                        Log.d("dude", it.map { m -> m.seasonName }.toString())
+                        seasonSpinnerAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            it.map { seasonItem ->
+                                seasonItem.seasonName
+                            }
+                        )
+
+                        binding.seasonSpinner.adapter = seasonSpinnerAdapter
+                    }
+                }
+
+                is Resource.Loading -> {
+                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
+        viewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    response.data?.let {
+                       binding.rvEps.apply {
+                           visibility = View.VISIBLE
+                           adapter = EpisodeRVAdapter(it)
+                           layoutManager = LinearLayoutManager(requireContext())
+                       }
                     }
                 }
 
@@ -358,7 +422,7 @@ class MovieDetailFragment : Fragment() {
                     // jw-svg-icon-fullscreen-off
                     // jw-svg-icon-fullscreen-on
 
-                    binding.playBtn.visibility = View.VISIBLE
+                //    binding.playBtn.visibility = View.VISIBLE
                 }
 
         }
