@@ -41,6 +41,7 @@ import java.io.InputStream
 import com.facebook.shimmer.ShimmerFrameLayout
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat.startActivity
@@ -396,6 +397,15 @@ class MovieDetailFragment : Fragment() {
 
             epsPlayer as TouchyWebView
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // chromium, enable hardware acceleration
+            epsPlayer.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            // older android version, disable hardware acceleration
+            epsPlayer.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+        epsPlayer.settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
             epsPlayer.settings.javaScriptEnabled = true
             epsPlayer.settings.userAgentString =
                 "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
