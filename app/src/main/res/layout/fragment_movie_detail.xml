@@ -43,12 +43,22 @@
                         />
 
 
-                    <com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
-                        android:transitionName="playerWV"
-                        android:visibility="gone"
-                        android:id="@+id/epsPlayer"
+                    <ViewStub
+                        android:id="@+id/wvStub"
+                        android:inflatedId="@+id/epsPlayer"
+                        android:layout="@layout/player_wv_layout_stub"
                         android:layout_width="match_parent"
-                        android:layout_height="238dp" />
+                        android:layout_height="238dp"
+                        />
+
+                    <ViewStub
+                        android:id="@+id/wvTrailerStub"
+                        android:inflatedId="@+id/epsPlayer"
+                        android:layout="@layout/player_wv_layout_stub"
+                        android:layout_width="match_parent"
+                        android:layout_height="238dp"
+                        />
+
 
                     <LinearLayout
                         android:id="@+id/ll_titleContainer"

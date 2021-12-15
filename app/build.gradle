@@ -3,10 +3,11 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'androidx.navigation.safeargs.kotlin'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
+
     compileSdk 31
 
     defaultConfig {
@@ -39,9 +40,11 @@ android {
 
 dependencies {
 
+    def material_design = "1.6.0-alpha01"
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation "com.google.android.material:material:$material_design"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'

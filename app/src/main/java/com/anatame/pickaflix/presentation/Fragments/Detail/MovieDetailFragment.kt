@@ -54,6 +54,9 @@ class MovieDetailFragment : Fragment() {
     private lateinit var binding: FragmentMovieDetailBinding
     private lateinit var container: ShimmerFrameLayout
     private val args: MovieDetailFragmentArgs by navArgs()
+    private lateinit var webPlayer: WebView
+
+    private lateinit var webTrailerPlayer: WebView
 
 
     override fun onCreateView(
@@ -61,7 +64,6 @@ class MovieDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        hideKeyboard()
 
         val transition: Transition = TransitionSet()
             .addTransition(ChangeTransform())
@@ -90,7 +92,8 @@ class MovieDetailFragment : Fragment() {
         binding.playBtn.visibility = View.GONE
 
         binding.playBtn.setOnClickListener{
-            binding.epsPlayer.visibility = View.VISIBLE
+            webTrailerPlayer.visibility = View.GONE
+            webPlayer.visibility = View.VISIBLE
             binding.llTitleContainer.visibility = View.GONE
         }
 
@@ -163,7 +166,9 @@ class MovieDetailFragment : Fragment() {
                         container.hideShimmer()
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
                         val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-                      //  loadTrailerPlayer(binding.epsPlayer,it.movieTrailerUrl + "?playlist=$vidId&loop=1")
+                        val inflated = binding.wvTrailerStub.inflate()
+                        webTrailerPlayer = inflated.findViewById(R.id.epsPlayer)
+                        loadTrailerPlayer(webTrailerPlayer,it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
                 is Resource.Loading -> {
@@ -180,11 +185,15 @@ class MovieDetailFragment : Fragment() {
                             (System.currentTimeMillis() - begin).toString(),
                             Toast.LENGTH_SHORT)
                             .show()
-                        loadEpsPlayer(binding.epsPlayer, it)
+                        val inflated = binding.wvStub.inflate()
+                        webPlayer = inflated.findViewById(R.id.epsPlayer)
+                        loadEpsPlayer(webPlayer, it)
                     }
                 }
             }
         })
+
+        hideKeyboard()
 
     }
 
