@@ -3,7 +3,6 @@ package com.anatame.pickaflix.presentation.Fragments.Detail
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.pm.ActivityInfo
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -42,11 +41,17 @@ import java.io.InputStream
 import com.facebook.shimmer.ShimmerFrameLayout
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
 import androidx.core.content.ContextCompat.startActivity
 import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.presentation.Adapters.EpisodeRVAdapter
 import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
 import com.anatame.pickaflix.presentation.PlayerActivity
+
+
+
+
 
 
 class MovieDetailFragment : Fragment() {
@@ -70,7 +75,8 @@ class MovieDetailFragment : Fragment() {
 
         val transition: Transition = TransitionSet()
             .addTransition(ChangeTransform())
-            .addTransition(ChangeBounds()) // For both
+            .addTransition(ChangeBounds())
+            // For both
 
         sharedElementEnterTransition = transition
 
@@ -91,6 +97,16 @@ class MovieDetailFragment : Fragment() {
         binding.ivBackBtn.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val inflated = binding.wvStub.inflate()
+            webPlayer = inflated.findViewById(R.id.epsPlayer)
+
+            val inflated2 = binding.wvTrailerStub.inflate()
+            webTrailerPlayer = inflated2.findViewById(R.id.epsPlayer)
+
+
+        }, 300)
 
         binding.playBtn.visibility = View.GONE
 
@@ -138,14 +154,12 @@ class MovieDetailFragment : Fragment() {
 
             if(args.movie?.movieType == "TV") {
                 viewModel.getSeasons(args.movie?.Url.toString())
-                binding.playBtn.visibility = View.GONE
-                binding.seasonSpinner.visibility = View.VISIBLE
+                tvControls()
             }
 
             if(args.movie?.movieType == "Movie"){
                 viewModel.getMovieData(args.movie?.Url.toString())
-                binding.playBtn.visibility = View.VISIBLE
-                binding.seasonSpinner.visibility = View.GONE
+                movieControls()
             }
         }
 
@@ -159,14 +173,12 @@ class MovieDetailFragment : Fragment() {
 
             if(args.searchMovieItem?.src!!.contains("tv")) {
                 viewModel.getSeasons(args.searchMovieItem?.src.toString())
-                binding.playBtn.visibility = View.GONE
-                binding.seasonSpinner.visibility = View.VISIBLE
+                tvControls()
             }
 
             if(args.searchMovieItem?.src!!.contains("movie")) {
                 viewModel.getMovieData(args.searchMovieItem?.src.toString())
-                binding.playBtn.visibility = View.VISIBLE
-                binding.seasonSpinner.visibility = View.GONE
+                movieControls()
             }
 
         }
@@ -180,13 +192,11 @@ class MovieDetailFragment : Fragment() {
 
             if(args.heroItem?.source!!.contains("tv")) {
                 viewModel.getSeasons(args.heroItem?.source.toString())
-                binding.playBtn.visibility = View.GONE
-                binding.seasonSpinner.visibility = View.VISIBLE
+                tvControls()
             }
             if(args.heroItem?.source!!.contains("movie")) {
                 viewModel.getMovieData(args.heroItem?.source.toString())
-                binding.playBtn.visibility = View.VISIBLE
-                binding.seasonSpinner.visibility = View.GONE
+                movieControls()
             }
 
         }
@@ -200,8 +210,7 @@ class MovieDetailFragment : Fragment() {
                         container.hideShimmer()
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
                         val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-                        val inflated = binding.wvTrailerStub.inflate()
-                        webTrailerPlayer = inflated.findViewById(R.id.epsPlayer)
+
                         loadTrailerPlayer(webTrailerPlayer,it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
@@ -238,16 +247,35 @@ class MovieDetailFragment : Fragment() {
             when (response) {
                 is Resource.Success -> {
                     response.data?.let {
+                        var seasonArray = it
                         Log.d("dude", it.map { m -> m.seasonName }.toString())
                         seasonSpinnerAdapter = ArrayAdapter(
                             requireContext(),
                             android.R.layout.simple_spinner_dropdown_item,
-                            it.map { seasonItem ->
+                            seasonArray.map { seasonItem ->
                                 seasonItem.seasonName
                             }
                         )
 
+
+
                         binding.seasonSpinner.adapter = seasonSpinnerAdapter
+                        binding.seasonSpinner.setOnItemSelectedListener(object :
+                            AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                viewModel.getEpisodes(seasonArray[position].seasonDataID)
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
                     }
                 }
 
@@ -261,11 +289,19 @@ class MovieDetailFragment : Fragment() {
             when (response) {
                 is Resource.Success -> {
                     response.data?.let {
+                        val epAdapter = EpisodeRVAdapter(it)
                        binding.rvEps.apply {
                            visibility = View.VISIBLE
-                           adapter = EpisodeRVAdapter(it)
+                           adapter = epAdapter
                            layoutManager = LinearLayoutManager(requireContext())
                        }
+
+                        epAdapter.setOnItemClickListener{ position, epsID ->
+                            viewModel.getSelectedEpisodeVid(epsID)
+                            webTrailerPlayer.visibility = View.GONE
+                            webPlayer.visibility = View.VISIBLE
+                            binding.llTitleContainer.visibility = View.GONE
+                        }
                     }
                 }
 
@@ -284,9 +320,12 @@ class MovieDetailFragment : Fragment() {
                             (System.currentTimeMillis() - begin).toString(),
                             Toast.LENGTH_SHORT)
                             .show()
-                        val inflated = binding.wvStub.inflate()
-                        webPlayer = inflated.findViewById(R.id.epsPlayer)
-                        loadEpsPlayer(webPlayer, it)
+
+
+
+                            loadEpsPlayer(webPlayer, it)
+
+
                     }
                 }
             }
@@ -295,6 +334,22 @@ class MovieDetailFragment : Fragment() {
         hideKeyboard()
 
     }
+
+    private fun movieControls() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.playBtn.visibility = View.VISIBLE
+            binding.seasonSpinner.visibility = View.GONE
+        }, 300)
+
+    }
+
+    private fun tvControls() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.playBtn.visibility = View.GONE
+            binding.seasonSpinner.visibility = View.VISIBLE
+        }, 300)
+    }
+
 
     @SuppressLint("ResourceType")
     private fun setContent(movieDetails: MovieDetails){

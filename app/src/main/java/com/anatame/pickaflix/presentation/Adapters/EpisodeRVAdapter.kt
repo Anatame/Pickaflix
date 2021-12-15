@@ -19,11 +19,21 @@ class EpisodeRVAdapter (
         return EpisodeViewHolder(binding)
     }
 
+    private var onItemClickListener: ((Int, String) -> Unit) ? = null
+
     override fun onBindViewHolder(holder: EpisodeViewHolder, position: Int) {
         holder.binding.apply {
             epsBtn.text = episodeList.get(position).title
+            epsBtn.setOnClickListener{
+                onItemClickListener?.let { it(position, episodeList.get(position).episodeDataID) }
+            }
         }
+
     }
+    fun setOnItemClickListener(listener: (Int, String) -> Unit) {
+        onItemClickListener = listener
+    }
+
 
     override fun getItemCount(): Int {
         return episodeList.size
