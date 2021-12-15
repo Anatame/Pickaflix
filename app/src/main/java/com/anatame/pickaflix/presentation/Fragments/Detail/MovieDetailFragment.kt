@@ -105,6 +105,9 @@ class MovieDetailFragment : Fragment() {
             val inflated2 = binding.wvTrailerStub.inflate()
             webTrailerPlayer = inflated2.findViewById(R.id.epsPlayer)
 
+            webTrailerPlayer.visibility = View.VISIBLE
+            webPlayer.visibility = View.INVISIBLE
+
 
         }, 300)
 
@@ -393,7 +396,6 @@ class MovieDetailFragment : Fragment() {
 
             epsPlayer as TouchyWebView
 
-            epsPlayer.webViewClient = WebViewClient()
             epsPlayer.settings.javaScriptEnabled = true
             epsPlayer.settings.userAgentString =
                 "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
@@ -406,6 +408,9 @@ class MovieDetailFragment : Fragment() {
             epsPlayer.settings.databaseEnabled = true;
             epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
             epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
+
+
+
 
             val map = HashMap<String, String>()
             map.put("referer", "https://fmoviesto.cc")
@@ -502,7 +507,6 @@ class MovieDetailFragment : Fragment() {
     private fun loadTrailerPlayer(wvPlayer: View, vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
         wvPlayer as TouchyWebView
 
-        wvPlayer.visibility = View.INVISIBLE
             wvPlayer.webViewClient = WebViewClient()
             wvPlayer.settings.javaScriptEnabled = true
             wvPlayer.settings.userAgentString =
@@ -560,7 +564,6 @@ class MovieDetailFragment : Fragment() {
                       })()""".trimIndent().trimMargin()
                     );
 
-                    wvPlayer.visibility = View.VISIBLE
                 }
 
             }
