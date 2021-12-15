@@ -14,6 +14,6 @@
     <color name="BackgroundDark">#14131E</color>
     <color name="PrimaryAccent">#80C2FF</color>
 
-    <color name="UnselectedIconColor">#c7c7c7</color>
+    <color name="UnselectedIconColor">#626262</color>
 
 </resources>

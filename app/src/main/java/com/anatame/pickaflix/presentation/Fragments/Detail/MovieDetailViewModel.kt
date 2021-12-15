@@ -34,6 +34,8 @@ class MovieDetailViewModel (
                 val servers = parser.getMovieServers(movieDataID)
                 Log.d("movieSeasons", servers.toString())
 
+                serverList.postValue(Resource.Success(servers))
+
                 val vidSrc = parser.getVidSource(servers.first().serverDataId)
                 Log.d("movieSeasons", vidSrc.toString())
                 vidEmbedLink.postValue(Resource.Success(vidSrc.link))

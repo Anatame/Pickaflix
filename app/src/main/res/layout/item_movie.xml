@@ -18,21 +18,21 @@
         >
 
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/card"
-        app:cardCornerRadius="14dp"
+        app:cardCornerRadius="8dp"
         app:cardBackgroundColor="#F48FB1"
-        android:layout_width="138dp"
-        android:layout_height="206dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_movieThumbnail"
-            android:scaleType="centerCrop"
             android:layout_width="138dp"
-            android:layout_height="264dp"
+            android:layout_height="206dp"
+            android:scaleType="centerCrop"
             />
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
