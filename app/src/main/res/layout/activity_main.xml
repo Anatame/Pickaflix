@@ -27,6 +27,8 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         app:labelVisibilityMode="unlabeled"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemRippleColor="@color/PrimaryAccent"
         android:background="@color/BackgroundDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

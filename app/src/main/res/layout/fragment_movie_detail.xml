@@ -169,7 +169,7 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playBtn"/>
+                app:layout_constraintTop_toBottomOf="@+id/controlsContainer"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/cg_genre"
@@ -258,7 +258,7 @@
                     android:id="@+id/rv_eps"
                     android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tv_caption"
                     app:layout_constraintTop_toBottomOf="@+id/controlsContainer" />

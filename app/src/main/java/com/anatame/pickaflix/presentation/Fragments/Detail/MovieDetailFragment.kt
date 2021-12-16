@@ -41,6 +41,7 @@ import java.io.InputStream
 import com.facebook.shimmer.ShimmerFrameLayout
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -66,6 +67,7 @@ class MovieDetailFragment : Fragment() {
     private lateinit var webTrailerPlayer: WebView
     private lateinit var serverSpinnerAdapter: ArrayAdapter<String>
     private lateinit var seasonSpinnerAdapter: ArrayAdapter<String>
+    private var trailerVisible = true
 
 
     override fun onCreateView(
@@ -106,8 +108,10 @@ class MovieDetailFragment : Fragment() {
             val inflated2 = binding.wvTrailerStub.inflate()
             webTrailerPlayer = inflated2.findViewById(R.id.epsPlayer)
 
-            webTrailerPlayer.visibility = View.VISIBLE
+            webTrailerPlayer.visibility = View.INVISIBLE
             webPlayer.visibility = View.INVISIBLE
+
+            webPlayer.setBackgroundColor(Color.BLACK);
 
 
         }, 300)
@@ -115,6 +119,7 @@ class MovieDetailFragment : Fragment() {
         binding.playBtn.visibility = View.GONE
 
         binding.playBtn.setOnClickListener{
+            trailerVisible = false
             webTrailerPlayer.visibility = View.GONE
             webPlayer.visibility = View.VISIBLE
             binding.llTitleContainer.visibility = View.GONE
@@ -405,6 +410,8 @@ class MovieDetailFragment : Fragment() {
             epsPlayer.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
+
+
         epsPlayer.settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
             epsPlayer.settings.javaScriptEnabled = true
             epsPlayer.settings.userAgentString =
@@ -574,7 +581,9 @@ class MovieDetailFragment : Fragment() {
                       })()""".trimIndent().trimMargin()
                     );
 
+                    if(trailerVisible) webTrailerPlayer.visibility = View.VISIBLE
                 }
+
 
             }
 

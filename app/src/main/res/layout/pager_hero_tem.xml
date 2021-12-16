@@ -7,10 +7,10 @@
     android:padding="8dp">
 
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="4dp"
+        app:cardCornerRadius="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,9 +111,10 @@
                         android:layout_height="wrap_content"
                         android:text="Movie"
                         android:layout_marginEnd="16dp"
+                        app:chipBackgroundColor="@color/PrimaryAccent"
                         />
                 </LinearLayout>
         </FrameLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

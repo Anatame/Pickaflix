@@ -6,7 +6,7 @@
     android:background="?attr/selectableItemBackgroundBorderless"
     android:orientation="vertical"
     android:layout_marginStart="8dp"
-    android:layout_width="138dp"
+    android:layout_width="142dp"
     android:layout_height="264dp">
 
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -20,14 +20,14 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="14dp"
         app:cardBackgroundColor="#F48FB1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_movieThumbnail"
-            android:layout_width="138dp"
+            android:layout_width="142dp"
             android:layout_height="206dp"
             android:scaleType="centerCrop"
             />
