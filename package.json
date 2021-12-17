@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build-css": "tailwindcss build src/styles.css -o tailwind/output.css",
+    "watch": "tailwindcss build src/styles.css -o tailwind/output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
