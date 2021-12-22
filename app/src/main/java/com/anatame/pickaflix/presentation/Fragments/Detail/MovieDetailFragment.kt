@@ -123,6 +123,13 @@ class MovieDetailFragment : Fragment() {
             webTrailerPlayer.visibility = View.GONE
             webPlayer.visibility = View.VISIBLE
             binding.llTitleContainer.visibility = View.GONE
+
+            if (webTrailerPlayer != null)
+            {
+                webTrailerPlayer.removeAllViews();
+                webTrailerPlayer.destroy();
+                Log.d("webviewStatus", "destroyed")
+            }
         }
 
         val serverSpinnerArray = ArrayList<String>()
@@ -412,7 +419,7 @@ class MovieDetailFragment : Fragment() {
 
 
 
-        epsPlayer.settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+
             epsPlayer.settings.javaScriptEnabled = true
             epsPlayer.settings.userAgentString =
                 "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
@@ -500,6 +507,14 @@ class MovieDetailFragment : Fragment() {
                     // jw-svg-icon-fullscreen-on
 
                 //    binding.playBtn.visibility = View.VISIBLE
+                    epsPlayer.webChromeClient = object: WebChromeClient(){
+                        override fun onPermissionRequest(request: PermissionRequest?) {
+                            if (request != null) {
+                                request.grant(request.resources);
+                            }
+                            super.onPermissionRequest(request)
+                        }
+                    }
                 }
 
         }

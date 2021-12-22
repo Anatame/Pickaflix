@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class SavedMoviesViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is Saved Movie Fragment"
+        value = "Saved Movies holder to be implemented"
     }
     val text: LiveData<String> = _text
 }

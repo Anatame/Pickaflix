@@ -12,6 +12,7 @@ import android.view.*
 import android.webkit.*
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.anatame.pickaflix.R
@@ -21,6 +22,12 @@ import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 import com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import android.view.WindowInsetsController
+
+import android.view.WindowInsets
+
+
+
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
@@ -28,15 +35,13 @@ class PlayerActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        goFullScreen()
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        goFullScreen()
 
         val extras = intent.extras
         if (extras != null) {
             val url = extras.getString("vidUrl")
-            Toast.makeText(this@PlayerActivity, url.toString(), Toast.LENGTH_SHORT).show()
             if (url != null) {
                 loadEpsPlayer(url)
             }
