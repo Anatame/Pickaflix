@@ -124,12 +124,7 @@ class MovieDetailFragment : Fragment() {
             webPlayer.visibility = View.VISIBLE
             binding.llTitleContainer.visibility = View.GONE
 
-            if (webTrailerPlayer != null)
-            {
-                webTrailerPlayer.removeAllViews();
-                webTrailerPlayer.destroy();
-                Log.d("webviewStatus", "destroyed")
-            }
+            destroyTrailerPlayer()
         }
 
         val serverSpinnerArray = ArrayList<String>()
@@ -351,6 +346,22 @@ class MovieDetailFragment : Fragment() {
 
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyTrailerPlayer()
+        Log.d("movieDetailFrag", "FragmentDestroyed")
+    }
+
+    private fun destroyTrailerPlayer() {
+        if (webTrailerPlayer != null) {
+            webTrailerPlayer.removeAllViews();
+            webTrailerPlayer.destroy();
+            Log.d("movieDetailFrag", "destroyed")
+        }
+    }
+
+
     private fun movieControls() {
         Handler(Looper.getMainLooper()).postDelayed({
             binding.playBtn.visibility = View.VISIBLE
@@ -467,6 +478,7 @@ class MovieDetailFragment : Fragment() {
 
                 override fun onLoadResource(view: WebView?, url: String?) {
                     super.onLoadResource(view, url)
+                    Log.d("resourceUrls", url!!)
                     if(url!!.endsWith("playlist.m3u8")){
                         Log.d("movieSeasons", url)
                     }
@@ -541,10 +553,7 @@ class MovieDetailFragment : Fragment() {
 
             wvPlayer.webViewClient = WebViewClient()
             wvPlayer.settings.javaScriptEnabled = true
-            wvPlayer.settings.userAgentString =
-                "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
-
-            wvPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+            wvPlayer.settings.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
             val map = HashMap<String, String>()
             map.put("referer", "https://fmoviesto.cc")
 
@@ -598,7 +607,6 @@ class MovieDetailFragment : Fragment() {
 
                     if(trailerVisible) webTrailerPlayer.visibility = View.VISIBLE
                 }
-
 
             }
 

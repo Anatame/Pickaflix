@@ -1,6 +1,11 @@
 package com.anatame.pickaflix.common.utils
 
 data class BlockHosts(
+    val hosts2: List<String> = listOf<String>(
+        "www.googletagmanager.com",
+        "g.jwpsrv.com"
+
+    ),
     val hosts: List<String> = listOf<String>(
         "absolutionbravery.com",
         "addthis.com",
@@ -27,6 +32,5 @@ data class BlockHosts(
         "untimburra.com",
         //      "ssl.p.jwpcdn.com",
         "i.imgur.com",
-        "cc.1clickcdn.ru"
     )
 )
