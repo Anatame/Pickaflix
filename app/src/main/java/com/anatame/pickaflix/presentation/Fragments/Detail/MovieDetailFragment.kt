@@ -47,13 +47,13 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat.startActivity
 import com.anatame.pickaflix.MainActivity
+import com.anatame.pickaflix.common.utils.EpsWebViewHelper
+import com.anatame.pickaflix.common.utils.PlayerHelper
 import com.anatame.pickaflix.presentation.Adapters.EpisodeRVAdapter
 import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
+import com.anatame.pickaflix.presentation.NativePlayerActivity
 import com.anatame.pickaflix.presentation.PlayerActivity
-
-
-
-
+import com.google.android.exoplayer2.ExoPlayer
 
 
 class MovieDetailFragment : Fragment() {
@@ -63,8 +63,9 @@ class MovieDetailFragment : Fragment() {
     private lateinit var container: ShimmerFrameLayout
     private val args: MovieDetailFragmentArgs by navArgs()
     private lateinit var webPlayer: WebView
-
     private lateinit var webTrailerPlayer: WebView
+    private lateinit var playerHelper: PlayerHelper
+
     private lateinit var serverSpinnerAdapter: ArrayAdapter<String>
     private lateinit var seasonSpinnerAdapter: ArrayAdapter<String>
     private var trailerVisible = true
@@ -119,9 +120,8 @@ class MovieDetailFragment : Fragment() {
         binding.playBtn.setOnClickListener{
             trailerVisible = false
             webTrailerPlayer.visibility = View.GONE
-            webPlayer.visibility = View.VISIBLE
             binding.llTitleContainer.visibility = View.GONE
-
+            binding.playerContainer.visibility = View.VISIBLE
             destroyTrailerPlayer()
         }
 
@@ -335,8 +335,6 @@ class MovieDetailFragment : Fragment() {
                             if(!this::webPlayer.isInitialized) initializeEpsPlayer()
 
                         loadEpsPlayer(webPlayer, it)
-
-
                     }
                 }
             }
@@ -344,6 +342,13 @@ class MovieDetailFragment : Fragment() {
 
         hideKeyboard()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyTrailerPlayer()
+        if(this::playerHelper.isInitialized) playerHelper.releasePlayer()
+        Log.d("movieDetailFrag", "FragmentDestroyed")
     }
 
     private fun initializeEpsPlayer() {
@@ -370,22 +375,6 @@ class MovieDetailFragment : Fragment() {
 
 
     }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyTrailerPlayer()
-        Log.d("movieDetailFrag", "FragmentDestroyed")
-    }
-
-    private fun destroyTrailerPlayer() {
-        if (webTrailerPlayer != null) {
-            webTrailerPlayer.removeAllViews();
-            webTrailerPlayer.destroy();
-            Log.d("movieDetailFrag", "destroyed")
-        }
-    }
-
 
     private fun movieControls() {
         Handler(Looper.getMainLooper()).postDelayed({
@@ -441,137 +430,16 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-    private fun loadEpsPlayer(epsPlayer: View, vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
 
-            epsPlayer as TouchyWebView
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // chromium, enable hardware acceleration
-            epsPlayer.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {
-            // older android version, disable hardware acceleration
-            epsPlayer.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-
-
-
-
-            epsPlayer.settings.javaScriptEnabled = true
-            epsPlayer.settings.userAgentString =
-                "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
-
-            epsPlayer?.settings?.userAgentString = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
-            epsPlayer.settings.setDomStorageEnabled(true);
-            epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
-            epsPlayer.settings.setAppCacheEnabled(true);
-            epsPlayer.settings.setAppCachePath(requireContext().filesDir.absolutePath + "/cache");
-            epsPlayer.settings.databaseEnabled = true;
-            epsPlayer.settings.setDatabasePath(requireContext().filesDir.absolutePath + "/databases");
-            epsPlayer.settings.mediaPlaybackRequiresUserGesture = false;
-
-
-
-
-            val map = HashMap<String, String>()
-            map.put("referer", "https://fmoviesto.cc")
-
-            epsPlayer.loadUrl(
-                vidEmbedURl,
-                map
-            )
-
-            epsPlayer.addJavascriptInterface(
-                WebAppInterface(requireContext(), vidEmbedURl), "Android")
-
-            fun getTextWebResource(data: InputStream): WebResourceResponse {
-                return WebResourceResponse("text/plain", "UTF-8", data);
-            }
-
-            epsPlayer.webViewClient = object : WebViewClient() {
-
-                override fun shouldInterceptRequest(
-                    view: WebView?,
-                    request: WebResourceRequest?
-                ): WebResourceResponse? {
-
-                    if (BlockHosts().hosts.contains(request!!.url.host)) {
-                        val textStream: InputStream = ByteArrayInputStream("".toByteArray())
-                        return getTextWebResource(textStream)
-                    }
-                    return super.shouldInterceptRequest(view, request)
-                }
-
-                override fun onLoadResource(view: WebView?, url: String?) {
-                    super.onLoadResource(view, url)
-                    Log.d("resourceUrls", url!!)
-                    if(url!!.endsWith("playlist.m3u8")){
-                        Log.d("movieSeasons", url)
-                    }
-                }
-
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    super.onPageStarted(view, url, favicon)
-
-                    epsPlayer.loadUrl(
-                        """javascript:(function f() {
-                            let myInterval = setInterval(() => {
-                            let fBtn = document.querySelector('.jw-icon-fullscreen');
-                            if(fBtn != null || fBtn != 'undefined'){
-                                  document.querySelector('.jw-icon-fullscreen').addEventListener('click', function() {
-                                     document.querySelector('.jw-svg-icon-fullscreen-off').style.display = 'none';
-                                     document.querySelector('.jw-svg-icon-fullscreen-on').style.display = 'block';
-                                     Android.showToast();
-                                 });
-                                   clearInterval(myInterval);
-                            }
-                        }, 200);
-                        
-                          let overlayInterval = setInterval(() => {
-                            let overlay = document.getElementById('overlay-center');
-                            if(overlay != null || overlay != 'undefined'){
-                              document.getElementById('overlay-center').remove();
-                               clearInterval(overlayInterval);
-                            }
-                        }, 200);
-                      })()""".trimIndent().trimMargin()
-                    );
-                }
-
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-
-                    // jw-svg-icon-fullscreen-off
-                    // jw-svg-icon-fullscreen-on
-
-                //    binding.playBtn.visibility = View.VISIBLE
-                    epsPlayer.webChromeClient = object: WebChromeClient(){
-                        override fun onPermissionRequest(request: PermissionRequest?) {
-                            if (request != null) {
-                                request.grant(request.resources);
-                            }
-                            super.onPermissionRequest(request)
-                        }
-                    }
-                }
-
-        }
+    private fun loadEpsPlayer(epsPlayer: WebView, vidEmbedURl: String){
+        val epsHelper = EpsWebViewHelper(epsPlayer, vidEmbedURl)
+        epsHelper.streamUrl.observe(viewLifecycleOwner, {
+            playerHelper = PlayerHelper(activity as Context, binding.playerView,  it)
+            playerHelper.initPlayer()
+//            val intent = Intent(activity, NativePlayerActivity::class.java)
+//            startActivity(intent)
+        })
     }
-    /** Instantiate the interface and set the context  */
-    class WebAppInterface(
-        private val mContext: Context,
-        private val url: String
-    ) {
-
-        /** Show a toast from the web page  */
-        @JavascriptInterface
-        fun showToast() {
-            Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
-            val intent = Intent(mContext, PlayerActivity::class.java)
-            intent.putExtra("vidUrl", url)
-            mContext.startActivity(intent)
-        }
-    }
-
 
     private fun loadTrailerPlayer(wvPlayer: View, vidEmbedURl: String = "https://streamrapid.ru/embed-4/FZbgGAE8iDRR?z="){
         wvPlayer as TouchyWebView
@@ -635,6 +503,13 @@ class MovieDetailFragment : Fragment() {
 
             }
 
+    }
+    private fun destroyTrailerPlayer() {
+        if (webTrailerPlayer != null) {
+            webTrailerPlayer.removeAllViews();
+            webTrailerPlayer.destroy();
+            Log.d("movieDetailFrag", "destroyed")
+        }
     }
 
     private fun hideKeyboard() {
