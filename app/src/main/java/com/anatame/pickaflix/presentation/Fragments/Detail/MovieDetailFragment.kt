@@ -45,6 +45,10 @@ import com.anatame.pickaflix.common.utils.PlayerHelper
 import com.anatame.pickaflix.presentation.Adapters.EpisodeRVAdapter
 import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.activity.OnBackPressedCallback
+
+
+
 
 
 class MovieDetailFragment : Fragment() {
@@ -84,6 +88,16 @@ class MovieDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
+
+        // This callback will only be called when MyFragment is at least Started.
+        // This callback will only be called when MyFragment is at least Started.
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         val currentOrientation = resources.configuration.orientation
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -550,12 +564,15 @@ class MovieDetailFragment : Fragment() {
 
     }
     private fun destroyTrailerPlayer() {
-        if (webTrailerPlayer != null) {
-            webTrailerPlayer.removeAllViews();
-            webTrailerPlayer.destroy();
-            Log.d("movieDetailFrag", "destroyed")
+        if(this::webTrailerPlayer.isInitialized) {
+            if (webTrailerPlayer != null) {
+                webTrailerPlayer.removeAllViews();
+                webTrailerPlayer.destroy();
+                Log.d("movieDetailFrag", "destroyed")
+            }
         }
     }
+
 
     private fun hideKeyboard() {
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -574,6 +591,7 @@ class MovieDetailFragment : Fragment() {
 
 
 }
+
 
 
 // shared element tranistions specific to views
