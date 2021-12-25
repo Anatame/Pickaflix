@@ -102,11 +102,9 @@ class MovieDetailFragment : Fragment() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val inflated = binding.wvStub.inflate()
-            webPlayer = inflated.findViewById(R.id.epsPlayer)
+            initializeEpsPlayer()
 
-            val inflated2 = binding.wvTrailerStub.inflate()
-            webTrailerPlayer = inflated2.findViewById(R.id.epsPlayer)
+            initializeTrailer()
 
             webTrailerPlayer.visibility = View.INVISIBLE
             webPlayer.visibility = View.INVISIBLE
@@ -221,7 +219,9 @@ class MovieDetailFragment : Fragment() {
                         container.hideShimmer()
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
                         val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-
+                        if(!this::webTrailerPlayer.isInitialized) {
+                            initializeTrailer()
+                        }
                         loadTrailerPlayer(webTrailerPlayer,it.movieTrailerUrl + "?playlist=$vidId&loop=1")
                     }
                 }
@@ -332,9 +332,9 @@ class MovieDetailFragment : Fragment() {
                             Toast.LENGTH_SHORT)
                             .show()
 
+                            if(!this::webPlayer.isInitialized) initializeEpsPlayer()
 
-
-                            loadEpsPlayer(webPlayer, it)
+                        loadEpsPlayer(webPlayer, it)
 
 
                     }
@@ -343,6 +343,31 @@ class MovieDetailFragment : Fragment() {
         })
 
         hideKeyboard()
+
+    }
+
+    private fun initializeEpsPlayer() {
+        if (binding.wvStub.getParent() != null) {
+            //have not been inflated
+            val inflated = binding.wvStub.inflate()
+            webPlayer = inflated.findViewById(R.id.epsPlayer)
+        } else {
+            //already inflated
+        }
+
+
+    }
+
+    private fun initializeTrailer() {
+
+        if (binding.wvTrailerStub.getParent() != null) {
+            //have not been inflated
+            val inflated2 = binding.wvTrailerStub.inflate()
+            webTrailerPlayer = inflated2.findViewById(R.id.epsPlayer)
+        } else {
+            //already inflated
+        }
+
 
     }
 

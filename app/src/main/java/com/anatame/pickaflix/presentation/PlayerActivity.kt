@@ -1,6 +1,7 @@
 package com.anatame.pickaflix.presentation
 
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -25,14 +26,14 @@ import java.io.InputStream
 import android.view.WindowInsetsController
 
 import android.view.WindowInsets
-
-
+import androidx.annotation.RequiresApi
 
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private val context: Context = this@PlayerActivity
     
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -45,6 +46,11 @@ class PlayerActivity : AppCompatActivity() {
             if (url != null) {
                 loadEpsPlayer(url)
             }
+        }
+
+        binding.btnEnterPip.setOnClickListener {
+            this.enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+
         }
     }
 
