@@ -3,6 +3,8 @@ package com.anatame.pickaflix.presentation.Fragments.Detail
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -17,10 +19,6 @@ import androidx.fragment.app.Fragment
 import com.anatame.pickaflix.databinding.FragmentMovieDetailBinding
 import com.bumptech.glide.Glide
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,27 +31,20 @@ import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.common.utils.BlockHosts
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieDetails
 import com.anatame.pickaflix.presentation.Adapters.ServerAdapter
-import com.anatame.pickaflix.presentation.Fragments.home.HomeFragmentDirections
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.chip.Chip
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import com.facebook.shimmer.ShimmerFrameLayout
-import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.core.content.ContextCompat.startActivity
 import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.common.utils.EpsWebViewHelper
 import com.anatame.pickaflix.common.utils.PlayerHelper
 import com.anatame.pickaflix.presentation.Adapters.EpisodeRVAdapter
 import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
-import com.anatame.pickaflix.presentation.NativePlayerActivity
-import com.anatame.pickaflix.presentation.PlayerActivity
-import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MovieDetailFragment : Fragment() {
@@ -70,11 +61,7 @@ class MovieDetailFragment : Fragment() {
     private lateinit var seasonSpinnerAdapter: ArrayAdapter<String>
     private var trailerVisible = true
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
 
         val transition: Transition = TransitionSet()
@@ -98,9 +85,19 @@ class MovieDetailFragment : Fragment() {
 
         viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
+        val currentOrientation = resources.configuration.orientation
+        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            portraitCreated()
+        } else {
+            fullScreenPlayer()
+        }
+    }
+
+    private fun portraitCreated() {
         binding.ivBackBtn.setOnClickListener {
             findNavController().popBackStack()
         }
+
 
         Handler(Looper.getMainLooper()).postDelayed({
             initializeEpsPlayer()
@@ -117,12 +114,15 @@ class MovieDetailFragment : Fragment() {
 
         binding.playBtn.visibility = View.GONE
 
-        binding.playBtn.setOnClickListener{
+        binding.playBtn.setOnClickListener {
             trailerVisible = false
             webTrailerPlayer.visibility = View.GONE
             binding.llTitleContainer.visibility = View.GONE
             binding.playerContainer.visibility = View.VISIBLE
             destroyTrailerPlayer()
+        }
+        binding.btnFullScreen.setOnClickListener {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
 
         val serverSpinnerArray = ArrayList<String>()
@@ -133,7 +133,7 @@ class MovieDetailFragment : Fragment() {
             serverSpinnerArray
         )
 
-     val seasonSpinnerArray = ArrayList<String>()
+        val seasonSpinnerArray = ArrayList<String>()
         seasonSpinnerArray.add("Season 1")
         seasonSpinnerAdapter = ArrayAdapter(
             requireContext(),
@@ -149,30 +149,30 @@ class MovieDetailFragment : Fragment() {
 
         val begin = System.currentTimeMillis()
 
-        if(args.movie != null){
+        if (args.movie != null) {
             Glide.with(this).load(args.movie?.thumbnailUrl)
                 .dontTransform()
                 .apply(
                     RequestOptions()
-                    .placeholder(R.drawable.backgroundplaceholder)
+                        .placeholder(R.drawable.backgroundplaceholder)
                 )
                 .into(binding.ivHero)
 
 
             viewModel.getMovieDetails(args.movie?.Url.toString())
 
-            if(args.movie?.movieType == "TV") {
+            if (args.movie?.movieType == "TV") {
                 viewModel.getSeasons(args.movie?.Url.toString())
                 tvControls()
             }
 
-            if(args.movie?.movieType == "Movie"){
+            if (args.movie?.movieType == "Movie") {
                 viewModel.getMovieData(args.movie?.Url.toString())
                 movieControls()
             }
         }
 
-        if(args.searchMovieItem != null){
+        if (args.searchMovieItem != null) {
             Glide.with(this).load(args.searchMovieItem?.thumbnailSrc)
                 .centerCrop()
                 .into(binding.ivHero)
@@ -180,12 +180,12 @@ class MovieDetailFragment : Fragment() {
             // get movie details passing the src
             viewModel.getMovieDetails(args.searchMovieItem?.src.toString())
 
-            if(args.searchMovieItem?.src!!.contains("tv")) {
+            if (args.searchMovieItem?.src!!.contains("tv")) {
                 viewModel.getSeasons(args.searchMovieItem?.src.toString())
                 tvControls()
             }
 
-            if(args.searchMovieItem?.src!!.contains("movie")) {
+            if (args.searchMovieItem?.src!!.contains("movie")) {
                 viewModel.getMovieData(args.searchMovieItem?.src.toString())
                 movieControls()
             }
@@ -199,30 +199,33 @@ class MovieDetailFragment : Fragment() {
 
             viewModel.getMovieDetails(it.source)
 
-            if(args.heroItem?.source!!.contains("tv")) {
+            if (args.heroItem?.source!!.contains("tv")) {
                 viewModel.getSeasons(args.heroItem?.source.toString())
                 tvControls()
             }
-            if(args.heroItem?.source!!.contains("movie")) {
+            if (args.heroItem?.source!!.contains("movie")) {
                 viewModel.getMovieData(args.heroItem?.source.toString())
                 movieControls()
             }
 
         }
 
-        viewModel.movieDetails.observe(viewLifecycleOwner, Observer { response->
-            when(response){
+        viewModel.movieDetails.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
                 is Resource.Success -> {
-                    response.data?.let{
+                    response.data?.let {
 
                         setContent(it)
                         container.hideShimmer()
                         // need to add "?playlist=$vidId&loop=1" to enable loop for youtube embed
                         val vidId = it.movieTrailerUrl.substring(30, it.movieTrailerUrl.length)
-                        if(!this::webTrailerPlayer.isInitialized) {
+                        if (!this::webTrailerPlayer.isInitialized) {
                             initializeTrailer()
                         }
-                        loadTrailerPlayer(webTrailerPlayer,it.movieTrailerUrl + "?playlist=$vidId&loop=1")
+                        loadTrailerPlayer(
+                            webTrailerPlayer,
+                            it.movieTrailerUrl + "?playlist=$vidId&loop=1"
+                        )
                     }
                 }
                 is Resource.Loading -> {
@@ -301,13 +304,13 @@ class MovieDetailFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let {
                         val epAdapter = EpisodeRVAdapter(it)
-                       binding.rvEps.apply {
-                           visibility = View.VISIBLE
-                           adapter = epAdapter
-                           layoutManager = LinearLayoutManager(requireContext())
-                       }
+                        binding.rvEps.apply {
+                            visibility = View.VISIBLE
+                            adapter = epAdapter
+                            layoutManager = LinearLayoutManager(requireContext())
+                        }
 
-                        epAdapter.setOnItemClickListener{ position, epsID ->
+                        epAdapter.setOnItemClickListener { position, epsID ->
                             viewModel.getSelectedEpisodeVid(epsID)
                             webTrailerPlayer.visibility = View.GONE
                             webPlayer.visibility = View.VISIBLE
@@ -324,15 +327,17 @@ class MovieDetailFragment : Fragment() {
         })
 
         viewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
-            when(response){
+            when (response) {
                 is Resource.Success -> {
-                    response.data?.let{
-                        Toast.makeText(context,
+                    response.data?.let {
+                        Toast.makeText(
+                            context,
                             (System.currentTimeMillis() - begin).toString(),
-                            Toast.LENGTH_SHORT)
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
 
-                            if(!this::webPlayer.isInitialized) initializeEpsPlayer()
+                        if (!this::webPlayer.isInitialized) initializeEpsPlayer()
 
                         loadEpsPlayer(webPlayer, it)
                     }
@@ -341,7 +346,19 @@ class MovieDetailFragment : Fragment() {
         })
 
         hideKeyboard()
+    }
 
+    private fun fullScreenPlayer(){
+        container = binding.shimmerViewContainer
+        container.hideShimmer()
+
+        binding.llTitleContainer.visibility = View.GONE
+        binding.playerContainer.visibility = View.VISIBLE
+
+        viewModel.streamUrl.observe(viewLifecycleOwner, {
+            playerHelper = PlayerHelper(activity as Context, binding.playerView,  it)
+            playerHelper.initPlayer()
+        })
     }
 
     override fun onDestroy() {
@@ -349,6 +366,33 @@ class MovieDetailFragment : Fragment() {
         destroyTrailerPlayer()
         if(this::playerHelper.isInitialized) playerHelper.releasePlayer()
         Log.d("movieDetailFrag", "FragmentDestroyed")
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val currentOrientation = resources.configuration.orientation
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            handlePlayerFullScreen()
+            Log.d("currentOrientation", "Landscape")
+        } else {
+            // Portrait
+        }
+
+    }
+
+    private fun handlePlayerFullScreen(){
+
+        val movieControlsContainer = binding.movieControlsContainer
+        movieControlsContainer.visibility = View.GONE
+
+        val movieContainer = binding.clMovieContainer
+        movieContainer.getLayoutParams().height= ViewGroup.LayoutParams.MATCH_PARENT;
+
+        val navBar = (activity as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view)
+
+        navBar.visibility = View.GONE
+
     }
 
     private fun initializeEpsPlayer() {
@@ -436,6 +480,7 @@ class MovieDetailFragment : Fragment() {
         epsHelper.streamUrl.observe(viewLifecycleOwner, {
             playerHelper = PlayerHelper(activity as Context, binding.playerView,  it)
             playerHelper.initPlayer()
+            viewModel.streamUrl.postValue(it)
 //            val intent = Intent(activity, NativePlayerActivity::class.java)
 //            startActivity(intent)
         })

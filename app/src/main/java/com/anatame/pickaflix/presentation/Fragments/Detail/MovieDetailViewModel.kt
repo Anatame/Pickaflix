@@ -22,6 +22,8 @@ class MovieDetailViewModel (
     val seasonList: MutableLiveData<Resource<List<SeasonItem>>> = MutableLiveData()
     val episodeList: MutableLiveData<Resource<List<EpisodeItem>>> = MutableLiveData()
 
+    val streamUrl: MutableLiveData<String> = MutableLiveData()
+
     init{
         Log.d("movieDetailViewModel", "started")
     }
