@@ -90,35 +90,6 @@ class HomeFragment : Fragment() {
         }
 
 
-//
-//        homeRvAdapter = activity?.let { HomeRVAdapter(it, homeRvItemList) }!!
-//        setupRecyclerView()
-
-//
-//        movieAdapter.setOnItemClickListener { movieItem, imageView ->
-////            val bundle = Bundle().apply {
-////                putSerializable("movie", movieItem)
-////                putString("imageID", imageView.transitionName)
-////            }
-//            val destination = HomeFragmentDirections.actionNavigationHomeToMovieDetailFragment(
-//                movieItem,
-//                imageView.transitionName,
-//                null
-//            )
-//            val extras = FragmentNavigatorExtras(imageView to imageView.transitionName)
-//
-//            findNavController().navigate(
-//                destination,
-//                extras
-//            )
-//
-//        }
-//
-
-
-
-
-
         binding.ibSearchButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
         }

@@ -30,14 +30,14 @@
             app:layout_constraintTop_toTopOf="@id/playerLayout"
             app:layout_constraintStart_toStartOf="@id/playerLayout"
             android:id="@+id/movieImage"
-            app:layout_constraintVertical_bias="0.0" />
+            />
     </ConstraintSet>
 
     <Transition
+        android:id="@+id/expandTransition"
         app:constraintSetEnd="@id/end"
         app:constraintSetStart="@+id/start"
-        app:motionInterpolator="overshoot"
-        app:duration="300">
+        app:duration="200">
 
         <OnSwipe
             app:maxAcceleration="30"

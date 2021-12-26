@@ -20,6 +20,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.common.Resource
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
@@ -205,11 +206,13 @@ class HomeRVAdapter(
 
 
             holder.adapter.setOnItemClickListener {position, movieItem, imageView ->
-                startNavigation(holder.itemView, movieItem, imageView)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    //doSomethingHere()
-                    scrollState.postValue(position)
-                }, 300)
+//                startNavigation(holder.itemView, movieItem, imageView)
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    //doSomethingHere()
+//                    scrollState.postValue(position)
+//                }, 300)
+
+                (activity as MainActivity).loadMovie()
             }
         }
     }

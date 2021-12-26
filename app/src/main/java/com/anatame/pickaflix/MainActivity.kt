@@ -16,6 +16,7 @@ import com.anatame.pickaflix.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import android.content.res.ColorStateList
+import androidx.constraintlayout.motion.widget.MotionLayout
 import com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment
 
 
@@ -66,6 +67,11 @@ class MainActivity : AppCompatActivity() {
         navController.navigateUp()
 
         return super.onSupportNavigateUp()
+    }
+
+    fun loadMovie(){
+        val motionLayout = binding.container
+        motionLayout.transitionToEnd()
     }
 
 }
