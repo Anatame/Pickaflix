@@ -41,13 +41,20 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/teal_200"
-        app:layout_constraintTop_toTopOf="@id/nav_host_fragment_activity_main"
         app:layout_constraintBottom_toBottomOf="@id/nav_host_fragment_activity_main"
-        app:layout_constraintStart_toStartOf="@id/nav_host_fragment_activity_main"
         app:layout_constraintEnd_toEndOf="@id/nav_host_fragment_activity_main"
-        >
+        app:layout_constraintStart_toStartOf="@id/nav_host_fragment_activity_main"
+        app:layout_constraintTop_toTopOf="@id/nav_host_fragment_activity_main"></androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        app:layout_constraintTop_toTopOf="@id/playerLayout"
+        app:layout_constraintStart_toStartOf="@id/playerLayout"
+        android:id="@+id/movieImage"
+        android:scaleType="centerCrop"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:src="@drawable/backgroundplaceholder"
+        />
 
     <com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
 
