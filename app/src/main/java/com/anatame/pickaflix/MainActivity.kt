@@ -1,5 +1,6 @@
 package com.anatame.pickaflix
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -16,6 +17,9 @@ import com.anatame.pickaflix.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import android.content.res.ColorStateList
+import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment
 
@@ -27,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     val context: Context = this@MainActivity
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         windowFlags(context, window)
@@ -70,8 +75,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loadMovie(){
-        val motionLayout = binding.container
-        motionLayout.transitionToEnd()
+//        val motionLayout = binding.container
+//        motionLayout.transitionToEnd()
     }
 
 }
