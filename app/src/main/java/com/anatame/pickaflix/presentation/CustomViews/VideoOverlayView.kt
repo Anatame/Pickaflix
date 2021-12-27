@@ -2,11 +2,22 @@ package com.anatame.pickaflix.presentation.CustomViews
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
+import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.R
+import com.anatame.pickaflix.presentation.Adapters.DetailsRVKingAdapter
+import com.anatame.pickaflix.presentation.Adapters.DetailsRVMasterAdapter
+import androidx.core.view.MotionEventCompat
+
+
+
 
 
 class VideoOverlayView
@@ -19,6 +30,8 @@ class VideoOverlayView
     private val touchableArea: View
 
     private val clickableArea: View
+    private val tvTitle: View
+    private var rv: RecyclerView
 
     private var startX: Float? = null
     private var startY: Float? = null
@@ -29,14 +42,29 @@ class VideoOverlayView
 
         touchableArea = motionLayout.findViewById(R.id.video_overlay_touchable_area)
         clickableArea = motionLayout.findViewById(R.id.video_overlay_thumbnail)
+        tvTitle = motionLayout.findViewById(R.id.video_overlay_title)
+        rv = motionLayout.findViewById(R.id.rvDetails)
+        initRecyclerview()
+
     }
 
+    fun initRecyclerview(){
+        if (rv != null) {
+            Log.d("nigga","the recyclerview is hereee")
+            rv.layoutManager = LinearLayoutManager(context)
+            rv.adapter = DetailsRVKingAdapter(context, rv)
+
+        }
+
+    }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         val isInProgress = (motionLayout.progress > 0.0f && motionLayout.progress < 1.0f)
         val isInTarget = touchEventInsideTargetView(touchableArea, ev)
 
-        return if (isInProgress || isInTarget) {
+        val isInRVTarget = touchEventInsideTargetView(rv, ev)
+
+        return if (isInProgress || isInTarget || isInRVTarget) {
             super.onInterceptTouchEvent(ev)
         } else {
             true
@@ -52,7 +80,9 @@ class VideoOverlayView
         return false
     }
 
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+
         if (touchEventInsideTargetView(clickableArea, ev)) {
             when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -67,6 +97,23 @@ class VideoOverlayView
                         if (doClickTransition()) {
                             return true
                         }
+                    }
+                }
+            }
+        }
+
+        if (touchEventInsideTargetView(tvTitle, ev)) {
+            when (ev.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = ev.x
+                    startY = ev.y
+                }
+
+                MotionEvent.ACTION_UP   -> {
+                    val endX = ev.x
+                    val endY = ev.y
+                    if (isAClick(startX!!, endX, startY!!, endY)) {
+                        Toast.makeText(context, "brah", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -96,5 +143,6 @@ class VideoOverlayView
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return false
     }
+
 
 }

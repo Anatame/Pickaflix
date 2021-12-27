@@ -6,7 +6,7 @@
         motion:constraintSetStart="@layout/video_overlay_small"
         motion:duration="200">
         <OnSwipe
-            motion:dragDirection="dragUp"
+
             motion:maxAcceleration="25"
             motion:touchAnchorId="@id/video_overlay_touchable_area"
             motion:touchAnchorSide="left"/>

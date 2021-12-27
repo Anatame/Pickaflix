@@ -15,6 +15,7 @@
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/activity_native_player.xml" value="0.10416666666666667" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/activity_player.xml" value="0.11322463768115942" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/details_rv_item.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/episode_rv_item.xml" value="0.11865942028985507" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/fragment_detail.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/fragment_home.xml" value="0.1" />
@@ -30,6 +31,7 @@
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_movie.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_rv_genre.xml" value="0.15715579710144928" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_rv_server.xml" value="0.15715579710144928" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/king_rv_item.xml" value="0.19739583333333333" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/movie_detail_fragment.xml" value="0.11548913043478261" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/pager_hero_tem.xml" value="0.152" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/player_wv_layout_stub.xml" value="0.10643115942028986" />
@@ -37,8 +39,8 @@
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/search_item_movie.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/search_item_movie2.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/themeable_bottom_nav.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/video_overlay_fullscreen.xml" value="0.19739583333333333" />
-        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/video_overlay_small.xml" value="0.19739583333333333" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/video_overlay_fullscreen.xml" value="0.18518518518518517" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/video_overlay_small.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/menu/bottom_nav_menu.xml" value="0.19739583333333333" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/xml/activity_main_scene.xml" value="0.148046875" />
       </map>
