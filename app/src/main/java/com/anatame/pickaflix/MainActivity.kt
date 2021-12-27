@@ -75,8 +75,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loadMovie(){
-//        val motionLayout = binding.container
-//        motionLayout.transitionToEnd()
+        binding.videoOverlayView.visibility = View.VISIBLE
+        binding.videoOverlayView.loadView()
     }
 
 }

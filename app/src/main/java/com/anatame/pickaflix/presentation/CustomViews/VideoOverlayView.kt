@@ -48,7 +48,7 @@ class VideoOverlayView
 
     }
 
-    fun initRecyclerview(){
+    private fun initRecyclerview(){
         if (rv != null) {
             Log.d("nigga","the recyclerview is hereee")
             rv.layoutManager = LinearLayoutManager(context)
@@ -93,9 +93,11 @@ class VideoOverlayView
                 MotionEvent.ACTION_UP   -> {
                     val endX = ev.x
                     val endY = ev.y
-                    if (isAClick(startX!!, endX, startY!!, endY)) {
-                        if (doClickTransition()) {
-                            return true
+                    if(startX != null && startY!= null){
+                        if (isAClick(startX!!, endX, startY!!, endY)) {
+                            if (doClickTransition()) {
+                                return true
+                            }
                         }
                     }
                 }
@@ -112,8 +114,10 @@ class VideoOverlayView
                 MotionEvent.ACTION_UP   -> {
                     val endX = ev.x
                     val endY = ev.y
-                    if (isAClick(startX!!, endX, startY!!, endY)) {
-                        Toast.makeText(context, "brah", Toast.LENGTH_SHORT).show()
+                    if(startX != null && startY!= null) {
+                        if (isAClick(startX!!, endX, startY!!, endY)) {
+                            Toast.makeText(context, "brah", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -142,6 +146,10 @@ class VideoOverlayView
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return false
+    }
+
+    fun loadView(){
+        motionLayout.transitionToEnd()
     }
 
 
