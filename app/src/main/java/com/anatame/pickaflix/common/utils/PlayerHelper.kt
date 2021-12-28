@@ -17,11 +17,13 @@ class PlayerHelper(
     private var player: ExoPlayer? = null
 
     fun initPlayer(){
+        playerView.useController = false
         player = ExoPlayer.Builder(context).build()
         playerView.player = player
         createMediaSource()
         player?.setMediaSource(createMediaSource())
         player?.prepare()
+        player?.playWhenReady = true
     }
 
     private fun createMediaSource(): MediaSource {

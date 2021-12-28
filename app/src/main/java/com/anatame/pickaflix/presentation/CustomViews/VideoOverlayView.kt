@@ -15,9 +15,9 @@ import com.anatame.pickaflix.R
 import com.anatame.pickaflix.presentation.Adapters.DetailsRVKingAdapter
 import com.anatame.pickaflix.presentation.Adapters.DetailsRVMasterAdapter
 import androidx.core.view.MotionEventCompat
-
-
-
+import com.anatame.pickaflix.common.utils.PlayerHelper
+import com.anatame.pickaflix.databinding.VideoOverlaySmallBinding
+import com.google.android.exoplayer2.ui.PlayerView
 
 
 class VideoOverlayView
@@ -26,6 +26,7 @@ class VideoOverlayView
      attrs: AttributeSet? = null,
      defStyleAttr: Int = 0) : MotionLayout(context, attrs, defStyleAttr) {
 
+    private var binding: VideoOverlaySmallBinding
     private var motionLayout: MotionLayout
     private val touchableArea: View
 
@@ -37,13 +38,14 @@ class VideoOverlayView
     private var startY: Float? = null
 
     init {
-        motionLayout = LayoutInflater.from(context).inflate(R.layout.video_overlay_small, this, false) as MotionLayout
-        addView(motionLayout)
+        binding = VideoOverlaySmallBinding.inflate(LayoutInflater.from(context), this, false)
+        addView(binding.root)
+        motionLayout = binding.container
 
-        touchableArea = motionLayout.findViewById(R.id.video_overlay_touchable_area)
-        clickableArea = motionLayout.findViewById(R.id.video_overlay_thumbnail)
-        tvTitle = motionLayout.findViewById(R.id.video_overlay_title)
-        rv = motionLayout.findViewById(R.id.rvDetails)
+        touchableArea = binding.videoOverlayTouchableArea
+        clickableArea = binding.videoOverlayThumbnail
+        tvTitle = binding.videoOverlayTitle
+        rv = binding.rvDetails
         initRecyclerview()
 
     }
@@ -62,9 +64,7 @@ class VideoOverlayView
         val isInProgress = (motionLayout.progress > 0.0f && motionLayout.progress < 1.0f)
         val isInTarget = touchEventInsideTargetView(touchableArea, ev)
 
-        val isInRVTarget = touchEventInsideTargetView(rv, ev)
-
-        return if (isInProgress || isInTarget || isInRVTarget) {
+        return if (isInProgress || isInTarget ) {
             super.onInterceptTouchEvent(ev)
         } else {
             true
@@ -150,6 +150,13 @@ class VideoOverlayView
 
     fun loadView(){
         motionLayout.transitionToEnd()
+    }
+
+    fun loadPlayer(){
+        val hlrUrl =   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+        val pv = clickableArea as PlayerView
+        val playerHelper = PlayerHelper(context, clickableArea,  hlrUrl)
+        playerHelper.initPlayer()
     }
 
 
