@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.R
@@ -30,8 +32,13 @@ class VideoOverlayView
     private var motionLayout: MotionLayout
     private val touchableArea: View
 
+    private lateinit var playerHelper: PlayerHelper
+    private val playIcon = R.drawable.ic_baseline_play_arrow_24
+    private val pauseIcon = R.drawable.ic_baseline_pause_24
+
     private val clickableArea: View
     private val tvTitle: View
+    private val playBtn: ImageButton
     private var rv: RecyclerView
 
     private var startX: Float? = null
@@ -45,6 +52,8 @@ class VideoOverlayView
         touchableArea = binding.videoOverlayTouchableArea
         clickableArea = binding.videoOverlayThumbnail
         tvTitle = binding.videoOverlayTitle
+        playBtn = binding.playBtn
+
         rv = binding.rvDetails
         initRecyclerview()
 
@@ -83,7 +92,30 @@ class VideoOverlayView
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
 
-        if (touchEventInsideTargetView(clickableArea, ev)) {
+//        if (touchEventInsideTargetView(clickableArea, ev)) {
+//            when (ev.action) {
+//                MotionEvent.ACTION_DOWN -> {
+//                    startX = ev.x
+//                    startY = ev.y
+//                }
+//
+//                MotionEvent.ACTION_UP   -> {
+//                    val endX = ev.x
+//                    val endY = ev.y
+//                    if(startX != null && startY!= null){
+//                        if (isAClick(startX!!, endX, startY!!, endY)) {
+//                            if (doClickTransition()) {
+//                                return true
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+
+
+        if (touchEventInsideTargetView(playBtn, ev)) {
             when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
                     startX = ev.x
@@ -95,8 +127,15 @@ class VideoOverlayView
                     val endY = ev.y
                     if(startX != null && startY!= null){
                         if (isAClick(startX!!, endX, startY!!, endY)) {
-                            if (doClickTransition()) {
-                                return true
+                            if(playerHelper.isPlaying()){
+                                playerHelper.pause()
+                                playBtn.setImageDrawable(
+                                    ContextCompat.getDrawable(context, playIcon));
+
+                            } else {
+                                playerHelper.play()
+                                playBtn.setImageDrawable(
+                                    ContextCompat.getDrawable(context, pauseIcon));
                             }
                         }
                     }
@@ -155,7 +194,7 @@ class VideoOverlayView
     fun loadPlayer(){
         val hlrUrl =   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
         val pv = clickableArea as PlayerView
-        val playerHelper = PlayerHelper(context, clickableArea,  hlrUrl)
+        playerHelper = PlayerHelper(context, clickableArea,  hlrUrl)
         playerHelper.initPlayer()
     }
 

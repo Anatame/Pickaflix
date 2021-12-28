@@ -25,7 +25,20 @@
         app:layout_constraintLeft_toLeftOf="@id/video_overlay_touchable_area"
         app:layout_constraintRight_toRightOf="@id/video_overlay_touchable_area"
         app:layout_constraintBottom_toBottomOf="@id/video_overlay_touchable_area"
-        app:layout_constraintTop_toTopOf="@id/video_overlay_touchable_area"/>
+        app:layout_constraintTop_toTopOf="@id/video_overlay_touchable_area">
+
+      </com.google.android.exoplayer2.ui.PlayerView>
+
+    <ImageButton
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:id="@+id/playBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/video_overlay_thumbnail"
+        app:layout_constraintBottom_toBottomOf="@+id/video_overlay_thumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/video_overlay_thumbnail"
+        app:layout_constraintStart_toStartOf="@+id/video_overlay_thumbnail"
+        app:srcCompat="@drawable/ic_baseline_play_arrow_24" />
 
     <TextView
         android:id="@+id/video_overlay_title"

@@ -21,9 +21,12 @@ class PlayerHelper(
         player = ExoPlayer.Builder(context).build()
         playerView.player = player
         createMediaSource()
-        player?.setMediaSource(createMediaSource())
-        player?.prepare()
-        player?.playWhenReady = true
+        if(player != null){
+            player!!.setMediaSource(createMediaSource())
+            player!!.prepare()
+            player!!.playWhenReady = true
+        }
+
     }
 
     private fun createMediaSource(): MediaSource {
@@ -31,6 +34,22 @@ class PlayerHelper(
 
         return HlsMediaSource.Factory(dataSourceFactory)
             .createMediaSource(MediaItem.fromUri(contentUrl))
+    }
+
+    fun play(){
+        player?.play()
+    }
+
+    fun pause(){
+        player?.pause()
+    }
+
+    fun isPlaying(): Boolean{
+        if (player != null) {
+            return player!!.isPlaying
+        } else {
+            return false
+        }
     }
 
     fun releasePlayer() {
