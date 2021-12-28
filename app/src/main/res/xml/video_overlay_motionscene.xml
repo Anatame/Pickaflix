@@ -13,20 +13,21 @@
 
         <KeyFrameSet>
 
-            <KeyPosition
-                motion:framePosition="10"
-                motion:keyPositionType="deltaRelative"
-                motion:percentX="0"
-                motion:sizePercent="0"
-                motion:motionTarget="@id/video_overlay_thumbnail"/>
+<!--            <KeyPosition-->
+<!--                motion:framePosition="10"-->
+<!--                motion:keyPositionType="deltaRelative"-->
+<!--                motion:percentX="0"-->
+<!--                motion:sizePercent="0"-->
+<!--                motion:motionTarget="@id/video_overlay_thumbnail"/>-->
 
-            <KeyPosition
-                motion:framePosition="10"
-                motion:keyPositionType="deltaRelative"
-                motion:percentX="0"
-                motion:percentY="0.4"
-                motion:sizePercent="0"
-                motion:motionTarget="@id/video_overlay_title"/>
+<!--            <KeyPosition-->
+<!--                motion:framePosition="10"-->
+<!--                motion:keyPositionType="deltaRelative"-->
+<!--                motion:percentX="0"-->
+<!--                motion:percentY="0.4"-->
+<!--                motion:sizePercent="0"-->
+<!--                motion:motionTarget="@id/video_overlay_title"/>-->
+
 
         </KeyFrameSet>
 

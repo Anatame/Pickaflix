@@ -21,10 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="238dp"
         android:background="@color/colorAccent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="@+id/video_overlay_touchable_area"
+        app:layout_constraintRight_toRightOf="@+id/video_overlay_touchable_area"
+        app:layout_constraintBottom_toBottomOf="@+id/video_overlay_touchable_area"
+        app:layout_constraintTop_toTopOf="@+id/video_overlay_touchable_area"/>
 
     <TextView
         android:id="@+id/video_overlay_title"
