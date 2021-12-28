@@ -76,8 +76,6 @@ class MainActivity : AppCompatActivity() {
 
     fun loadMovie(){
         binding.videoOverlayView.visibility = View.VISIBLE
-        binding.videoOverlayView.loadView()
-
         binding.videoOverlayView.loadPlayer()
     }
 

@@ -38,7 +38,7 @@
     <com.anatame.pickaflix.presentation.CustomViews.VideoOverlayView
         android:id="@+id/videoOverlayView"
         android:layout_width="0dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/nav_host_fragment_activity_main"
         app:layout_constraintLeft_toLeftOf="@id/nav_host_fragment_activity_main"

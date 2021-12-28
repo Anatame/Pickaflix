@@ -78,6 +78,8 @@ class VideoOverlayView
         } else {
             true
         }
+
+        super.onInterceptTouchEvent(ev)
     }
 
     private fun touchEventInsideTargetView(v: View, ev: MotionEvent): Boolean {
