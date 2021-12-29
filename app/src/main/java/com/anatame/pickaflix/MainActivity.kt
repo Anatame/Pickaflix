@@ -21,13 +21,17 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.lifecycle.ViewModelProvider
+import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.presentation.Fragments.Detail.MovieDetailFragment
+import com.anatame.pickaflix.presentation.MovieDetailViewModel
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MovieDetailViewModel
     lateinit var navController: NavController
     val context: Context = this@MainActivity
 
@@ -37,21 +41,18 @@ class MainActivity : AppCompatActivity() {
         windowFlags(context, window)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
         setContentView(binding.root)
 
 
         val navView: BottomNavigationView = binding.navView
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_search,  R.id.navigation_saved, R.id.navigation_settings
             )
         )
-
-
         navView.setupWithNavController(navController)
 
         val iconColorStates = ColorStateList(
@@ -74,9 +75,16 @@ class MainActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
-    fun loadMovie(){
+    fun loadMovie(movieItem: MovieItem){
         binding.videoOverlayView.visibility = View.VISIBLE
         binding.videoOverlayView.loadPlayer()
+
+        viewModel.getMovieDetails(movieItem.Url)
+        when(movieItem.movieType) {
+            "TV" -> viewModel.getSeasons(movieItem.Url)
+            "Movie" ->  viewModel.getMovieData(movieItem.Url)
+        }
+
     }
 
 }

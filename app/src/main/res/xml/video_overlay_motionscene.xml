@@ -21,6 +21,22 @@
                 app:percentY="0"
                 app:sizePercent="0"
                 app:motionTarget="@id/small_controls"/>
+
+            <KeyPosition
+                app:framePosition="95"
+                app:keyPositionType="deltaRelative"
+                app:percentX="0"
+                app:percentY="0"
+                app:sizePercent="0"
+                app:motionTarget="@id/btnClosePlayer"/>
+
+            <KeyPosition
+                app:framePosition="95"
+                app:keyPositionType="deltaRelative"
+                app:percentX="0"
+                app:percentY="0"
+                app:sizePercent="0"
+                app:motionTarget="@id/btnPlayMini"/>
         </KeyFrameSet>
 
     </Transition>

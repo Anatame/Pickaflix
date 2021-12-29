@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.presentation.Fragments.Detail
+package com.anatame.pickaflix.presentation
 
 import android.util.Log
 import android.widget.Toast
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class MovieDetailViewModel (
     private val parser: Parser = Parser()
-        ) : ViewModel() {
+) : ViewModel() {
 
     val movieDetails: MutableLiveData<Resource<MovieDetails>> = MutableLiveData()
     val vidEmbedLink: MutableLiveData<Resource<String>> = MutableLiveData()
@@ -126,6 +126,7 @@ class MovieDetailViewModel (
             try {
                 movieDetails.postValue(Resource.Loading())
                 val response = parser.getMovieDetails(movieSrc)
+                Log.d("checkData", response.movieTitle)
                 movieDetails.postValue(Resource.Success(response))
             } catch (e: Exception){
                 e.printStackTrace()

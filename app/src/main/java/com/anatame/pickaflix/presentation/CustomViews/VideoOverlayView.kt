@@ -38,6 +38,7 @@ class VideoOverlayView
     private val pauseIcon = R.drawable.ic_baseline_pause_24
 
     private val clickableArea: View
+    private val playerView: PlayerView
     private val tvTitle: View
     private val playBtn: ImageButton
     private var rv: RecyclerView
@@ -52,6 +53,7 @@ class VideoOverlayView
 
         touchableArea = binding.videoOverlayTouchableArea
         clickableArea = binding.videoOverlayThumbnail
+        playerView = binding.actPlayer
         tvTitle = binding.videoOverlayTitle
         playBtn = binding.playBtn
 
@@ -130,16 +132,7 @@ class VideoOverlayView
                     val endY = ev.y
                     if(startX != null && startY!= null){
                         if (isAClick(startX!!, endX, startY!!, endY)) {
-                            if(playerHelper.isPlaying()){
-                                playerHelper.pause()
-                                playBtn.setImageDrawable(
-                                    ContextCompat.getDrawable(context, playIcon));
-
-                            } else {
-                                playerHelper.play()
-                                playBtn.setImageDrawable(
-                                    ContextCompat.getDrawable(context, pauseIcon));
-                            }
+                            handlePlayerControls()
                         }
                     }
                 }
@@ -196,10 +189,25 @@ class VideoOverlayView
 
     fun loadPlayer(){
         val hlrUrl =   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-        val pv = clickableArea as PlayerView
-        playerHelper = PlayerHelper(context, clickableArea,  hlrUrl)
+        playerHelper = PlayerHelper(context, playerView,  hlrUrl)
         playerHelper.initPlayer()
     }
+
+    private fun handlePlayerControls() {
+        if (playerHelper.isPlaying()) {
+            playerHelper.pause()
+            playBtn.setImageDrawable(
+                ContextCompat.getDrawable(context, playIcon)
+            );
+
+        } else {
+            playerHelper.play()
+            playBtn.setImageDrawable(
+                ContextCompat.getDrawable(context, pauseIcon)
+            );
+        }
+    }
+
 
 
 }

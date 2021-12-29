@@ -212,7 +212,7 @@ class HomeRVAdapter(
 //                    scrollState.postValue(position)
 //                }, 300)
 
-                (activity as MainActivity).loadMovie()
+                (activity as MainActivity).loadMovie(movieItem)
             }
         }
     }

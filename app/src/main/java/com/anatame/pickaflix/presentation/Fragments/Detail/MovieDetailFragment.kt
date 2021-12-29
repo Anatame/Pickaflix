@@ -46,9 +46,7 @@ import com.anatame.pickaflix.presentation.Adapters.EpisodeRVAdapter
 import com.anatame.pickaflix.presentation.CustomViews.TouchyWebView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.OnBackPressedCallback
-
-
-
+import com.anatame.pickaflix.presentation.MovieDetailViewModel
 
 
 class MovieDetailFragment : Fragment() {
