@@ -18,6 +18,7 @@ import com.anatame.pickaflix.presentation.Adapters.DetailsRVKingAdapter
 import com.anatame.pickaflix.presentation.Adapters.DetailsRVMasterAdapter
 import androidx.core.view.MotionEventCompat
 import com.anatame.pickaflix.common.utils.PlayerHelper
+import com.anatame.pickaflix.databinding.VideoOverlayFullscreenBinding
 import com.anatame.pickaflix.databinding.VideoOverlaySmallBinding
 import com.google.android.exoplayer2.ui.PlayerView
 
@@ -28,7 +29,7 @@ class VideoOverlayView
      attrs: AttributeSet? = null,
      defStyleAttr: Int = 0) : MotionLayout(context, attrs, defStyleAttr) {
 
-    private var binding: VideoOverlaySmallBinding
+    private var binding: VideoOverlayFullscreenBinding
     private var motionLayout: MotionLayout
     private val touchableArea: View
 
@@ -45,7 +46,7 @@ class VideoOverlayView
     private var startY: Float? = null
 
     init {
-        binding = VideoOverlaySmallBinding.inflate(LayoutInflater.from(context), this, false)
+        binding = VideoOverlayFullscreenBinding.inflate(LayoutInflater.from(context), this, false)
         addView(binding.root)
         motionLayout = binding.container
 

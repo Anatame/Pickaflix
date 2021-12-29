@@ -17,10 +17,11 @@
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/video_overlay_thumbnail"
         android:layout_width="226dp"
-        android:layout_height="143dp"
+        android:layout_height="0dp"
         android:background="@color/black"
         app:layout_constraintStart_toStartOf="@+id/video_overlay_touchable_area"
         app:layout_constraintTop_toTopOf="@+id/video_overlay_touchable_area"
+        app:layout_constraintBottom_toTopOf="@id/small_controls"
         app:layout_constraintEnd_toEndOf="@+id/video_overlay_touchable_area"/>
 
     <ImageButton
@@ -52,8 +53,17 @@
         android:id="@+id/rvDetails"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="@+id/video_overlay_thumbnail"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/video_overlay_thumbnail" />
 
+    <View
+        android:id="@+id/small_controls"
+        android:layout_width="226dp"
+        android:layout_height="48dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/video_overlay_touchable_area"
+        app:layout_constraintEnd_toEndOf="@+id/video_overlay_touchable_area"
+    />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

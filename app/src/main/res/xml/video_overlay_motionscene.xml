@@ -4,22 +4,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        app:constraintSetEnd="@layout/video_overlay_fullscreen"
-        app:constraintSetStart="@layout/video_overlay_small"
+        app:constraintSetEnd="@layout/video_overlay_small"
+        app:constraintSetStart="@layout/video_overlay_fullscreen"
         app:duration="200">
         <OnSwipe
+            app:maxAcceleration="25"
             app:dragDirection="dragDown"
             app:touchAnchorId="@id/video_overlay_touchable_area"
             app:touchAnchorSide="top"/>
+
+        <KeyFrameSet>
+            <KeyPosition
+                app:framePosition="95"
+                app:keyPositionType="deltaRelative"
+                app:percentX="0"
+                app:percentY="0"
+                app:sizePercent="0"
+                app:motionTarget="@id/small_controls"/>
+        </KeyFrameSet>
 
     </Transition>
 
     <Transition
         app:constraintSetEnd="@layout/video_overlay_dismiss"
-        app:constraintSetStart="@layout/video_overlay_fullscreen"
+        app:constraintSetStart="@layout/video_overlay_small"
         app:duration="200">
 
         <OnSwipe
+            app:maxAcceleration="40"
             app:touchAnchorSide="left"
             app:dragDirection="dragLeft"
             app:touchAnchorId="@id/video_overlay_touchable_area"
