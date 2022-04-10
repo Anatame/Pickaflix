@@ -1,3 +1,42 @@
 {
-    "Home": "HomeDataBro"
+    "home": "HomeDataBro",
+    "domains": {
+      "movie_domains": [
+          {
+            "domain": "https://fmovies.to/",
+            "methods": {
+                "getSearch": "This is search text for Fmovies",
+                "getEpisodes": "Episode script for Fmovies",
+                "videoUrlIdentifier": "hls identifier for Fmovies"
+            }
+          },
+          {
+            "domain": "https://fmovies.to/",
+            "methods": {
+                "getSearch": "This is search text for Fmovies",
+                "getEpisodes": "Episode script for Fmovies",
+                "videoUrlIdentifier": "hls identifier for Fmovies"
+            }
+          }
+      ],
+      "anime_domains": [
+        {
+            "domain": "https://9anime.id/",
+            "methods": {
+                "getSearch": "This is search text for 9anime.id",
+                "getEpisodes": "Episode script for 9anime.id",
+                "videoUrlIdentifier": "hls identifier for 9anime.id"
+            }
+        },
+        {
+            "domain": "https://9anime.id/",
+            "methods": {
+                "getSearch": "This is search text for 9anime.id",
+                "getEpisodes": "Episode script for 9anime.id",
+                "videoUrlIdentifier": "hls identifier for 9anime.id"
+            }
+        }
+      ]
+
+    }
 }
