@@ -13,7 +13,7 @@
           {
             "domain": "https://fmovies.to/",
             "methods": {
-                "getSearch": "This is search text for Fmovies",
+                "getSearch": "search for fmovies",
                 "getEpisodes": "Episode script for Fmovies",
                 "videoUrlIdentifier": "hls identifier for Fmovies"
             }
@@ -23,7 +23,7 @@
         {
             "domain": "https://9anime.id/",
             "methods": {
-                "getSearch": "This is search text for 9anime.id",
+                "getSearch": "function startSearchFromHome(term){\r\n    let form = $('form')[1];\r\n    let inputText = form.children[0];\r\n\r\n    inputText.value = term;\r\n    inputText.dispatchEvent(new Event('keydown', { 'bubbles': true }));\r\n    inputText.dispatchEvent(new Event('keyup', { 'bubbles': true }));\r\n    form.submit();\r\n};",
                 "getEpisodes": "Episode script for 9anime.id",
                 "videoUrlIdentifier": "hls identifier for 9anime.id"
             }
@@ -31,7 +31,7 @@
         {
             "domain": "https://9anime.id/",
             "methods": {
-                "getSearch": "This is search text for 9anime.id",
+                "getSearch": "function startSearchFromHome(term){\r\n    let form = $('form')[1];\r\n    let inputText = form.children[0];\r\n\r\n    inputText.value = term;\r\n    inputText.dispatchEvent(new Event('keydown', { 'bubbles': true }));\r\n    inputText.dispatchEvent(new Event('keyup', { 'bubbles': true }));\r\n    form.submit();\r\n};",
                 "getEpisodes": "Episode script for 9anime.id",
                 "videoUrlIdentifier": "hls identifier for 9anime.id"
             }
